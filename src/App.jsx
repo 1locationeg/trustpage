@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Sparkles, Layout, Eye, UserCheck, RefreshCw, Layers, ExternalLink, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Sparkles, Layout, Eye, UserCheck, Layers, ExternalLink, ArrowRight } from 'lucide-react';
 import { DEFAULT_PROFILE, MOCK_PRESETS } from './data/mockProfiles';
 import LivePreviewCard from './components/LivePreviewCard';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -19,24 +19,23 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-slate-100 font-sans">
+    <div className="min-h-screen bg-[#0A0D14] text-slate-100 font-sans selection:bg-[#D4AF37]/30 selection:text-[#F3C66B]">
       
       {/* Global Header Bar */}
       <header className="sticky top-0 z-50 bg-[#0E1422]/95 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           
-          {/* Logo & Category Subtitle */}
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2 font-extrabold text-[#D4AF37] font-heading text-xl tracking-tight">
               <ShieldCheck className="w-6 h-6 text-[#D4AF37]" />
               <span>R8ESTATE</span>
             </div>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#D4AF37]/15 text-[#F3C66B] border border-[#D4AF37]/30 font-semibold hidden sm:inline">
-              Decision Infrastructure
+              Universal Decision Intelligence
             </span>
           </div>
 
-          {/* Mode Switcher Buttons */}
+          {/* Mode Switcher */}
           <div className="flex items-center space-x-1.5 bg-slate-900/90 p-1 rounded-2xl border border-slate-800 text-xs">
             <button
               onClick={() => setViewMode('builder')}
@@ -47,7 +46,7 @@ export default function App() {
               }`}
             >
               <Layout className="w-3.5 h-3.5" />
-              <span>12-Step Builder</span>
+              <span>Outcome-First Builder v2</span>
             </button>
 
             <button
@@ -59,7 +58,7 @@ export default function App() {
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Public Trust Page (12 Screens)</span>
+              <span>Public Decision Page</span>
             </button>
 
             <button
@@ -71,13 +70,13 @@ export default function App() {
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
-              <span>Card View</span>
+              <span>Trust Card View</span>
             </button>
           </div>
 
-          {/* Preset Selector */}
+          {/* Profession Ecosystem Preset Selector */}
           <div className="flex items-center space-x-2 text-xs">
-            <span className="text-slate-400 hidden lg:inline">Preset:</span>
+            <span className="text-slate-400 hidden lg:inline">Ecosystem Preset:</span>
             <select
               value={selectedPresetId}
               onChange={(e) => handlePresetChange(e.target.value)}
@@ -94,24 +93,23 @@ export default function App() {
         </div>
       </header>
 
-      {/* VIEW MODE 1: BUILDER & LIVE PREVIEW (MATCHING SCREENSHOT) */}
+      {/* VIEW MODE 1: OUTCOME-FIRST BUILDER V2 */}
       {viewMode === 'builder' && (
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="mb-6 text-center md:text-left">
             <div className="inline-flex items-center space-x-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#F3C66B] px-3 py-1 rounded-full text-xs font-bold font-heading">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>VALUE-FIRST ONBOARDING BUILDER</span>
+              <span>OUTCOME-FIRST EXPERIENCE</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white font-heading mt-2">
-              Transform <span className="gold-gradient-text">Unknown Professional → Confident Decision</span>
+            <h1 className="text-2xl md:text-4xl font-extrabold text-white font-heading mt-2 tracking-tight">
+              Build Trust. <span className="gold-gradient-text">Unlock Opportunities.</span>
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Watch your live Trust Card update in real-time as you complete each guided step.
+              Turn your experience into an opportunity-ready professional identity across the real estate ecosystem.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Column: 12 Step Wizard */}
             <div className="lg:col-span-7">
               <OnboardingWizard
                 profile={profile}
@@ -120,12 +118,11 @@ export default function App() {
               />
             </div>
 
-            {/* Right Column: Live Updating Card Preview */}
             <div className="lg:col-span-5 sticky top-24">
               <div className="text-center mb-3">
                 <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider flex items-center justify-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  REAL-TIME LIVE PREVIEW
+                  REAL-TIME OUTCOME PREVIEW
                 </span>
               </div>
               <LivePreviewCard
@@ -137,7 +134,7 @@ export default function App() {
         </div>
       )}
 
-      {/* VIEW MODE 2: FULL PUBLIC DECISION INFRASTRUCTURE TRUST PAGE */}
+      {/* VIEW MODE 2: PUBLIC DECISION PAGE */}
       {viewMode === 'public' && (
         <PublicTrustPage
           profile={profile}
@@ -145,12 +142,12 @@ export default function App() {
         />
       )}
 
-      {/* VIEW MODE 3: STANDALONE TRUST CARD VIEW */}
+      {/* VIEW MODE 3: STANDALONE TRUST CARD */}
       {viewMode === 'card' && (
         <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 text-center">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white font-heading">Your Shareable R8ESTATE Trust Card</h2>
-            <p className="text-xs text-slate-400">Embed anywhere or share as a high-impact digital card.</p>
+            <h2 className="text-2xl font-bold text-white font-heading">Your Shareable Trust Card</h2>
+            <p className="text-xs text-slate-400">Embed anywhere or share as a high-impact digital identity.</p>
           </div>
 
           <LivePreviewCard
@@ -163,7 +160,7 @@ export default function App() {
               onClick={() => setViewMode('public')}
               className="px-6 py-3 bg-gradient-to-r from-[#D4AF37] via-[#F3C66B] to-[#D4AF37] text-slate-950 font-bold text-xs rounded-xl hover:brightness-110 shadow-xl font-heading flex items-center space-x-2"
             >
-              <span>View Full 12-Screen Intelligence Memo</span>
+              <span>View Full Decision Page</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
