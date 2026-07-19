@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Sparkles, Layout, Eye, UserCheck, Layers, ExternalLink, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Layout, Eye, UserCheck, ArrowRight } from 'lucide-react';
 import { DEFAULT_PROFILE, MOCK_PRESETS } from './data/mockProfiles';
 import LivePreviewCard from './components/LivePreviewCard';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -19,42 +19,44 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-slate-100 font-sans selection:bg-[#D4AF37]/30 selection:text-[#F3C66B]">
+    <div id="app-root" className="min-h-[100dvh] bg-[#FAFAF9] text-[#111827] font-sans antialiased selection:bg-[#0A3D62]/10 selection:text-[#0A3D62]">
       
       {/* Global Header Bar */}
-      <header className="sticky top-0 z-50 bg-[#0E1422]/95 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+      <header id="global-header" className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 py-3">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           
           <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 font-extrabold text-[#D4AF37] font-heading text-xl tracking-tight">
-              <ShieldCheck className="w-6 h-6 text-[#D4AF37]" />
+            <div className="flex items-center space-x-2 font-bold text-[#0A3D62] font-heading text-xl tracking-tight">
+              <ShieldCheck className="w-6 h-6 text-[#0A3D62]" />
               <span>R8ESTATE</span>
             </div>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#D4AF37]/15 text-[#F3C66B] border border-[#D4AF37]/30 font-semibold hidden sm:inline">
+            <span className="text-xs text-gray-500 font-medium hidden sm:inline border-l border-gray-200 pl-3">
               Universal Decision Intelligence
             </span>
           </div>
 
           {/* Mode Switcher */}
-          <div className="flex items-center space-x-1.5 bg-slate-900/90 p-1 rounded-2xl border border-slate-800 text-xs">
+          <div className="flex items-center p-1 bg-gray-100 rounded-lg text-xs font-medium border border-gray-200">
             <button
+              id="btn-mode-builder"
               onClick={() => setViewMode('builder')}
-              className={`px-3.5 py-1.5 rounded-xl font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`px-3.5 py-1.5 rounded-md transition-all flex items-center space-x-1.5 ${
                 viewMode === 'builder'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#F3C66B] text-slate-950 shadow-md font-heading'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-[#0A3D62] shadow-sm font-semibold'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <Layout className="w-3.5 h-3.5" />
-              <span>Outcome-First Builder v2</span>
+              <span>Outcome-First Builder</span>
             </button>
 
             <button
+              id="btn-mode-public"
               onClick={() => setViewMode('public')}
-              className={`px-3.5 py-1.5 rounded-xl font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`px-3.5 py-1.5 rounded-md transition-all flex items-center space-x-1.5 ${
                 viewMode === 'public'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#F3C66B] text-slate-950 shadow-md font-heading'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-[#0A3D62] shadow-sm font-semibold'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -62,25 +64,29 @@ export default function App() {
             </button>
 
             <button
+              id="btn-mode-card"
               onClick={() => setViewMode('card')}
-              className={`px-3.5 py-1.5 rounded-xl font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`px-3.5 py-1.5 rounded-md transition-all flex items-center space-x-1.5 ${
                 viewMode === 'card'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#F3C66B] text-slate-950 shadow-md font-heading'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-[#0A3D62] shadow-sm font-semibold'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
-              <span>Trust Card View</span>
+              <span>Trust Card</span>
             </button>
           </div>
 
-          {/* Profession Ecosystem Preset Selector */}
+          {/* Ecosystem Preset Selector */}
           <div className="flex items-center space-x-2 text-xs">
-            <span className="text-slate-400 hidden lg:inline">Ecosystem Preset:</span>
+            <label htmlFor="preset-select" className="text-gray-500 font-medium hidden lg:inline">
+              Ecosystem Preset:
+            </label>
             <select
+              id="preset-select"
               value={selectedPresetId}
               onChange={(e) => handlePresetChange(e.target.value)}
-              className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-[#D4AF37]"
+              className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/20 focus:border-[#0A3D62]"
             >
               {MOCK_PRESETS.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -93,23 +99,12 @@ export default function App() {
         </div>
       </header>
 
-      {/* VIEW MODE 1: OUTCOME-FIRST BUILDER V2 */}
+      {/* VIEW MODE 1: OUTCOME-FIRST BUILDER */}
       {viewMode === 'builder' && (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="mb-6 text-center md:text-left">
-            <div className="inline-flex items-center space-x-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#F3C66B] px-3 py-1 rounded-full text-xs font-bold font-heading">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>OUTCOME-FIRST EXPERIENCE</span>
-            </div>
-            <h1 className="text-2xl md:text-4xl font-extrabold text-white font-heading mt-2 tracking-tight">
-              Build Trust. <span className="gold-gradient-text">Unlock Opportunities.</span>
-            </h1>
-            <p className="text-xs text-slate-400 mt-1">
-              Turn your experience into an opportunity-ready professional identity across the real estate ecosystem.
-            </p>
-          </div>
-
+        <main id="builder-main" className="max-w-7xl mx-auto px-4 py-6 md:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left Form Column */}
             <div className="lg:col-span-7">
               <OnboardingWizard
                 profile={profile}
@@ -118,11 +113,15 @@ export default function App() {
               />
             </div>
 
-            <div className="lg:col-span-5 sticky top-24">
-              <div className="text-center mb-3">
-                <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider flex items-center justify-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  REAL-TIME OUTCOME PREVIEW
+            {/* Right Live Preview Column */}
+            <div className="lg:col-span-5 lg:sticky lg:top-20">
+              <div className="mb-3 flex items-center justify-between text-xs">
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Live Preview
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded text-[11px] border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Real-time Sync</span>
                 </span>
               </div>
               <LivePreviewCard
@@ -130,8 +129,9 @@ export default function App() {
                 onOpenFullPage={() => setViewMode('public')}
               />
             </div>
+
           </div>
-        </div>
+        </main>
       )}
 
       {/* VIEW MODE 2: PUBLIC DECISION PAGE */}
@@ -144,10 +144,14 @@ export default function App() {
 
       {/* VIEW MODE 3: STANDALONE TRUST CARD */}
       {viewMode === 'card' && (
-        <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 text-center">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white font-heading">Your Shareable Trust Card</h2>
-            <p className="text-xs text-slate-400">Embed anywhere or share as a high-impact digital identity.</p>
+        <main id="card-main" className="min-h-[80dvh] flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto">
+          <div className="mb-6 space-y-1">
+            <h2 className="text-2xl font-bold text-gray-900 font-heading">
+              Your Shareable Trust Card
+            </h2>
+            <p className="text-sm text-gray-600">
+              Embed anywhere or share as a high-impact digital identity.
+            </p>
           </div>
 
           <LivePreviewCard
@@ -155,16 +159,17 @@ export default function App() {
             onOpenFullPage={() => setViewMode('public')}
           />
 
-          <div className="mt-6">
+          <div className="mt-8">
             <button
+              id="btn-view-full-page"
               onClick={() => setViewMode('public')}
-              className="px-6 py-3 bg-gradient-to-r from-[#D4AF37] via-[#F3C66B] to-[#D4AF37] text-slate-950 font-bold text-xs rounded-xl hover:brightness-110 shadow-xl font-heading flex items-center space-x-2"
+              className="px-6 py-3 bg-[#FAC417] text-slate-900 font-semibold text-sm rounded-full hover:bg-[#E5B210] transition-all shadow-sm font-heading flex items-center space-x-2"
             >
               <span>View Full Decision Page</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </main>
       )}
 
     </div>
