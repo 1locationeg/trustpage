@@ -15,6 +15,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
     trustScore = 94,
     verificationLevel = "Gold",
     dealsClosed = 0,
+    transactionVolume = "$10M+",
     yearsExp = 0,
     projectsSold = 0,
     happyClients = 0,
