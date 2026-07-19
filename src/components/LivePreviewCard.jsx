@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Award, MapPin, Briefcase, Star, CheckCircle2, TrendingUp, Share2, Download, ExternalLink, Zap, Lock } from 'lucide-react';
 import { PROFESSIONS_DICT } from '../data/professionTemplates';
 
@@ -26,6 +26,22 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
     authorityStatus = "Verified Specialist"
   } = profile;
 
+  // Debounced name & title for silky smooth live updating
+  const [debouncedName, setDebouncedName] = useState(name);
+  const [debouncedTitle, setDebouncedTitle] = useState(title);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    setIsUpdating(true);
+    const handler = setTimeout(() => {
+      setDebouncedName(name || "Your Name");
+      setDebouncedTitle(title || activeProf.label);
+      setIsUpdating(false);
+    }, 120);
+
+    return () => clearTimeout(handler);
+  }, [name, title, activeProf.label]);
+
   return (
     <div id="live-preview-card-container" className="relative w-full max-w-sm mx-auto">
       {/* Card Body */}
@@ -49,7 +65,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
             <div className="w-20 h-20 rounded-full p-0.5 bg-gray-200 shadow-sm">
               <img
                 src={photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80"}
-                alt={name}
+                alt={debouncedName}
                 className="w-full h-full rounded-full object-cover border-2 border-white"
               />
             </div>
@@ -60,13 +76,13 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
             </div>
           </div>
 
-          <h3 className="text-lg font-bold text-[#0A3D62] font-heading flex items-center justify-center gap-1.5">
-            {name || "Your Name"}
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 inline" />
+          <h3 className={`text-lg font-bold text-[#0A3D62] font-heading flex items-center justify-center gap-1.5 transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
+            {debouncedName}
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 inline shrink-0" />
           </h3>
 
-          <p className="text-xs text-gray-700 font-medium mt-0.5">
-            {specializations[0] || title}
+          <p className={`text-xs text-gray-700 font-medium mt-0.5 transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
+            {specializations[0] || debouncedTitle}
           </p>
 
           <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
