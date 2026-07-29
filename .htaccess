@@ -1,0 +1,19 @@
+# R8ESTATE - Production Route Redirects for Hostinger
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Exclude .well-known (SSL verification, etc.) and the dist/ folder from rewriting
+  RewriteCond %{REQUEST_URI} !^/\.well-known
+  RewriteCond %{REQUEST_URI} !^/dist/
+
+  # If the requested file or directory exists inside dist/, serve it
+  RewriteCond %{DOCUMENT_ROOT}/dist%{REQUEST_URI} -f [OR]
+  RewriteCond %{DOCUMENT_ROOT}/dist%{REQUEST_URI} -d
+  RewriteRule ^(.*)$ dist/$1 [L]
+
+  # Otherwise, rewrite all non-existent routes (SPA routes) to dist/index.html
+  RewriteCond %{REQUEST_URI} !^/\.well-known
+  RewriteCond %{REQUEST_URI} !^/dist/
+  RewriteRule . /dist/index.html [L]
+</IfModule>
