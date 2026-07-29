@@ -13,12 +13,18 @@ export default function App() {
   const [actualMobile, setActualMobile] = useState(false);
   const [timeString, setTimeString] = useState("09:41");
   
-  // App-level Visual Editor mode: 'visual_flat' | 'interactive'
-  // Default to 'visual_flat' so the user is immediately presented with all text editable
-  const [appMode, setAppMode] = useState('visual_flat');
+  // Check if we are running in the production environment (live website)
+  const isProduction = typeof window !== 'undefined' && 
+    window.location.hostname !== 'localhost' && 
+    window.location.hostname !== '127.0.0.1';
 
-  // Keyboard Shortcut Alt + S to toggle modes
+  // App-level Visual Editor mode: 'visual_flat' | 'interactive'
+  // Default to 'interactive' in production so users see the live site, and 'visual_flat' locally
+  const [appMode, setAppMode] = useState(isProduction ? 'interactive' : 'visual_flat');
+
+  // Keyboard Shortcut Alt + S to toggle modes (only active locally)
   useEffect(() => {
+    if (isProduction) return;
     const handleKeyDown = (e) => {
       if (e.altKey && e.key.toLowerCase() === 's') {
         e.preventDefault();
@@ -27,10 +33,11 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [isProduction]);
 
-  // Visual Editor Click Bypass: Hold Ctrl, Cmd, or Shift while clicking to interact
+  // Visual Editor Click Bypass: Hold Ctrl, Cmd, or Shift while clicking to interact (only active locally)
   useEffect(() => {
+    if (isProduction) return;
     const handleCaptureClick = (e) => {
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
         const clickable = e.target.closest('button, select, a, [role="button"]');
@@ -52,7 +59,8 @@ export default function App() {
     };
     window.addEventListener('click', handleCaptureClick, true); // true = capture phase!
     return () => window.removeEventListener('click', handleCaptureClick, true);
-  }, []);
+  }, [isProduction]);
+
 
   // Detect actual mobile screen sizes
   useEffect(() => {
@@ -582,43 +590,45 @@ export default function App() {
       </div>
 
       {/* Floating App Mode Controller for Visual Editor overlay */}
-      <div 
-        id="app-mode-floating-widget" 
-        data-antigravity-ignore="true"
-        contentEditable={false}
-        className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white rounded-xl shadow-2xl p-2.5 flex items-center space-x-2 border border-slate-700 hover:scale-105 transition-transform"
-      >
-        <div className="flex flex-col text-[10px] font-bold text-gray-400 px-1 leading-tight text-left pointer-events-none">
-          <span>EDITOR VIEW</span>
-          <span className={appMode === 'visual_flat' ? 'text-amber-400' : 'text-emerald-400'}>
-            {appMode === 'visual_flat' ? 'Visual Edit: ON' : 'Visual Edit: OFF'}
-          </span>
-          <span className="text-[8px] text-amber-200 mt-0.5">Press Alt + S</span>
-          <span className="text-[8px] text-emerald-300 mt-0.5 font-extrabold">Hold Ctrl + Click to Switch</span>
+      {!isProduction && (
+        <div 
+          id="app-mode-floating-widget" 
+          data-antigravity-ignore="true"
+          contentEditable={false}
+          className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white rounded-xl shadow-2xl p-2.5 flex items-center space-x-2 border border-slate-700 hover:scale-105 transition-transform"
+        >
+          <div className="flex flex-col text-[10px] font-bold text-gray-400 px-1 leading-tight text-left pointer-events-none">
+            <span>EDITOR VIEW</span>
+            <span className={appMode === 'visual_flat' ? 'text-amber-400' : 'text-emerald-400'}>
+              {appMode === 'visual_flat' ? 'Visual Edit: ON' : 'Visual Edit: OFF'}
+            </span>
+            <span className="text-[8px] text-amber-200 mt-0.5">Press Alt + S</span>
+            <span className="text-[8px] text-emerald-300 mt-0.5 font-extrabold">Hold Ctrl + Click to Switch</span>
+          </div>
+          
+          <button
+            onClick={() => setAppMode('visual_flat')}
+            data-antigravity-ignore="true"
+            contentEditable={false}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
+              appMode === 'visual_flat' ? 'bg-[#FAC417] text-slate-950 font-black' : 'text-gray-300 hover:text-white'
+            }`}
+          >
+            <span className="pointer-events-none">🛠️ Turn On Visual Edit</span>
+          </button>
+          
+          <button
+            onClick={() => setAppMode('interactive')}
+            data-antigravity-ignore="true"
+            contentEditable={false}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
+              appMode === 'interactive' ? 'bg-[#FAC417] text-slate-950 font-black' : 'text-gray-300 hover:text-white'
+            }`}
+          >
+            <span className="pointer-events-none">🕹️ Turn Off Visual Edit</span>
+          </button>
         </div>
-        
-        <button
-          onClick={() => setAppMode('visual_flat')}
-          data-antigravity-ignore="true"
-          contentEditable={false}
-          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
-            appMode === 'visual_flat' ? 'bg-[#FAC417] text-slate-950 font-black' : 'text-gray-300 hover:text-white'
-          }`}
-        >
-          <span className="pointer-events-none">🛠️ Turn On Visual Edit</span>
-        </button>
-        
-        <button
-          onClick={() => setAppMode('interactive')}
-          data-antigravity-ignore="true"
-          contentEditable={false}
-          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
-            appMode === 'interactive' ? 'bg-[#FAC417] text-slate-950 font-black' : 'text-gray-300 hover:text-white'
-          }`}
-        >
-          <span className="pointer-events-none">🕹️ Turn Off Visual Edit</span>
-        </button>
-      </div>
+      )}
 
     </div>
   );
