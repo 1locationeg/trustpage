@@ -8,6 +8,7 @@ import {
 import { QRCodeSVG } from 'qrcode.react';
 import ProofModal from './ProofModal';
 import { PROFESSIONS_DICT } from '../data/professionTemplates';
+import { getFallbackPhoto } from '../data/mockProfiles';
 
 export default function PublicTrustPage({ profile, onBackToBuilder }) {
   const [selectedProof, setSelectedProof] = useState(null);
@@ -62,9 +63,12 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
       <header id="public-header" className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-1.5 font-bold text-[#0A3D62] font-heading text-lg">
-              <ShieldCheck className="w-5 h-5" />
-              <span>R8ESTATE</span>
+            <div id="public-brand-logo" className="flex items-center">
+              <img
+                src="/r8estate-logo.svg"
+                alt="R8ESTATE Logo"
+                className="h-8 w-auto object-contain"
+              />
             </div>
             <span className="hidden sm:inline text-xs text-gray-500 border-l border-gray-200 pl-3 font-medium">
               {activeProf.label} — Decision Intelligence Memo
@@ -102,7 +106,7 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
               <div className="relative mb-2">
                 <div className="w-36 h-36 rounded-full p-1 bg-gray-200 shadow-md">
                   <img
-                    src={photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80"}
+                    src={photo || getFallbackPhoto(name)}
                     alt={name}
                     className="w-full h-full rounded-full object-cover border-2 border-white"
                   />

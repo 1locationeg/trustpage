@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -9,6 +10,103 @@
   h1, h2, h3, h4, h5, h6, .font-heading {
     font-family: 'Outfit', sans-serif;
   }
+}
+
+.font-serif-premium {
+  font-family: 'Playfair Display', Georgia, Cambria, serif;
+}
+
+/* Premium Gold Accent Styles */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #FFE896 0%, #FAC417 40%, #C29306 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #FCD34D 0%, #FAC417 50%, #D97706 100%);
+}
+
+.border-gold-premium {
+  border-color: rgba(250, 196, 23, 0.35);
+}
+
+@keyframes goldGlow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 12px rgba(250, 196, 23, 0.08);
+    border-color: rgba(250, 196, 23, 0.25);
+  }
+  50% {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(250, 196, 23, 0.22);
+    border-color: rgba(250, 196, 23, 0.45);
+  }
+}
+
+.animate-gold-glow {
+  animation: goldGlow 6s infinite ease-in-out;
+}
+
+/* Mobile PWA Simulated Frame Styles */
+.phone-bezel {
+  position: relative;
+  width: 380px;
+  height: 780px;
+  border-radius: 40px;
+  background: #111827;
+  padding: 11px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 3px #374151;
+  overflow: hidden;
+}
+
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #FAFAF9;
+  border-radius: 30px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Hide scrollbars inside device shell */
+.phone-screen::-webkit-scrollbar {
+  display: none;
+}
+.phone-screen {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.phone-notch {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 25px;
+  background: #111827;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: #374151;
+  border-radius: 2px;
+  z-index: 100;
 }
 
 /* Calm Editorial Design System Utilities */

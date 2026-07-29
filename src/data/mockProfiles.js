@@ -12,7 +12,7 @@ export const DEFAULT_PROFILE = {
   title: "Senior Off-Plan & Investment Specialist",
   company: "Independent Professional",
   companyLogo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&auto=format&fit=crop&q=80",
-  photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
+  photo: "/profile_man_ahmed.png",
   locations: ["New Cairo", "North Coast", "Sheikh Zayed"],
   languages: ["English", "Arabic", "French"],
   trustScore: 94,
@@ -141,7 +141,7 @@ export const MOCK_PRESETS = [
       name: "Elena Rostova",
       title: "Principal Architect & Sustainable Masterplanner",
       company: "Rostova & Associates Studio",
-      photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80",
+      photo: "/profile_woman_elena.png",
       locations: ["Dubai", "Riyadh", "London"],
       specializations: ["Sustainable Masterplanning", "Luxury Residential Design", "Commercial Towers", "RIBA Chartered"],
       dealsClosed: 48,
@@ -186,7 +186,7 @@ export const MOCK_PRESETS = [
       name: "Marcus Vance, KC",
       title: "Senior Partner — Commercial Real Estate & Structuring",
       company: "Vance & Sterling International Legal Counsel",
-      photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&auto=format&fit=crop&q=80",
+      photo: "/profile_man_marcus.png",
       locations: ["London", "DIFC Dubai", "Riyadh"],
       specializations: ["Cross-Border Land Acquisitions", "Escrow & Title Protection", "Joint Venture Structuring"],
       dealsClosed: 310,
@@ -218,3 +218,19 @@ export const MOCK_PRESETS = [
     }
   }
 ];
+
+export function getFallbackPhoto(name) {
+  if (!name) return "/profile_man_ahmed.png";
+  const lower = name.toLowerCase();
+  const femaleKeywords = [
+    'elena', 'elene', 'rostova', 'maria', 'mary', 'jane', 'jessica', 'linda', 
+    'emily', 'sarah', 'sara', 'fatima', 'yasmin', 'amina', 'nour', 'layla',
+    'anna', 'anne', 'hannah', 'chloe', 'zoe', 'sofia', 'sophie', 'olivia',
+    'isabella', 'mia', 'charlotte', 'amelia', 'harper', 'evelyn', 'abigail',
+    'rose', 'lily', 'grace', 'diana', 'lucy', 'luna', 'stella', 'victoria',
+    'architect' // elena's profession
+  ];
+  const isFemale = femaleKeywords.some(keyword => lower.includes(keyword));
+  return isFemale ? "/profile_woman_elena.png" : "/profile_man_ahmed.png";
+}
+
