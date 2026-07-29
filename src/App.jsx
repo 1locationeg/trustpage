@@ -13,18 +13,13 @@ export default function App() {
   const [actualMobile, setActualMobile] = useState(false);
   const [timeString, setTimeString] = useState("09:41");
   
-  // Check if we are running in the production environment (live website)
-  const isProduction = typeof window !== 'undefined' && 
-    window.location.hostname !== 'localhost' && 
-    window.location.hostname !== '127.0.0.1';
-
   // App-level Visual Editor mode: 'visual_flat' | 'interactive'
-  // Default to 'interactive' in production so users see the live site, and 'visual_flat' locally
-  const [appMode, setAppMode] = useState(isProduction ? 'interactive' : 'visual_flat');
+  // Default to 'interactive' in production so users see the live site, and 'visual_flat' locally in development
+  const [appMode, setAppMode] = useState(import.meta.env.DEV ? 'visual_flat' : 'interactive');
 
-  // Keyboard Shortcut Alt + S to toggle modes (only active locally)
+  // Keyboard Shortcut Alt + S to toggle modes (only active in local development)
   useEffect(() => {
-    if (isProduction) return;
+    if (!import.meta.env.DEV) return;
     const handleKeyDown = (e) => {
       if (e.altKey && e.key.toLowerCase() === 's') {
         e.preventDefault();
@@ -33,11 +28,11 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isProduction]);
+  }, []);
 
-  // Visual Editor Click Bypass: Hold Ctrl, Cmd, or Shift while clicking to interact (only active locally)
+  // Visual Editor Click Bypass: Hold Ctrl, Cmd, or Shift while clicking to interact (only active in local development)
   useEffect(() => {
-    if (isProduction) return;
+    if (!import.meta.env.DEV) return;
     const handleCaptureClick = (e) => {
       if (e.ctrlKey || e.metaKey || e.shiftKey) {
         const clickable = e.target.closest('button, select, a, [role="button"]');
@@ -59,7 +54,8 @@ export default function App() {
     };
     window.addEventListener('click', handleCaptureClick, true); // true = capture phase!
     return () => window.removeEventListener('click', handleCaptureClick, true);
-  }, [isProduction]);
+  }, []);
+
 
 
   // Detect actual mobile screen sizes
@@ -590,7 +586,7 @@ export default function App() {
       </div>
 
       {/* Floating App Mode Controller for Visual Editor overlay */}
-      {!isProduction && (
+      {import.meta.env.DEV && (
         <div 
           id="app-mode-floating-widget" 
           data-antigravity-ignore="true"

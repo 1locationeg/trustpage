@@ -29,6 +29,16 @@ function handlePromptRequest(req, res, next) {
   }
 }
 
+const stripAntigravityPlugin = () => ({
+  name: 'strip-antigravity',
+  transformIndexHtml(html, ctx) {
+    if (!ctx.server) {
+      return html.replace(/<script[^>]*src="[^"]*antigravity-bridge\.js"[^>]*><\/script>/g, '');
+    }
+    return html;
+  }
+});
+
 const promptPlugin = () => ({
   name: 'prompt-api',
   configureServer(server) {
@@ -40,7 +50,7 @@ const promptPlugin = () => ({
 });
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), promptPlugin()],
+  plugins: [react(), tailwindcss(), promptPlugin(), stripAntigravityPlugin()],
   base: './', // Ensures relative asset paths work seamlessly on Hostinger static hosting and subdomains
   build: {
     outDir: 'dist',

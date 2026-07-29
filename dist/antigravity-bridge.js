@@ -3,6 +3,17 @@
  * Injected into the user's React app to communicate with the VS Code extension.
  */
 (function () {
+    // Only initialize the bridge if running on localhost/127.0.0.1 (local development/editor)
+    const isLocal = typeof window !== 'undefined' && 
+      (window.location.hostname === 'localhost' || 
+       window.location.hostname === '127.0.0.1' ||
+       window.location.hostname.startsWith('192.168.'));
+    
+    if (!isLocal) {
+        console.log('[Antigravity Bridge] Disabled on production server.');
+        return;
+    }
+
     console.log('[Antigravity Bridge] Initializing...');
 
     let hoveredElement = null;
