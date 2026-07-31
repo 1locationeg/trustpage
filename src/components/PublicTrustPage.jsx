@@ -62,24 +62,29 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
       {/* Top Header */}
       <header id="public-header" className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div id="public-brand-logo" className="flex items-center">
+          <a href="/" className="flex items-center space-x-2.5 hover:opacity-90 transition-opacity">
+            <div id="public-brand-logo" className="flex items-center shrink-0">
               <img
-                src="/r8estate-logo.svg"
-                alt="R8ESTATE Logo"
-                className="h-8 w-auto object-contain"
+                src="/favicon.svg"
+                alt="R8ESTATE Icon"
+                className="h-8 w-8 object-contain"
               />
             </div>
-            <span className="hidden sm:inline text-xs text-gray-500 border-l border-gray-200 pl-3 font-medium">
-              {activeProf.label} — Decision Intelligence Memo
-            </span>
-          </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[19px] sm:text-[20px] font-extrabold text-slate-900 leading-none tracking-tight">
+                <span className="text-[#FF1744]">R8</span>ESTATE
+              </span>
+              <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.18em] leading-none mt-1">
+                Decision Intelligence
+              </span>
+            </div>
+          </a>
 
           <div className="flex items-center space-x-2">
             <button
               id="btn-edit-builder"
               onClick={onBackToBuilder}
-              className="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-lg border border-gray-300 transition-all"
+              className="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-lg border border-gray-300 transition-all font-heading"
             >
               Edit in Builder
             </button>

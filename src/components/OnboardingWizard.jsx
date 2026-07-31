@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  ArrowRight, ArrowLeft, Check, Shield, Award, MapPin, 
+  ArrowRight, ArrowLeft, Check, Shield, ShieldCheck, Award, MapPin, 
   Building2, UserCheck, Phone, Mail, FileText, Star, 
   TrendingUp, QrCode, Share2, Download, CheckCircle2, RefreshCw, Plus, Minus,
   Briefcase, Target, Layers, Compass, CheckSquare, Zap, Lock, Sparkles, AlertCircle, Edit, Eye, ShieldAlert
@@ -15,10 +15,46 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   
-  // Mobile active tab: 'overview' | 'edit' | 'preview'
-  const [mobileTab, setMobileTab] = useState('overview');
+  // Mobile active tab: 'home' | 'build' | 'dashboard' | 'card'
+  const [mobileTab, setMobileTab] = useState('home');
   // Mobile accordion state: 'identity' | 'kpis' | 'verifications' | 'goals'
   const [mobileAccordion, setMobileAccordion] = useState('identity');
+
+  // Card theme state: 'gold' | 'silver' | 'emerald'
+  const [cardTheme, setCardTheme] = useState('gold');
+
+  // Touch swiping refs for mobile card view
+  const touchStart = useRef(0);
+  const touchEnd = useRef(0);
+
+  const handleTouchStart = (e) => {
+    touchStart.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEnd.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart.current || !touchEnd.current) return;
+    const distance = touchStart.current - touchEnd.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    const themes = ['gold', 'silver', 'emerald'];
+    const currentIndex = themes.indexOf(cardTheme);
+
+    if (isLeftSwipe) {
+      const nextIndex = (currentIndex + 1) % themes.length;
+      setCardTheme(themes[nextIndex]);
+    } else if (isRightSwipe) {
+      const prevIndex = (currentIndex - 1 + themes.length) % themes.length;
+      setCardTheme(themes[prevIndex]);
+    }
+    
+    // Reset refs
+    touchStart.current = 0;
+    touchEnd.current = 0;
+  };
 
   const activeProfession = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
 
@@ -59,7 +95,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
   const handleStartBuilder = () => {
     setIsLanding(false);
     setCurrentStep(1);
-    setMobileTab('overview');
+    setMobileTab('home');
   };
 
   const handleNext = () => {
@@ -281,18 +317,6 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </span>
             </div>
           </div>
-
-          {/* Outcome Card Motivation (Centered underneath) */}
-          <div id="mobile-landing-outcome" className="mt-6 border-t border-gray-100 pt-6">
-            <div className="text-center mb-3">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
-                YOUR GUARANTEED OUTCOME
-              </span>
-            </div>
-            <div className="scale-95 origin-center">
-              <LivePreviewCard profile={profile} />
-            </div>
-          </div>
         </div>
       );
     }
@@ -321,11 +345,11 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           style={{ paddingBottom: '85px' }} // Avoid overlapping bottom tabbar
         >
           
-          {/* TAB 1: OVERVIEW DASHBOARD */}
-          {mobileTab === 'overview' && (
-            <div id="tab-overview-container" className="space-y-5 animate-fade-up">
+          {/* TAB 1: HOME/OVERVIEW */}
+          {mobileTab === 'home' && (
+            <div id="tab-home-container" className="space-y-5 animate-fade-up">
               
-              {/* Trust Score circular health panel */}
+              {/* Trust Score Health Panel */}
               <div className="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-gray-400 uppercase">Trust Analytics</span>
@@ -401,7 +425,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     </div>
                     {!profile.photo && (
                       <button 
-                        onClick={() => { setMobileTab('edit'); setMobileAccordion('identity'); }}
+                        onClick={() => { setMobileTab('build'); setMobileAccordion('identity'); }}
                         className="text-[10px] font-bold text-[#0A3D62] bg-[#0A3D62]/5 px-2.5 py-1.5 rounded-lg"
                       >
                         Add Photo
@@ -420,7 +444,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       </div>
                     </div>
                     <button 
-                      onClick={() => { setMobileTab('edit'); setMobileAccordion('kpis'); }}
+                      onClick={() => { setMobileTab('build'); setMobileAccordion('kpis'); }}
                       className="text-[10px] font-bold text-[#0A3D62] bg-[#0A3D62]/5 px-2.5 py-1.5 rounded-lg"
                     >
                       Audit
@@ -429,23 +453,23 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </div>
               </div>
 
-              {/* Big CTA to Preview */}
+              {/* Big CTA in Thumb-Zone */}
               <button
-                onClick={() => setMobileTab('preview')}
+                onClick={() => setMobileTab('build')}
                 className="w-full py-3.5 bg-slate-950 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center space-x-2"
               >
-                <span>View My Finished Card</span>
+                <span>Edit & Build My Card</span>
                 <ArrowRight className="w-4 h-4 text-[#FAC417]" />
               </button>
             </div>
           )}
 
-          {/* TAB 2: EDIT PROFILE ACCORDIONS */}
-          {mobileTab === 'edit' && (
-            <div id="tab-edit-container" className="space-y-4 animate-fade-up">
+          {/* TAB 2: BUILD CARD (ACCORDIONS) */}
+          {mobileTab === 'build' && (
+            <div id="tab-build-container" className="space-y-4 animate-fade-up">
               
               <div className="text-left">
-                <h2 className="text-lg font-bold text-slate-900 font-heading">Edit Profile Data</h2>
+                <h2 className="text-lg font-bold text-slate-900 font-heading">Build Card Data</h2>
                 <p className="text-xs text-gray-500">Live syncs automatically to your card outcome.</p>
               </div>
 
@@ -514,39 +538,27 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </button>
                 {mobileAccordion === 'kpis' && (
                   <div className="p-4 space-y-4 text-left">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <label htmlFor="mobile-input-deals" className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Deals Closed</label>
-                        <input
-                          id="mobile-input-deals"
-                          type="number"
-                          value={profile.dealsClosed || 0}
-                          onChange={(e) => handleInputChange('dealsClosed', parseInt(e.target.value) || 0)}
-                          className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2"
-                        />
+                        <span className="text-xs font-bold text-gray-800 block">Deals Closed</span>
+                        <span className="text-[10px] text-gray-400">Total verified transactions</span>
                       </div>
-                      <div>
-                        <label htmlFor="mobile-input-exp" className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Years Experience</label>
-                        <input
-                          id="mobile-input-exp"
-                          type="number"
-                          value={profile.yearsExp || 0}
-                          onChange={(e) => handleInputChange('yearsExp', parseInt(e.target.value) || 0)}
-                          className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2"
-                        />
+                      <div className="flex items-center space-x-2">
+                        <button onClick={() => adjustCounter('dealsClosed', -5)} className="w-8 h-8 rounded bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-sm">-</button>
+                        <span className="w-10 text-center font-bold text-xs text-slate-800">{profile.dealsClosed || 0}</span>
+                        <button onClick={() => adjustCounter('dealsClosed', 5)} className="w-8 h-8 rounded bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-sm">+</button>
                       </div>
                     </div>
-
-                    <div>
-                      <label htmlFor="mobile-input-volume" className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Volume Structured</label>
-                      <input
-                        id="mobile-input-volume"
-                        type="text"
-                        value={profile.transactionVolume || ''}
-                        onChange={(e) => handleInputChange('transactionVolume', e.target.value)}
-                        placeholder="$10M+"
-                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2"
-                      />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-bold text-gray-800 block">Years Experience</span>
+                        <span className="text-[10px] text-gray-400">Time in local market</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button onClick={() => adjustCounter('yearsExp', -1)} className="w-8 h-8 rounded bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-sm">-</button>
+                        <span className="w-10 text-center font-bold text-xs text-slate-800">{profile.yearsExp || 0}</span>
+                        <button onClick={() => adjustCounter('yearsExp', 1)} className="w-8 h-8 rounded bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-sm">+</button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -560,30 +572,26 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 >
                   <span className="flex items-center gap-2 uppercase tracking-wider pointer-events-none">
                     <ShieldCheck className="w-4 h-4 text-[#0A3D62] pointer-events-none" />
-                    3. Credentials & Verifications
+                    3. Credentials & Audits
                   </span>
                   <span className="pointer-events-none">{mobileAccordion === 'verifications' ? '▲' : '▼'}</span>
                 </button>
                 {mobileAccordion === 'verifications' && (
-                  <div className="p-4 space-y-3.5 text-left">
-                    <div className="text-[11px] text-gray-500 bg-emerald-50 border border-emerald-100 p-2.5 rounded-lg flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>R8ESTATE automatically verifies licensing databases across Egypt, UAE, and KSA.</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {profile.verifications?.map((v, idx) => (
-                        <div key={idx} className="p-2.5 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-between text-xs">
-                          <span className="font-semibold text-slate-800">{v.title}</span>
-                          <span className="text-[9px] bg-emerald-100 text-emerald-700 font-extrabold px-1.5 py-0.5 rounded">VERIFIED</span>
-                        </div>
-                      ))}
+                  <div className="p-4 space-y-3 text-left">
+                    <div className="p-3.5 bg-slate-900 text-white rounded-xl space-y-2 border border-slate-800">
+                      <div className="flex items-center space-x-2">
+                        <ShieldAlert className="w-4 h-4 text-[#FAC417]" />
+                        <span className="text-xs font-bold font-heading text-[#FAC417]">Regulatory Verification Level</span>
+                      </div>
+                      <p className="text-[10px] text-gray-400 leading-relaxed">
+                        Credentials verified via Land Registries, AML records, and official regulatory commercial logs.
+                      </p>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Accordion 4: Strategic Goals */}
+              {/* Accordion 4: Goals */}
               <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
                 <button
                   onClick={() => setMobileAccordion(mobileAccordion === 'goals' ? '' : 'goals')}
@@ -591,7 +599,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 >
                   <span className="flex items-center gap-2 uppercase tracking-wider pointer-events-none">
                     <Target className="w-4 h-4 text-[#0A3D62] pointer-events-none" />
-                    4. Strategic Alignment Goal
+                    4. Strategic Goals
                   </span>
                   <span className="pointer-events-none">{mobileAccordion === 'goals' ? '▲' : '▼'}</span>
                 </button>
@@ -621,48 +629,120 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 )}
               </div>
 
+              {/* View Card button in Thumb-zone */}
               <div className="pt-2">
                 <button
-                  onClick={() => setMobileTab('preview')}
-                  className="w-full py-3 bg-[#FAC417] text-slate-900 font-bold text-xs rounded-xl shadow-sm"
+                  onClick={() => setMobileTab('card')}
+                  className="w-full py-3.5 bg-slate-950 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center space-x-2"
                 >
-                  Go to Preview Card
+                  <span>Preview Finished Card</span>
+                  <ArrowRight className="w-4 h-4 text-[#FAC417]" />
                 </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* TAB 3: DASHBOARD METRICS */}
+          {mobileTab === 'dashboard' && (
+            <div id="tab-dashboard-container" className="space-y-4 animate-fade-up text-left">
+              <h2 className="text-lg font-bold text-slate-900 font-heading">Decision Dashboard</h2>
+              <p className="text-xs text-gray-500">Real-time credibility indicators configured for your profile.</p>
+
+              <div className="grid grid-cols-2 gap-3.5 pt-2">
+                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">Trust score</span>
+                  <span className="text-3xl font-extrabold text-slate-900 font-heading">{profile.trustScore}%</span>
+                  <span className="text-[9px] text-[#FAC417] font-semibold">Gold Certified</span>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">Opportunity index</span>
+                  <span className="text-3xl font-extrabold text-[#0A3D62] font-heading">{profile.opportunityScore}/100</span>
+                  <span className="text-[9px] text-emerald-600 font-semibold">Excellent Rating</span>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">Hiring readiness</span>
+                  <span className="text-3xl font-extrabold text-slate-900 font-heading">{profile.hiringReadiness}%</span>
+                  <span className="text-[9px] text-gray-500 font-semibold">Instant Response</span>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">Referrals</span>
+                  <span className="text-3xl font-extrabold text-slate-900 font-heading">44%</span>
+                  <span className="text-[9px] text-[#0A3D62] font-semibold">High Repeat Rate</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-950 text-white rounded-2xl p-5 border border-slate-800 shadow-lg space-y-3 mt-4">
+                <h3 className="text-sm font-bold text-[#FAC417] font-heading flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-[#FAC417]" />
+                  <span>Verified Decision Asset</span>
+                </h3>
+                <p className="text-[11px] text-gray-400 leading-relaxed">
+                  Your credentials have been aggregated into R8ESTATE's secure decentralized identity index, ensuring complete verifiability on the regional trust networks.
+                </p>
               </div>
             </div>
           )}
 
-          {/* TAB 3: STANDALONE CARD PREVIEW */}
-          {mobileTab === 'preview' && (
-            <div id="tab-preview-container" className="space-y-6 animate-fade-up">
+          {/* TAB 4: SWIPEABLE TRUST CARD PREVIEW */}
+          {mobileTab === 'card' && (
+            <div id="tab-card-container" className="space-y-6 animate-fade-up">
               
               <div className="text-center">
-                <h2 className="text-lg font-bold text-slate-900 font-heading">Your Finished Trust Card</h2>
-                <p className="text-xs text-gray-500">Touch and hold to save to photos, or copy link.</p>
+                <h2 className="text-lg font-bold text-slate-900 font-heading">Swipe to Switch Themes</h2>
+                <p className="text-xs text-gray-500">Swipe left or right on the card to cycle themes.</p>
               </div>
 
-              <div className="scale-95 origin-center">
+              {/* Swipeable container */}
+              <div 
+                id="swipe-detector-area"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                className="scale-95 origin-center cursor-pointer select-none active:scale-95 duration-200"
+              >
                 <LivePreviewCard 
                   profile={profile} 
                   onOpenFullPage={onFinish}
+                  theme={cardTheme}
                 />
               </div>
 
-              <div className="space-y-2 max-w-sm mx-auto">
+              {/* Dot Indicators */}
+              <div className="flex justify-center space-x-2.5 mt-4">
+                {['gold', 'silver', 'emerald'].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setCardTheme(t)}
+                    className={`w-3 h-3 rounded-full transition-all border ${
+                      cardTheme === t 
+                        ? 'bg-[#0A3D62] border-[#0A3D62] scale-125' 
+                        : 'bg-gray-300 border-gray-300'
+                    }`}
+                    title={`Switch to ${t} theme`}
+                  />
+                ))}
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="space-y-2 max-w-sm mx-auto pt-4">
                 <button
                   id="btn-pwa-share"
                   onClick={onFinish}
-                  className="w-full py-3 bg-slate-950 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center space-x-2"
+                  className="w-full py-3.5 bg-slate-950 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center space-x-2"
                 >
                   <Share2 className="w-4 h-4 text-[#FAC417]" />
-                  <span>Share My Trust Page</span>
+                  <span>Publish My Trust Page</span>
                 </button>
                 <button
                   id="btn-pwa-back-overview"
-                  onClick={() => setMobileTab('overview')}
+                  onClick={() => setMobileTab('home')}
                   className="w-full py-3 bg-white text-gray-700 border border-gray-200 font-bold text-xs rounded-xl shadow-sm"
                 >
-                  Back to Dashboard
+                  Back to Home
                 </button>
               </div>
             </div>
@@ -673,33 +753,43 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
         {/* Sticky iOS-style PWA Bottom Tabbar */}
         <div 
           id="pwa-bottom-tabbar" 
-          className="absolute bottom-0 inset-x-0 bg-white border-t border-gray-200 flex items-center justify-around py-2.5 z-40"
+          className="absolute bottom-0 inset-x-0 bg-white border-t border-gray-200 flex items-center justify-around py-2.5 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]"
           style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 12px))' }} // respects notches and safe zones
         >
           <button
-            onClick={() => setMobileTab('overview')}
-            className={`flex flex-col items-center justify-center w-16 text-[10px] font-bold ${
-              mobileTab === 'overview' ? 'text-[#0A3D62]' : 'text-gray-400'
+            onClick={() => setMobileTab('home')}
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
+              mobileTab === 'home' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
             }`}
           >
             <Compass className="w-5 h-5 mb-0.5 pointer-events-none" />
-            <span className="pointer-events-none">Overview</span>
+            <span className="pointer-events-none">Home</span>
           </button>
 
           <button
-            onClick={() => setMobileTab('edit')}
-            className={`flex flex-col items-center justify-center w-16 text-[10px] font-bold ${
-              mobileTab === 'edit' ? 'text-[#0A3D62]' : 'text-gray-400'
+            onClick={() => setMobileTab('build')}
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
+              mobileTab === 'build' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
             }`}
           >
             <Edit className="w-5 h-5 mb-0.5 pointer-events-none" />
-            <span className="pointer-events-none">Edit Data</span>
+            <span className="pointer-events-none">Build Card</span>
           </button>
 
           <button
-            onClick={() => setMobileTab('preview')}
-            className={`flex flex-col items-center justify-center w-16 text-[10px] font-bold ${
-              mobileTab === 'preview' ? 'text-[#0A3D62]' : 'text-gray-400'
+            onClick={() => setMobileTab('dashboard')}
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
+              mobileTab === 'dashboard' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
+            }`}
+          >
+            <TrendingUp className="w-5 h-5 mb-0.5 pointer-events-none" />
+            <span className="pointer-events-none">Dashboard</span>
+          </button>
+
+          <button
+            onClick={() => setMobileTab('card')}
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
+              mobileTab === 'card' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
             }`}
           >
             <Eye className="w-5 h-5 mb-0.5 pointer-events-none" />
@@ -715,15 +805,16 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
   // DESKTOP WIZARD RENDERING
   // ==========================================
   const renderDesktopWizard = () => {
-    return (
-      <div id="onboarding-wizard-wrapper" className="w-full bg-white rounded-xl border border-gray-200 p-6 md:p-8 shadow-sm relative flex flex-col justify-between min-h-[540px] transition-all duration-300">
-        
-        {/* 1. LANDING STATE */}
-        {isLanding ? (
-          <div id="landing-state-container" className="space-y-8 py-3 animate-fade-up text-center max-w-2xl mx-auto">
+    /* 1. LANDING STATE (CLASSIC SPLIT HERO) */
+    if (isLanding) {
+      return (
+        <div id="desktop-landing-grid" className="max-w-7xl mx-auto px-6 py-8 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[580px] text-left animate-fade-up">
+          
+          {/* Left Column: Heading, CTA, Bullets */}
+          <div className="lg:col-span-7 space-y-6 py-4">
             
             {/* Header Tag / Trust Strip */}
-            <div id="landing-trust-strip" className="mx-auto flex items-center space-x-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit">
+            <div id="landing-trust-strip" className="flex items-center space-x-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit">
               <Shield className="w-4 h-4 text-[#FAC417]" />
               <span>Egypt 🇪🇬 · UAE 🇦🇪 · Saudi Arabia 🇸🇦 Universal Trust Network</span>
             </div>
@@ -747,8 +838,22 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </span>
             </div>
 
+            {/* Strategic highlights loop */}
+            <div className="space-y-2 border-l-2 border-gray-200 pl-4 py-1">
+              {[
+                { title: "Universal verification", desc: "Instantly link verified regulatory registries & contracts." },
+                { title: "Premium trust identity", desc: "Stand out in emails, listings, and messages." },
+                { title: "No placeholders", desc: "Your real statistics updated live via our sync engine." }
+              ].map((h, i) => (
+                <div key={i} className="text-xs">
+                  <span className="font-bold text-slate-800">{h.title}:</span>{" "}
+                  <span className="text-gray-500">{h.desc}</span>
+                </div>
+              ))}
+            </div>
+
             {/* Direct CTA Button */}
-            <div className="pt-2 max-w-sm mx-auto">
+            <div className="pt-2 max-w-sm">
               <button
                 id="btn-landing-cta"
                 onClick={handleStartBuilder}
@@ -762,22 +867,32 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </span>
             </div>
 
-            {/* Outcome Center Mock/Motivation */}
-            <div id="desktop-landing-outcome" className="mt-8 border-t border-gray-100 pt-8 max-w-md mx-auto">
+          </div>
+
+          {/* Right Column: Live Output Card Preview */}
+          <div className="lg:col-span-5 flex items-center justify-center">
+            <div className="w-full scale-100 hover:scale-105 duration-300">
               <div className="text-center mb-4">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-widest block">
-                  YOUR GUARANTEED CARD OUTCOME
+                  YOUR GUARANTEED OUTCOME
                 </span>
               </div>
-              <div className="scale-95 transition-transform hover:scale-100 duration-300">
-                <LivePreviewCard profile={profile} />
-              </div>
+              <LivePreviewCard profile={profile} />
             </div>
-
           </div>
-        ) : (
-          /* 2. BUILDER STATE (Standard 12 Steps) */
-          <div id="builder-state-container" className="space-y-6 flex-1 flex flex-col justify-between animate-fade-up">
+
+        </div>
+      );
+    }
+
+    /* 2. BUILDER STATE (SPLIT LAYOUT DURING 12-STEPS) */
+    return (
+      <div id="desktop-builder-grid" className="max-w-7xl mx-auto px-6 py-8 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start text-left animate-fade-up">
+        
+        {/* Left Column: Form & Onboarding Wizard Container */}
+        <div className="lg:col-span-7 bg-white rounded-xl border border-gray-200 p-6 md:p-8 shadow-sm relative flex flex-col justify-between min-h-[540px]">
+          
+          <div id="builder-state-container" className="space-y-6 flex-1 flex flex-col justify-between">
             
             {/* Top Header Progress Indicator */}
             <div id="wizard-progress-header">
@@ -1261,9 +1376,29 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
-
           </div>
-        )}
+
+        </div>
+
+        {/* Right Column: Premium live-sync card outcome */}
+        <div className="lg:col-span-5 lg:sticky lg:top-24">
+          <div className="mb-4 flex items-center justify-between text-xs">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+              Live Output preview
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full text-[10px] border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Sync Engine Active</span>
+            </span>
+          </div>
+          
+          <div className="w-full scale-100 transition-transform">
+            <LivePreviewCard
+              profile={profile}
+              onOpenFullPage={onFinish}
+            />
+          </div>
+        </div>
 
       </div>
     );

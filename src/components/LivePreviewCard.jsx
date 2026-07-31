@@ -4,7 +4,41 @@ import { QRCodeSVG } from 'qrcode.react';
 import { PROFESSIONS_DICT } from '../data/professionTemplates';
 import { getFallbackPhoto } from '../data/mockProfiles';
 
-export default function LivePreviewCard({ profile, onOpenFullPage }) {
+// Helper component to animate counting statistics
+function AnimatedCounter({ value, duration = 1200, suffix = "" }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const stringVal = String(value);
+    const num = parseInt(stringVal.replace(/[^0-9]/g, ""), 10);
+    if (isNaN(num)) {
+      setCount(value);
+      return;
+    }
+
+    let start = 0;
+    const end = num;
+    const isVolume = stringVal.includes("$") || stringVal.includes("M") || stringVal.includes("+");
+    const prefix = stringVal.startsWith("$") ? "$" : "";
+    const originalSuffix = stringVal.endsWith("+") ? "+" : (stringVal.endsWith("M+") ? "M+" : (stringVal.endsWith("M") ? "M" : suffix));
+
+    let timer = setInterval(() => {
+      start += Math.ceil(end / 40);
+      if (start >= end) {
+        clearInterval(timer);
+        setCount(prefix + end + originalSuffix);
+      } else {
+        setCount(prefix + start + originalSuffix);
+      }
+    }, 25);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return <span>{count}</span>;
+}
+
+export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold' }) {
   const activeProf = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
 
   const {
@@ -28,6 +62,42 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
     avgResponseTime = "2h"
   } = profile;
 
+  // Theme-specific CSS styling classes
+  const themeConfigs = {
+    gold: {
+      gradient: "from-[#0B1329] via-[#020617] to-[#131C35]",
+      border: "border-[#FAC417]/50",
+      accent: "#FAC417",
+      accentText: "text-[#FAC417]",
+      bgAccent: "bg-[#FAC417]/10",
+      borderAccent: "border-[#FAC417]/30",
+      glow: "animate-gold-glow",
+      fillAccent: "fill-[#FAC417]",
+    },
+    silver: {
+      gradient: "from-[#0F172A] via-[#0B0F19] to-[#1E293B]",
+      border: "border-slate-400/40",
+      accent: "#94A3B8",
+      accentText: "text-slate-300",
+      bgAccent: "bg-slate-400/10",
+      borderAccent: "border-slate-400/30",
+      glow: "animate-silver-glow",
+      fillAccent: "fill-slate-300",
+    },
+    emerald: {
+      gradient: "from-[#064E3B] via-[#022C22] to-[#0D5C46]",
+      border: "border-emerald-500/40",
+      accent: "#10B981",
+      accentText: "text-emerald-400",
+      bgAccent: "bg-emerald-500/10",
+      borderAccent: "border-emerald-500/30",
+      glow: "animate-emerald-glow",
+      fillAccent: "fill-emerald-400",
+    }
+  };
+
+  const tc = themeConfigs[theme] || themeConfigs.gold;
+
   // Debounced name & title for silky smooth live updating
   const [debouncedName, setDebouncedName] = useState(name);
   const [debouncedTitle, setDebouncedTitle] = useState(title);
@@ -49,10 +119,10 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
 
   return (
     <div id="live-preview-card-container" className="relative w-full max-w-xl mx-auto">
-      {/* Premium Dark Gold Trust Card Body */}
+      {/* Dynamic Trust Card Body */}
       <div 
         id="live-preview-card-body" 
-        className="bg-gradient-to-br from-[#0B1329] via-[#020617] to-[#131C35] rounded-2xl p-5 border border-gold-premium text-white shadow-2xl overflow-hidden transition-all duration-300 animate-gold-glow relative"
+        className={`bg-gradient-to-br ${tc.gradient} rounded-2xl p-5 border ${tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${tc.glow} relative`}
         style={{ minHeight: '390px' }}
       >
         {/* Subtle mesh background overlays */}
@@ -148,7 +218,9 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
             <div className="flex items-center justify-center">
               <Shield className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
-            <div className="text-[12px] font-bold text-white font-heading mt-1">{trustScore}%</div>
+            <div className={`text-[12px] font-bold ${tc.accentText} font-heading mt-1`}>
+              <AnimatedCounter value={trustScore} suffix="%" />
+            </div>
             <div className="text-[8px] text-gray-400 truncate leading-none">Trust Score Excellent</div>
           </div>
 
@@ -157,16 +229,18 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
             <div className="flex items-center justify-center">
               <Zap className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
-            <div className="text-[12px] font-bold text-white font-heading mt-1">{dealsClosed}+</div>
+            <div className="text-[12px] font-bold text-white font-heading mt-1">
+              <AnimatedCounter value={dealsClosed} suffix="+" />
+            </div>
             <div className="text-[8px] text-gray-400 truncate leading-none">Deals Closed This Year</div>
           </div>
 
           {/* Client Rating */}
           <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
             <div className="flex items-center justify-center">
-              <Star className="w-3.5 h-3.5 fill-[#FAC417] text-[#FAC417] shrink-0" />
+              <Star className={`w-3.5 h-3.5 ${tc.fillAccent} ${tc.accentText} shrink-0`} />
             </div>
-            <div className="text-[12px] font-bold text-[#FAC417] font-heading mt-1">4.9</div>
+            <div className={`text-[12px] font-bold ${tc.accentText} font-heading mt-1`}>4.9</div>
             <div className="text-[8px] text-gray-400 truncate leading-none">Client Rating (87 Rev.)</div>
           </div>
 
@@ -175,7 +249,9 @@ export default function LivePreviewCard({ profile, onOpenFullPage }) {
             <div className="flex items-center justify-center">
               <Users className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
-            <div className="text-[12px] font-bold text-white font-heading mt-1">{yearsExp}+</div>
+            <div className="text-[12px] font-bold text-white font-heading mt-1">
+              <AnimatedCounter value={yearsExp} suffix="+" />
+            </div>
             <div className="text-[8px] text-gray-400 truncate leading-none">Years Exp. Local Expert</div>
           </div>
 
