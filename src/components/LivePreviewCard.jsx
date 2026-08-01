@@ -324,28 +324,20 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
         </div>
 
         {/* Why Clients Choose Me Section */}
-        <div className="border-t border-white/5 pt-3 pb-2 relative z-10 text-left">
-          <div className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mb-1.5 text-center">WHY CLIENTS CHOOSE ME</div>
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-            <span className="inline-flex items-center text-[9px] text-gray-300 font-medium">
-              <ShieldCheck className="w-3 h-3 text-[#FAC417] mr-1" />
+        <div className="border-t border-white/5 pt-3 pb-2 relative z-10 text-center">
+          <div className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mb-1.5">WHY CLIENTS CHOOSE ME</div>
+          <div className="flex flex-row items-center justify-center space-x-3 text-[8px] sm:text-[9px] whitespace-nowrap overflow-hidden">
+            <span className="inline-flex items-center text-gray-300 font-medium">
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] mr-1 shrink-0" />
               Verified Identity
             </span>
-            <span className="inline-flex items-center text-[9px] text-gray-300 font-medium">
-              <ShieldCheck className="w-3 h-3 text-[#FAC417] mr-1" />
+            <span className="inline-flex items-center text-gray-300 font-medium">
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] mr-1 shrink-0" />
               Real Client Reviews
             </span>
-            <span className="inline-flex items-center text-[9px] text-gray-300 font-medium">
-              <ShieldCheck className="w-3 h-3 text-[#FAC417] mr-1" />
+            <span className="inline-flex items-center text-gray-300 font-medium">
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] mr-1 shrink-0" />
               Proven Results
-            </span>
-            <span className="inline-flex items-center text-[9px] text-gray-300 font-medium">
-              <ShieldCheck className="w-3 h-3 text-[#FAC417] mr-1" />
-              Data Protected
-            </span>
-            <span className="inline-flex items-center text-[9px] text-gray-300 font-medium">
-              <ShieldCheck className="w-3 h-3 text-[#FAC417] mr-1" />
-              Trusted Professional
             </span>
           </div>
         </div>
