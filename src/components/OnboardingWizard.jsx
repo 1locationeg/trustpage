@@ -59,14 +59,42 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
   const activeProfession = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
 
-  // Staggered benefits highlight loop (pauses permanently when user starts typing)
+  // Vertical Word-Rotator States (7 states)
+  const ROTATOR_STATES = [
+    { text: "Build Authority", presetId: "build-authority", theme: "silver" },
+    { text: "Proven Experience", presetId: "proven-experience", theme: "gold" },
+    { text: "Client Confidence", presetId: "client-confidence", theme: "emerald" },
+    { text: "Stronger Partnerships", presetId: "stronger-partnerships", theme: "silver" },
+    { text: "Stand Out", presetId: "stand-out", theme: "emerald" },
+    { text: "More Opportunities", presetId: "more-opportunities", theme: "gold" },
+    { text: "More Clients", presetId: "client-confidence", theme: "gold", isClimax: true }
+  ];
+
+  const [activeStateIndex, setActiveStateIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Autoplay cycle effect: holds for 2.6s (and let's trigger transition after 2.8s)
   useEffect(() => {
-    if (hasUserTyped || !isLanding) return;
-    const interval = setInterval(() => {
-      setHighlightedIndex((prev) => (prev + 1) % 6);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [hasUserTyped, isLanding]);
+    if (isPaused || !isLanding) return;
+
+    const timer = setTimeout(() => {
+      setActiveStateIndex((prev) => (prev + 1) % 7);
+    }, 2800); // 2600ms hold + 200ms transition buffer
+
+    return () => clearTimeout(timer);
+  }, [activeStateIndex, isPaused, isLanding]);
+
+  // Sync profile preset when activeStateIndex changes (only in landing state)
+  useEffect(() => {
+    if (!isLanding) return;
+    const currentState = ROTATOR_STATES[activeStateIndex];
+    if (currentState) {
+      const preset = MOCK_PRESETS.find(p => p.id === currentState.presetId);
+      if (preset) {
+        setProfile(preset.data);
+      }
+    }
+  }, [activeStateIndex, isLanding]);
 
   const updateProfile = (fields) => {
     setProfile((prev) => {
@@ -290,15 +318,61 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
           {/* Hero Section (Flex Container) */}
           <div id="mobile-landing-hero" className="flex-1 flex flex-col justify-around py-1 min-h-0">
-            {/* Title / Header block */}
-            <div className="text-center space-y-1">
+            {/* Title / Header block with Rotator */}
+            <div 
+              className="text-center space-y-2 py-2"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
               <span className="text-[9px] font-extrabold tracking-widest text-[#0A3D62] uppercase block">
                 Real Estate Professional Looking for
               </span>
-              <h1 className="text-3xl font-extrabold tracking-tight text-gold-gradient font-serif-premium leading-none">
-                MORE CLIENTS
-              </h1>
-              <p className="text-xs font-bold text-gray-800 leading-none">
+              
+              {/* Word-rotator container */}
+              <div className="overflow-hidden h-[44px] relative flex items-center justify-center">
+                <span 
+                  key={activeStateIndex}
+                  className={`absolute text-3xl font-extrabold tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
+                    activeStateIndex === 6 ? 'scale-105 transition-all duration-300' : ''
+                  }`}
+                  style={{
+                    animation: activeStateIndex === 6 ? 'slideUpIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, pulse 2s infinite ease-in-out' : undefined
+                  }}
+                >
+                  {ROTATOR_STATES[activeStateIndex].text}
+                </span>
+              </div>
+
+              {/* Progress bar container */}
+              <div className="w-full max-w-[200px] h-[3px] bg-gray-100 rounded-full overflow-hidden mx-auto mt-1.5">
+                <div 
+                  key={activeStateIndex}
+                  className={`h-full bg-[#0A3D62] rounded-full animate-progress-bar ${
+                    isPaused ? 'animate-progress-bar-paused' : ''
+                  }`}
+                />
+              </div>
+
+              {/* Navigation dots */}
+              <div className="flex items-center space-x-1.5 justify-center mt-2">
+                {ROTATOR_STATES.map((state, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setActiveStateIndex(idx);
+                      setIsPaused(true);
+                    }}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      idx === activeStateIndex
+                        ? 'bg-[#0A3D62] w-3'
+                        : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    title={state.text}
+                  />
+                ))}
+              </div>
+
+              <p className="text-xs font-bold text-gray-800 leading-none pt-2">
                 Get them all now 👇
               </p>
             </div>
@@ -331,7 +405,11 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </div>
               <div className="w-full flex justify-center h-[260px] overflow-hidden">
                 <div className="w-full scale-[0.80] sm:scale-[0.85] origin-top">
-                  <LivePreviewCard profile={profile} />
+                  <LivePreviewCard 
+                    profile={profile} 
+                    activeStateIndex={activeStateIndex}
+                    theme={ROTATOR_STATES[activeStateIndex]?.theme || 'gold'}
+                  />
                 </div>
               </div>
             </div>
@@ -341,7 +419,11 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <button
                 id="btn-mobile-start-cta"
                 onClick={handleStartBuilder}
-                className="w-full py-3 bg-slate-950 text-white font-bold text-xs rounded-full hover:bg-slate-900 transition-all shadow-md flex items-center justify-center space-x-2"
+                className={`w-full py-3 font-bold text-xs rounded-full transition-all shadow-md flex items-center justify-center space-x-2 ${
+                  activeStateIndex === 6
+                    ? 'bg-[#FF1744] text-white hover:bg-[#D50000] ring-4 ring-[#FF1744]/30 scale-105 animate-pulse'
+                    : 'bg-slate-950 text-white hover:bg-slate-900'
+                }`}
               >
                 <span>Get My Trust Card</span>
                 <ArrowRight className="w-4 h-4 text-[#FAC417]" />
@@ -844,9 +926,13 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     if (isLanding) {
       return (
         <div id="desktop-landing-container" className="min-h-[calc(100vh-100px)] flex flex-col justify-center py-12 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-16">
-          
           {/* Split Hero Grid */}
-          <div id="desktop-landing-grid" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
+          <div 
+            id="desktop-landing-grid" 
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full"
+          >
             
             {/* Left Column: Heading, CTA, Bullets */}
             <div className="lg:col-span-7 space-y-6 py-4">
@@ -860,17 +946,57 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <span>Real Estate Trust System <strong className="font-bold">(REITS)</strong> ™️</span>
               </div>
 
-              {/* Premium Gold Typography Hero Section */}
+              {/* Premium Gold Typography Hero Section with Rotator */}
               <div className="space-y-4">
                 <span className="text-xs font-extrabold tracking-widest text-slate-500 uppercase block">
                   Real Estate Professional Looking for
                 </span>
                 
-                <h1 className="text-5xl md:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none">
-                  MORE CLIENTS
-                </h1>
-                
-                <p className="text-2xl font-bold text-slate-900 leading-tight">
+                {/* Word-rotator container */}
+                <div className="overflow-hidden h-[60px] md:h-[80px] relative flex items-center justify-start">
+                  <span 
+                    key={activeStateIndex}
+                    className={`absolute text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
+                      activeStateIndex === 6 ? 'scale-105 transition-all duration-300' : ''
+                    }`}
+                    style={{
+                      animation: activeStateIndex === 6 ? 'slideUpIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, pulse 2s infinite ease-in-out' : undefined
+                    }}
+                  >
+                    {ROTATOR_STATES[activeStateIndex].text}
+                  </span>
+                </div>
+
+                {/* Progress bar container */}
+                <div className="w-full max-w-[280px] h-[3px] bg-gray-150 rounded-full overflow-hidden mt-3">
+                  <div 
+                    key={activeStateIndex}
+                    className={`h-full bg-[#0A3D62] rounded-full animate-progress-bar ${
+                      isPaused ? 'animate-progress-bar-paused' : ''
+                    }`}
+                  />
+                </div>
+
+                {/* Navigation dots */}
+                <div className="flex items-center space-x-1.5 justify-start mt-3">
+                  {ROTATOR_STATES.map((state, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setActiveStateIndex(idx);
+                        setIsPaused(true);
+                      }}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        idx === activeStateIndex
+                          ? 'bg-[#0A3D62] w-4'
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                      title={state.text}
+                    />
+                  ))}
+                </div>
+
+                <p className="text-2xl font-bold text-slate-900 leading-tight pt-2">
                   Get them all now 👇
                 </p>
                 
@@ -898,7 +1024,11 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <button
                   id="btn-landing-cta"
                   onClick={handleStartBuilder}
-                  className="w-full py-4 bg-slate-950 text-white font-bold text-base rounded-full hover:bg-slate-900 transition-all shadow-md flex items-center justify-center space-x-2 font-heading"
+                  className={`w-full py-4 font-bold text-base rounded-full transition-all shadow-md flex items-center justify-center space-x-2 font-heading ${
+                    activeStateIndex === 6
+                      ? 'bg-[#FF1744] text-white hover:bg-[#D50000] ring-4 ring-[#FF1744]/30 scale-105 animate-pulse'
+                      : 'bg-slate-950 text-white hover:bg-slate-900'
+                  }`}
                 >
                   <span>Get My Trust Card</span>
                   <ArrowRight className="w-4 h-4 text-[#FAC417]" />
@@ -937,10 +1067,14 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     </div>
                   </div>
                 </div>
-                <LivePreviewCard profile={profile} />
+
+                <LivePreviewCard 
+                  profile={profile} 
+                  activeStateIndex={activeStateIndex}
+                  theme={isLanding ? (ROTATOR_STATES[activeStateIndex]?.theme || 'gold') : cardTheme}
+                />
               </div>
             </div>
-
           </div>
 
           {/* Stat Strip */}

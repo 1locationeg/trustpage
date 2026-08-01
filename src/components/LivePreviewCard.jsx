@@ -38,8 +38,10 @@ function AnimatedCounter({ value, duration = 1200, suffix = "" }) {
   return <span>{count}</span>;
 }
 
-export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold' }) {
+export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold', activeStateIndex = -1 }) {
   const activeProf = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
+  const kpi0 = activeProf.kpis?.[0];
+  const kpi2 = activeProf.kpis?.[2];
 
   const {
     name = "Your Name",
@@ -98,6 +100,42 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
   const tc = themeConfigs[theme] || themeConfigs.gold;
 
+  // Dynamic stat highlights mapping and styles
+  const getStatHighlightStyle = (index) => {
+    // If climax state (6), all stats glow
+    const isHighlighted = activeStateIndex === 6 || (
+      (activeStateIndex === 0 && index === 1) || // Build Authority -> Deals Advised
+      (activeStateIndex === 1 && index === 1) || // Proven Experience -> Spaces Styled
+      (activeStateIndex === 2 && index === 0) || // Client Confidence -> Trust Score
+      (activeStateIndex === 3 && index === 1) || // Stronger Partnerships -> Projects Designed
+      (activeStateIndex === 4 && index === 1) || // Stand Out -> Units Managed
+      (activeStateIndex === 5 && index === 1)    // More Opportunities -> Master Projects
+    );
+    
+    if (isHighlighted) {
+      return {
+        borderColor: tc.accent,
+        boxShadow: `0 0 15px ${tc.accent}40`,
+        transform: 'scale(1.05)',
+        transition: 'all 0.3s ease',
+        backgroundColor: 'rgba(10, 17, 40, 0.85)'
+      };
+    }
+    return {
+      borderColor: 'rgba(255, 255, 255, 0.05)',
+      transition: 'all 0.3s ease',
+      backgroundColor: 'rgba(10, 17, 40, 0.6)'
+    };
+  };
+
+  const cardStyle = activeStateIndex === 6 ? {
+    borderColor: '#FF1744', // Red border for climax payoff
+    boxShadow: `0 0 25px rgba(255, 23, 68, 0.45), inset 0 0 12px rgba(255, 23, 68, 0.25)`,
+    transition: 'all 0.4s ease'
+  } : {
+    transition: 'all 0.4s ease'
+  };
+
   // Debounced name & title for silky smooth live updating
   const [debouncedName, setDebouncedName] = useState(name);
   const [debouncedTitle, setDebouncedTitle] = useState(title);
@@ -123,6 +161,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
       <div 
         id="live-preview-card-body" 
         className={`bg-gradient-to-br ${tc.gradient} rounded-2xl p-4 sm:p-5 border ${tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${tc.glow} relative min-h-[325px] sm:min-h-[390px]`}
+        style={cardStyle}
       >
         {/* Subtle mesh background overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(250,196,23,0.06),transparent_50%)] pointer-events-none" />
@@ -213,7 +252,10 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center mb-4 relative z-10">
           
           {/* Trust Score */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
+          <div 
+            className="rounded-lg p-2 border flex flex-col justify-between min-h-[58px]"
+            style={getStatHighlightStyle(0)}
+          >
             <div className="flex items-center justify-center">
               <Shield className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
@@ -224,18 +266,26 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           </div>
 
           {/* Deals Closed */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
+          <div 
+            className="rounded-lg p-2 border flex flex-col justify-between min-h-[58px]"
+            style={getStatHighlightStyle(1)}
+          >
             <div className="flex items-center justify-center">
               <Zap className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
             <div className="text-[12px] font-bold text-white font-heading mt-1">
-              <AnimatedCounter value={dealsClosed} suffix="+" />
+              <AnimatedCounter value={dealsClosed} suffix={kpi0?.unit || "+"} />
             </div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">Deals Closed This Year</div>
+            <div className="text-[8px] text-gray-400 truncate leading-none">
+              {kpi0 ? kpi0.label : "Deals Closed"}
+            </div>
           </div>
 
           {/* Client Rating */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
+          <div 
+            className="rounded-lg p-2 border flex flex-col justify-between min-h-[58px]"
+            style={getStatHighlightStyle(2)}
+          >
             <div className="flex items-center justify-center">
               <Star className={`w-3.5 h-3.5 ${tc.fillAccent} ${tc.accentText} shrink-0`} />
             </div>
@@ -244,18 +294,26 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           </div>
 
           {/* Experience (Hidden on mobile) */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex">
+          <div 
+            className="rounded-lg p-2 border flex-col justify-between min-h-[58px] hidden sm:flex"
+            style={getStatHighlightStyle(3)}
+          >
             <div className="flex items-center justify-center">
               <Users className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
             <div className="text-[12px] font-bold text-white font-heading mt-1">
-              <AnimatedCounter value={yearsExp} suffix="+" />
+              <AnimatedCounter value={yearsExp} suffix={kpi2?.unit || "+"} />
             </div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">Years Exp. Local Expert</div>
+            <div className="text-[8px] text-gray-400 truncate leading-none">
+              {kpi2 ? kpi2.label : "Years Exp."}
+            </div>
           </div>
 
           {/* Response Time (Hidden on mobile) */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex">
+          <div 
+            className="rounded-lg p-2 border flex-col justify-between min-h-[58px] hidden sm:flex"
+            style={getStatHighlightStyle(4)}
+          >
             <div className="flex items-center justify-center">
               <Clock className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
