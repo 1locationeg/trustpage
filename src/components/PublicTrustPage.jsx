@@ -72,7 +72,7 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
             </div>
             <div className="flex flex-col text-left">
               <span className="text-[19px] sm:text-[20px] font-extrabold text-slate-900 leading-none tracking-tight">
-                <span className="text-[#FF1744]">R8</span>ESTATE
+                <span className="text-[#FF1744]">R8</span> ESTATE
               </span>
               <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.18em] leading-none mt-1">
                 Decision Intelligence

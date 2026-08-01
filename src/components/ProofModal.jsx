@@ -19,7 +19,7 @@ export default function ProofModal({ proofItem, onClose }) {
         {/* Modal Header */}
         <div className="flex items-center space-x-1.5 text-[#0A3D62] text-xs font-semibold uppercase tracking-wider mb-2">
           <ShieldCheck className="w-4 h-4 text-[#0A3D62]" />
-          <span>R8ESTATE VERIFIED AUDIT PROOF</span>
+          <span>R8 ESTATE VERIFIED AUDIT PROOF</span>
         </div>
 
         <h3 className="text-xl font-bold text-gray-900 font-heading mb-3">

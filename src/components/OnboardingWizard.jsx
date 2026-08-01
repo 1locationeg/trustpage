@@ -364,7 +364,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
         <div id="pwa-header" className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center space-x-2">
             <Shield className="w-5 h-5 text-[#0A3D62]" />
-            <span className="font-extrabold text-sm text-[#0A3D62]">R8ESTATE PWA</span>
+            <span className="font-extrabold text-sm text-[#0A3D62]">R8 ESTATE PWA</span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -716,7 +716,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   <span>Verified Decision Asset</span>
                 </h3>
                 <p className="text-[11px] text-gray-400 leading-relaxed">
-                  Your credentials have been aggregated into R8ESTATE's secure decentralized identity index, ensuring complete verifiability on the regional trust networks.
+                  Your credentials have been aggregated into R8 ESTATE's secure decentralized identity index, ensuring complete verifiability on the regional trust networks.
                 </p>
               </div>
             </div>
@@ -875,7 +875,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </p>
                 
                 <span className="text-sm text-slate-500 font-semibold block">
-                  ⭐ Powered by R8ESTATE
+                  ⭐ Powered by R8 ESTATE
                 </span>
               </div>
 
@@ -1080,7 +1080,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     What best describes your profession?
                   </h2>
                   <p className="text-sm text-gray-600">
-                    R8ESTATE automatically configures relevant KPIs, proof records, and verification criteria for your field.
+                    R8 ESTATE automatically configures relevant KPIs, proof records, and verification criteria for your field.
                   </p>
                 </div>
 
@@ -1441,7 +1441,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     STEP 12 • CARD GENERATED
                   </span>
                   <h2 className="text-3xl font-extrabold text-gray-900 font-heading mt-1">
-                    Your R8ESTATE Trust Card is ready!
+                    Your R8 ESTATE Trust Card is ready!
                   </h2>
                   <p className="text-sm text-gray-600">
                     Click below to generate and publish your official decision intelligence profile page.
