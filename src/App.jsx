@@ -61,10 +61,10 @@ export default function App() {
   }
 
   return (
-    <div id="app-root" className="min-h-[100dvh] bg-[#FAFAF9] text-[#111827] font-sans antialiased selection:bg-[#0A3D62]/10 selection:text-[#0A3D62] flex flex-col justify-between relative pb-16">
+    <div id="app-root" className="min-h-[100dvh] bg-[#FAFAF9] text-[#111827] font-sans antialiased selection:bg-[#0A3D62]/10 selection:text-[#0A3D62] flex flex-col justify-between relative md:pb-16">
       
       {/* 1. Global Header Bar (Clean production header, logo linked to home) */}
-      <header id="global-header" className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 px-6 py-3.5 shadow-sm">
+      <header id="global-header" className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 px-6 py-3.5 shadow-sm hidden md:block">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           
           {/* Logo Brand area */}

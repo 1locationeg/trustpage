@@ -3,10 +3,11 @@ import {
   ArrowRight, ArrowLeft, Check, Shield, ShieldCheck, Award, MapPin, 
   Building2, UserCheck, Phone, Mail, FileText, Star, 
   TrendingUp, QrCode, Share2, Download, CheckCircle2, RefreshCw, Plus, Minus,
-  Briefcase, Target, Layers, Compass, CheckSquare, Zap, Lock, Sparkles, AlertCircle, Edit, Eye, ShieldAlert
+  Briefcase, Target, Layers, Compass, CheckSquare, Zap, Lock, Sparkles, AlertCircle, Edit, Eye, ShieldAlert,
+  ChevronDown
 } from 'lucide-react';
 import { PROFESSIONS_DICT, USER_GOALS } from '../data/professionTemplates';
-import { getFallbackPhoto } from '../data/mockProfiles';
+import { getFallbackPhoto, MOCK_PRESETS } from '../data/mockProfiles';
 import LivePreviewCard from './LivePreviewCard';
 
 export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode }) {
@@ -277,45 +278,88 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
     if (isLanding) {
       return (
-        <div id="mobile-landing-pwa" className="flex-1 flex flex-col justify-between bg-white text-gray-900 overflow-y-auto px-5 py-6">
+        <div id="mobile-landing-pwa" className="flex-1 flex flex-col justify-between bg-white text-gray-900 overflow-hidden px-4 py-4 min-h-0">
           {/* Header Strip */}
-          <div id="mobile-landing-strip" className="flex items-center justify-center space-x-2 text-[10px] font-semibold text-gray-500 bg-gray-50 p-2 rounded-lg border border-gray-200 w-full mb-4">
-            <Shield className="w-3.5 h-3.5 text-[#0A3D62]" />
-            <span>Egypt · UAE · Saudi Arabia Verified</span>
+          <div id="mobile-landing-strip" className="flex items-center justify-center space-x-2 text-[9px] font-semibold text-gray-500 bg-gray-50 p-1.5 rounded-lg border border-gray-200 w-full mb-2 shrink-0">
+            <Shield 
+              className="w-3.5 h-3.5 text-[#0A3D62] fill-[#0A3D62]" 
+              strokeWidth={3} 
+            />
+            <span>Real Estate Trust System <strong className="font-bold">(REITS)</strong> ™️</span>
           </div>
 
-          {/* Hero Section */}
-          <div id="mobile-landing-hero" className="text-center space-y-3 my-auto">
-            <span className="text-[10px] font-extrabold tracking-widest text-[#0A3D62] uppercase block">
-              FOR REAL ESTATE PROFESSIONALS
-            </span>
-            
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gold-gradient font-serif-premium leading-none">
-              MORE CLIENTS
-            </h1>
-            
-            <p className="text-lg font-bold text-gray-800 leading-tight">
-              Get them all now 👇
-            </p>
-            
-            <span className="text-xs text-gray-500 font-medium block">
-              ⭐ Powered by R8ESTATE
-            </span>
+          {/* Hero Section (Flex Container) */}
+          <div id="mobile-landing-hero" className="flex-1 flex flex-col justify-around py-1 min-h-0">
+            {/* Title / Header block */}
+            <div className="text-center space-y-1">
+              <span className="text-[9px] font-extrabold tracking-widest text-[#0A3D62] uppercase block">
+                Real Estate Professional Looking for
+              </span>
+              <h1 className="text-3xl font-extrabold tracking-tight text-gold-gradient font-serif-premium leading-none">
+                MORE CLIENTS
+              </h1>
+              <p className="text-xs font-bold text-gray-800 leading-none">
+                Get them all now 👇
+              </p>
+            </div>
 
-            {/* CTA Button */}
-            <div className="pt-4 pb-2">
+            {/* Outcome Card Motivation (Positioned Above the CTA) */}
+            <div id="mobile-landing-outcome" className="w-full max-w-sm mx-auto overflow-hidden my-1 flex flex-col items-center">
+              {/* Preset Selector Dropdown */}
+              <div id="mobile-landing-preset-selector" className="mb-2 flex flex-col items-center w-full max-w-[240px]">
+                <label htmlFor="mobile-preset-select" className="text-[8px] font-extrabold tracking-widest text-[#0A3D62] uppercase mb-1 block text-center">
+                  Choose Preset Outcome
+                </label>
+                <div className="relative w-full">
+                  <select
+                    id="mobile-preset-select"
+                    value={MOCK_PRESETS.find(p => p.data.selectedGoal === profile.selectedGoal)?.id || ''}
+                    onChange={(e) => {
+                      const found = MOCK_PRESETS.find(p => p.id === e.target.value);
+                      if (found) setProfile(found.data);
+                    }}
+                    className="w-full bg-white border border-gray-200 text-gray-700 py-1.5 px-3 pr-8 rounded-full text-[10px] font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10 focus:border-[#0A3D62] cursor-pointer appearance-none text-center"
+                  >
+                    <option value="" disabled>-- Select Preset --</option>
+                    {MOCK_PRESETS.map((preset) => (
+                      <option key={preset.id} value={preset.id}>
+                        {preset.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                    <ChevronDown className="w-3 h-3" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mb-1">
+                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest block">
+                  YOUR GUARANTEED OUTCOME
+                </span>
+              </div>
+              <div className="w-full flex justify-center h-[260px] overflow-hidden">
+                <div className="w-full scale-[0.80] sm:scale-[0.85] origin-top">
+                  <LivePreviewCard profile={profile} />
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Button Block (Bottom) */}
+            <div className="space-y-1.5 shrink-0 text-center px-2">
               <button
                 id="btn-mobile-start-cta"
                 onClick={handleStartBuilder}
-                className="w-full py-3.5 bg-slate-950 text-white font-bold text-sm rounded-full hover:bg-slate-900 transition-all shadow-md flex items-center justify-center space-x-2"
+                className="w-full py-3 bg-slate-950 text-white font-bold text-xs rounded-full hover:bg-slate-900 transition-all shadow-md flex items-center justify-center space-x-2"
               >
                 <span>Get My Trust Card</span>
                 <ArrowRight className="w-4 h-4 text-[#FAC417]" />
               </button>
-              <span className="text-[10px] text-gray-400 block mt-2 text-center">
+              <span className="text-[9px] text-gray-400 block mt-1 text-center">
                 90 seconds - Instant preview - No signup
               </span>
             </div>
+
           </div>
         </div>
       );
@@ -805,79 +849,154 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
   // DESKTOP WIZARD RENDERING
   // ==========================================
   const renderDesktopWizard = () => {
-    /* 1. LANDING STATE (CLASSIC SPLIT HERO) */
+    /* 1. LANDING STATE (CLASSIC SPLIT HERO + STAT STRIP + HOW IT WORKS) */
     if (isLanding) {
       return (
-        <div id="desktop-landing-grid" className="max-w-7xl mx-auto px-6 py-8 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[580px] text-left animate-fade-up">
+        <div id="desktop-landing-container" className="min-h-[calc(100vh-100px)] flex flex-col justify-center py-12 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-16">
           
-          {/* Left Column: Heading, CTA, Bullets */}
-          <div className="lg:col-span-7 space-y-6 py-4">
+          {/* Split Hero Grid */}
+          <div id="desktop-landing-grid" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
             
-            {/* Header Tag / Trust Strip */}
-            <div id="landing-trust-strip" className="flex items-center space-x-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit">
-              <Shield className="w-4 h-4 text-[#FAC417]" />
-              <span>Egypt 🇪🇬 · UAE 🇦🇪 · Saudi Arabia 🇸🇦 Universal Trust Network</span>
+            {/* Left Column: Heading, CTA, Bullets */}
+            <div className="lg:col-span-7 space-y-6 py-4">
+              
+              {/* Header Tag / Trust Strip */}
+              <div id="landing-trust-strip" className="flex items-center space-x-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit">
+                <Shield 
+                  className="w-4 h-4 text-[#0A3D62] fill-[#0A3D62]" 
+                  strokeWidth={3} 
+                />
+                <span>Real Estate Trust System <strong className="font-bold">(REITS)</strong> ™️</span>
+              </div>
+
+              {/* Premium Gold Typography Hero Section */}
+              <div className="space-y-4">
+                <span className="text-xs font-extrabold tracking-widest text-slate-500 uppercase block">
+                  Real Estate Professional Looking for
+                </span>
+                
+                <h1 className="text-5xl md:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none">
+                  MORE CLIENTS
+                </h1>
+                
+                <p className="text-2xl font-bold text-slate-900 leading-tight">
+                  Get them all now 👇
+                </p>
+                
+                <span className="text-sm text-slate-500 font-semibold block">
+                  ⭐ Powered by R8ESTATE
+                </span>
+              </div>
+
+              {/* Strategic highlights loop */}
+              <div className="space-y-2 border-l-2 border-gray-200 pl-4 py-1">
+                {[
+                  { title: "Universal verification", desc: "Instantly link verified regulatory registries & contracts." },
+                  { title: "Premium trust identity", desc: "Stand out in emails, listings, and messages." },
+                  { title: "No placeholders", desc: "Your real statistics updated live via our sync engine." }
+                ].map((h, i) => (
+                  <div key={i} className="text-xs">
+                    <span className="font-bold text-slate-800">{h.title}:</span>{" "}
+                    <span className="text-gray-500">{h.desc}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Direct CTA Button */}
+              <div className="pt-2 max-w-sm">
+                <button
+                  id="btn-landing-cta"
+                  onClick={handleStartBuilder}
+                  className="w-full py-4 bg-slate-950 text-white font-bold text-base rounded-full hover:bg-slate-900 transition-all shadow-md flex items-center justify-center space-x-2 font-heading"
+                >
+                  <span>Get My Trust Card</span>
+                  <ArrowRight className="w-4 h-4 text-[#FAC417]" />
+                </button>
+                <span className="text-xs text-slate-400 block mt-2">
+                  90 seconds - Instant preview - No signup
+                </span>
+              </div>
+
             </div>
 
-            {/* Premium Gold Typography Hero Section */}
-            <div className="space-y-4">
-              <span className="text-xs font-extrabold tracking-widest text-slate-500 uppercase block">
-                FOR REAL ESTATE PROFESSIONALS
-              </span>
-              
-              <h1 className="text-5xl md:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none">
-                MORE CLIENTS
-              </h1>
-              
-              <p className="text-2xl font-bold text-slate-900 leading-tight">
-                Get them all now 👇
-              </p>
-              
-              <span className="text-sm text-slate-500 font-semibold block">
-                ⭐ Powered by R8ESTATE
-              </span>
-            </div>
-
-            {/* Strategic highlights loop */}
-            <div className="space-y-2 border-l-2 border-gray-200 pl-4 py-1">
-              {[
-                { title: "Universal verification", desc: "Instantly link verified regulatory registries & contracts." },
-                { title: "Premium trust identity", desc: "Stand out in emails, listings, and messages." },
-                { title: "No placeholders", desc: "Your real statistics updated live via our sync engine." }
-              ].map((h, i) => (
-                <div key={i} className="text-xs">
-                  <span className="font-bold text-slate-800">{h.title}:</span>{" "}
-                  <span className="text-gray-500">{h.desc}</span>
+            {/* Right Column: Live Output Card Preview (Scaled 15% Up) */}
+            <div className="lg:col-span-5 flex items-center justify-center py-6">
+              <div className="w-full scale-110 lg:scale-[1.15] origin-center hover:scale-[1.20] duration-300 flex flex-col items-center">
+                {/* Preset Selector Dropdown */}
+                <div id="landing-preset-selector" className="mb-4 flex flex-col items-center w-full max-w-[280px]">
+                  <label htmlFor="preset-select" className="text-[10px] font-extrabold tracking-widest text-[#0A3D62] uppercase mb-1 block text-center">
+                    Choose Preset Outcome
+                  </label>
+                  <div className="relative w-full">
+                    <select
+                      id="preset-select"
+                      value={MOCK_PRESETS.find(p => p.data.selectedGoal === profile.selectedGoal)?.id || ''}
+                      onChange={(e) => {
+                        const found = MOCK_PRESETS.find(p => p.id === e.target.value);
+                        if (found) setProfile(found.data);
+                      }}
+                      className="w-full bg-white border border-gray-200 text-gray-700 py-2 px-4 pr-10 rounded-full text-xs font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10 focus:border-[#0A3D62] cursor-pointer appearance-none text-center"
+                    >
+                      <option value="" disabled>-- Select Preset --</option>
+                      {MOCK_PRESETS.map((preset) => (
+                        <option key={preset.id} value={preset.id}>
+                          {preset.label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
 
-            {/* Direct CTA Button */}
-            <div className="pt-2 max-w-sm">
-              <button
-                id="btn-landing-cta"
-                onClick={handleStartBuilder}
-                className="w-full py-4 bg-slate-950 text-white font-bold text-base rounded-full hover:bg-slate-900 transition-all shadow-md flex items-center justify-center space-x-2"
-              >
-                <span>Get My Trust Card</span>
-                <ArrowRight className="w-4 h-4 text-[#FAC417]" />
-              </button>
-              <span className="text-xs text-slate-400 block mt-2">
-                90 seconds - Instant preview - No signup
-              </span>
+                <div className="text-center mb-4">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest block">
+                    YOUR GUARANTEED OUTCOME
+                  </span>
+                </div>
+                <LivePreviewCard profile={profile} />
+              </div>
             </div>
 
           </div>
 
-          {/* Right Column: Live Output Card Preview */}
-          <div className="lg:col-span-5 flex items-center justify-center">
-            <div className="w-full scale-100 hover:scale-105 duration-300">
-              <div className="text-center mb-4">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest block">
-                  YOUR GUARANTEED OUTCOME
-                </span>
+          {/* Stat Strip */}
+          <div id="desktop-landing-stats" className="border-t border-b border-gray-200/85 py-8 grid grid-cols-4 gap-4 text-center max-w-5xl mx-auto w-full">
+            {[
+              { value: "100+", label: "Verified professionals" },
+              { value: "3", label: "Countries live" },
+              { value: "94%", label: "Avg trust score" },
+              { value: "<12m", label: "Avg response time" }
+            ].map((stat, idx) => (
+              <div key={idx} className="flex flex-col items-center">
+                <span className="text-2xl font-extrabold text-slate-900 font-heading">{stat.value}</span>
+                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">{stat.label}</span>
               </div>
-              <LivePreviewCard profile={profile} />
+            ))}
+          </div>
+
+          {/* How It Works Section */}
+          <div id="desktop-landing-how" className="py-6 max-w-5xl mx-auto w-full space-y-8">
+            <div className="text-center">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-widest block">STEPS</span>
+              <h2 className="text-2xl font-extrabold text-slate-900 font-heading mt-1">HOW IT WORKS</h2>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-6">
+              {[
+                { step: "1", title: "Verify", desc: "Link your verified land registries, professional license credentials, and corporate affiliations to authorize your public trust index." },
+                { step: "2", title: "Generate", desc: "Our adaptive engine formats your transaction volumes, ratings, and experience into a high-fidelity, verified R8 trust card." },
+                { step: "3", title: "Share", desc: "Embed your verified trust identity across property listings, emails, WhatsApp messages, or print QR codes." }
+              ].map((card, idx) => (
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-3 hover:shadow-md transition-all duration-300">
+                  <div className="w-8 h-8 rounded-full bg-[#0A3D62]/10 flex items-center justify-center text-xs font-extrabold text-[#0A3D62] font-heading">
+                    {card.step}
+                  </div>
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide font-heading">{card.title}</h3>
+                  <p className="text-[11px] text-gray-500 leading-relaxed">{card.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 

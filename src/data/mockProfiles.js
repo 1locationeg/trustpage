@@ -126,59 +126,9 @@ export const DEFAULT_PROFILE = {
 };
 
 export const MOCK_PRESETS = [
-  { 
-    id: "ahmed-hassan", 
-    label: "Ahmed Hassan — Sales & Off-Plan Specialist (Cairo)", 
-    data: DEFAULT_PROFILE 
-  },
   {
-    id: "elena-rostova",
-    label: "Elena Rostova — Principal Architect & Urban Planner (Dubai)",
-    data: {
-      ...DEFAULT_PROFILE,
-      selectedGoal: "win_partnerships",
-      professionId: "architect",
-      name: "Elena Rostova",
-      title: "Principal Architect & Sustainable Masterplanner",
-      company: "Rostova & Associates Studio",
-      photo: "/profile_woman_elena.png",
-      locations: ["Dubai", "Riyadh", "London"],
-      specializations: ["Sustainable Masterplanning", "Luxury Residential Design", "Commercial Towers", "RIBA Chartered"],
-      dealsClosed: 48,
-      transactionVolume: "14.2M",
-      yearsExp: 14,
-      happyClients: 98,
-      trustScore: 98,
-      buyerConfidenceScore: 98,
-      confidenceLevel: "Legendary",
-      verificationLevel: "Elite",
-      opportunityScore: 97,
-      hiringReadiness: 94,
-      authorityStatus: "Global Design Authority",
-      promise: "Designing net-zero, high-yield iconic architectural assets that appreciate across generations.",
-      methodology: "Biophilic Design Principles + BREEAM Platinum Structural Certification + Cost-Optima Tech.",
-      proofItems: [
-        {
-          id: "arch-1",
-          title: "Palm Jumeirah Ultra-Luxury Waterfront Villa Masterplan",
-          type: "Verified Blueprint & Construction",
-          date: "December 2024",
-          source: "Dubai Municipality & Civil Engineering Audit",
-          confidence: 100,
-          evidenceLevel: "Tier 1 — Official Building Permit & Handover",
-          details: "22,000 sq ft private estate featuring solar kinetic facade and subterranean wellness spa.",
-          verifiedBy: "Dubai Development Authority & Client Signoff"
-        }
-      ],
-      verifications: [
-        { title: "RIBA & AIA Architect Charter", status: "Verified", date: "Jan 2022", source: "Royal Institute of British Architects", confidence: 100 },
-        { title: "Dubai Municipality Unlimited License", status: "Verified", date: "Mar 2023", source: "DCA Engineering Council", confidence: 100 }
-      ]
-    }
-  },
-  {
-    id: "marcus-vance",
-    label: "Marcus Vance — Real Estate & Property Lawyer (London & UAE)",
+    id: "build-authority",
+    label: "Build Authority",
     data: {
       ...DEFAULT_PROFILE,
       selectedGoal: "build_reputation",
@@ -213,6 +163,175 @@ export const MOCK_PRESETS = [
           evidenceLevel: "Tier 1 — Recorded Land Registry Deed",
           details: "Advised European pension fund on full ownership transfer and master lease structuring.",
           verifiedBy: "DIFC Regulatory Authority & Bar Council"
+        }
+      ]
+    }
+  },
+  {
+    id: "more-opportunities",
+    label: "More Opportunities",
+    data: {
+      ...DEFAULT_PROFILE,
+      selectedGoal: "get_hired",
+      professionId: "developer_exec",
+      name: "Sarah Jenkins",
+      title: "VP of Project Development",
+      company: "Apex Urban Holdings",
+      photo: "/profile_woman_elena.png",
+      locations: ["Cairo", "Dubai"],
+      specializations: ["Mixed-Use Developments", "GDV Growth Strategy", "Feasibility Modeling"],
+      dealsClosed: 12,
+      transactionVolume: "$320M+",
+      yearsExp: 11,
+      happyClients: 85,
+      trustScore: 95,
+      buyerConfidenceScore: 95,
+      confidenceLevel: "Excellent",
+      verificationLevel: "Gold",
+      opportunityScore: 96,
+      hiringReadiness: 95,
+      authorityStatus: "VP Level Executive",
+      promise: "Driving high-GDV real estate portfolios from concept to 100% exit velocity.",
+      methodology: "Risk-Adjusted Masterplanning + Strategic JV Sourcing + Cost-Efficiency Auditing.",
+      proofItems: [
+        {
+          id: "dev-1",
+          title: "New Cairo Mixed-Use District Master Delivery",
+          type: "Verified Development Milestone",
+          date: "November 2024",
+          source: "Ministry of Housing & Urban Audit",
+          confidence: 98,
+          evidenceLevel: "Tier 1 — Delivery & Handover Certificate",
+          details: "Led development of a 45-acre retail and residential hub with 98% pre-completion sales.",
+          verifiedBy: "GCP Engineering Consultants & Project Audit"
+        }
+      ]
+    }
+  },
+  {
+    id: "stronger-partnerships",
+    label: "Stronger Partnerships",
+    data: {
+      ...DEFAULT_PROFILE,
+      selectedGoal: "win_partnerships",
+      professionId: "architect",
+      name: "Elena Rostova",
+      title: "Principal Architect & Sustainable Masterplanner",
+      company: "Rostova & Associates Studio",
+      photo: "/profile_woman_elena.png",
+      locations: ["Dubai", "Riyadh", "London"],
+      specializations: ["Sustainable Masterplanning", "Luxury Residential Design", "Commercial Towers", "RIBA Chartered"],
+      dealsClosed: 48,
+      transactionVolume: "$214M+",
+      yearsExp: 14,
+      happyClients: 98,
+      trustScore: 98,
+      buyerConfidenceScore: 98,
+      confidenceLevel: "Legendary",
+      verificationLevel: "Elite",
+      opportunityScore: 97,
+      hiringReadiness: 94,
+      authorityStatus: "Global Design Authority",
+      promise: "Designing net-zero, high-yield iconic architectural assets that appreciate across generations.",
+      methodology: "Biophilic Design Principles + BREEAM Platinum Structural Certification + Cost-Optima Tech.",
+      proofItems: [
+        {
+          id: "arch-1",
+          title: "Palm Jumeirah Ultra-Luxury Waterfront Villa Masterplan",
+          type: "Verified Blueprint & Construction",
+          date: "December 2024",
+          source: "Dubai Municipality & Civil Engineering Audit",
+          confidence: 100,
+          evidenceLevel: "Tier 1 — Official Building Permit & Handover",
+          details: "22,000 sq ft private estate featuring solar kinetic facade and subterranean wellness spa.",
+          verifiedBy: "Dubai Development Authority & Client Signoff"
+        }
+      ]
+    }
+  },
+  {
+    id: "client-confidence",
+    label: "Client Confidence",
+    data: DEFAULT_PROFILE
+  },
+  {
+    id: "proven-experience",
+    label: "Proven Experience",
+    data: {
+      ...DEFAULT_PROFILE,
+      selectedGoal: "showcase_expertise",
+      professionId: "interior_designer",
+      name: "David Chen",
+      title: "Lead Interior Architect",
+      company: "Chen Design Partners",
+      photo: "/profile_man_ahmed.png",
+      locations: ["Cairo", "London"],
+      specializations: ["High-End Hospitality Design", "Corporate Office Styling", "Custom Yacht Interiors"],
+      dealsClosed: 88,
+      transactionVolume: "$45M+",
+      yearsExp: 10,
+      happyClients: 76,
+      trustScore: 93,
+      buyerConfidenceScore: 93,
+      confidenceLevel: "Excellent",
+      verificationLevel: "Gold",
+      opportunityScore: 92,
+      hiringReadiness: 89,
+      authorityStatus: "Award-Winning Designer",
+      promise: "Crafting highly bespoke, functional spaces that maximize commercial value and aesthetic impact.",
+      methodology: "Spatial Optimization + Verified Materials Sourcing + Detailed Acoustic Modeling.",
+      proofItems: [
+        {
+          id: "design-1",
+          title: "Boutique Hotel Lobby & Lounge Redesign",
+          type: "Verified Portfolio Handover",
+          date: "October 2024",
+          source: "Hotel Group Operations Ledger",
+          confidence: 96,
+          evidenceLevel: "Tier 1 — Handover Protocol & Quality Signoff",
+          details: "Redesigned 8,000 sq ft main lobby, increasing guest satisfaction ratings by 24%.",
+          verifiedBy: "Accor Group Design Audit"
+        }
+      ]
+    }
+  },
+  {
+    id: "stand-out",
+    label: "Stand Out",
+    data: {
+      ...DEFAULT_PROFILE,
+      selectedGoal: "increase_visibility",
+      professionId: "property_manager",
+      name: "Ziad El-Masry",
+      title: "Asset Management Director",
+      company: "Vanguard Property Solutions",
+      photo: "/profile_man_ahmed.png",
+      locations: ["Cairo", "Alexandria"],
+      specializations: ["Residential Portfolio Maximization", "Smart Building Technology", "Operational Cost Reduction"],
+      dealsClosed: 520,
+      transactionVolume: "$180M+",
+      yearsExp: 12,
+      happyClients: 450,
+      trustScore: 96,
+      buyerConfidenceScore: 96,
+      confidenceLevel: "Exceptional",
+      verificationLevel: "Gold",
+      opportunityScore: 94,
+      hiringReadiness: 90,
+      authorityStatus: "Senior Asset Manager",
+      promise: "Optimizing real estate yield through automated operations, energy efficiency, and high tenant retention.",
+      methodology: "IoT Integration + Dynamic Rent Pricing + Preventive Maintenance Lifecycle Planning.",
+      proofItems: [
+        {
+          id: "pm-1",
+          title: "IoT Upgrade & Cost Optimization for 120-Unit Complex",
+          type: "Verified Asset Management",
+          date: "August 2024",
+          source: "Property Management Annual Audit Report",
+          confidence: 99,
+          evidenceLevel: "Tier 1 — Audited Expense Ledger",
+          details: "Implemented smart building management system, reducing utility costs by 18% in 12 months.",
+          verifiedBy: "Middle East Energy Audits & Vanguard Finance"
         }
       ]
     }

@@ -122,35 +122,34 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
       {/* Dynamic Trust Card Body */}
       <div 
         id="live-preview-card-body" 
-        className={`bg-gradient-to-br ${tc.gradient} rounded-2xl p-5 border ${tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${tc.glow} relative`}
-        style={{ minHeight: '390px' }}
+        className={`bg-gradient-to-br ${tc.gradient} rounded-2xl p-4 sm:p-5 border ${tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${tc.glow} relative min-h-[325px] sm:min-h-[390px]`}
       >
         {/* Subtle mesh background overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(250,196,23,0.06),transparent_50%)] pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#FAC417]/20 to-transparent pointer-events-none" />
 
         {/* Card Header Ribbon */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4 relative z-10">
+        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5 sm:pb-3 sm:mb-4 relative z-10">
           <div id="card-brand-logo" className="flex items-center space-x-2">
-            <Shield className="w-5 h-5 text-[#FAC417]" />
+            <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#FAC417]" />
             <div className="flex flex-col">
-              <span className="text-[14px] font-extrabold tracking-widest text-white leading-none">TRUST CARD</span>
-              <span className="text-[8px] text-[#FAC417] font-semibold tracking-wider leading-none mt-1 uppercase">REAL ESTATE PROFESSIONAL</span>
+              <span className="text-[12px] sm:text-[14px] font-extrabold tracking-widest text-white leading-none">TRUST CARD</span>
+              <span className="text-[7px] sm:text-[8px] text-[#FAC417] font-semibold tracking-wider leading-none mt-0.5 sm:mt-1 uppercase">REAL ESTATE PROFESSIONAL</span>
             </div>
           </div>
           
-          <div className="flex items-center space-x-1.5 bg-[#FAC417]/10 text-[#FAC417] px-2.5 py-1 rounded-full text-[10px] font-bold border border-[#FAC417]/30 tracking-wide uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FAC417] animate-pulse" />
-            <span>VERIFIED · TRUSTED · RECOMMENDED</span>
+          <div className="flex items-center space-x-1 bg-[#FAC417]/10 text-[#FAC417] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold border border-[#FAC417]/30 tracking-wide uppercase">
+            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#FAC417] animate-pulse" />
+            <span>VERIFIED · TRUSTED</span>
           </div>
         </div>
 
         {/* Profile Info Grid (Avatar, Name, Title, QR Code) */}
-        <div className="grid grid-cols-12 gap-3 items-center mb-4 relative z-10">
+        <div className="grid grid-cols-12 gap-2 sm:gap-3 items-center mb-3 sm:mb-4 relative z-10">
           {/* Avatar Area */}
           <div className="col-span-3 flex flex-col items-center justify-center">
             <div className="relative">
-              <div className="w-20 h-20 rounded-full p-0.5 bg-gradient-to-tr from-[#FAC417] via-amber-200 to-[#FAC417]/30 shadow-md">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-0.5 bg-gradient-to-tr from-[#FAC417] via-amber-200 to-[#FAC417]/30 shadow-md">
                 <img
                   src={photo || getFallbackPhoto(debouncedName)}
                   alt={debouncedName}
@@ -159,59 +158,59 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
               </div>
               <div className="absolute -bottom-1 -right-1 bg-[#020617] p-0.5 rounded-full border border-white/20">
                 <div className="bg-[#FAC417] text-slate-900 p-0.5 rounded-full font-bold" title={`Verified: ${verificationLevel}`}>
-                  <ShieldCheck className="w-3.5 h-3.5 text-slate-950" />
+                  <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-950" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Name & Titles */}
-          <div className="col-span-6 space-y-1.5 pl-1.5 text-left">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <h3 className={`text-lg font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
+          <div className="col-span-6 space-y-1 pl-1 text-left">
+            <div className="flex flex-wrap items-center gap-1">
+              <h3 className={`text-sm sm:text-lg font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
                 {debouncedName}
               </h3>
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 inline shrink-0" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 inline shrink-0" />
             </div>
 
-            <p className={`text-xs text-gray-300 font-medium transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
+            <p className={`text-[10px] sm:text-xs text-gray-300 font-medium transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
               {debouncedTitle}
             </p>
 
-            <div className="flex items-center gap-1 text-[11px] text-gray-400">
-              <Briefcase className="w-3 h-3 text-[#FAC417]" />
-              <span className="truncate">{company || "Emaar Misr"}</span>
-              <span className="inline-flex items-center gap-1 px-1 bg-emerald-500/10 text-emerald-400 text-[8px] font-extrabold rounded uppercase border border-emerald-500/20 ml-1">
-                Company Verified
+            <div className="flex items-center gap-1 text-[9px] sm:text-[11px] text-gray-400">
+              <Briefcase className="w-2.5 h-2.5 text-[#FAC417]" />
+              <span className="truncate max-w-[80px] sm:max-w-none">{company || "Emaar Misr"}</span>
+              <span className="inline-flex items-center gap-0.5 px-0.5 bg-emerald-500/10 text-emerald-400 text-[6px] sm:text-[8px] font-extrabold rounded uppercase border border-emerald-500/20 ml-0.5">
+                VERIFIED
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 pt-1">
-              <span className="inline-flex items-center text-[9px] font-bold bg-[#FAC417]/10 text-[#FAC417] border border-[#FAC417]/30 px-1.5 py-0.5 rounded">
-                Verified Professional
+            <div className="flex items-center gap-1 pt-0.5">
+              <span className="inline-flex items-center text-[7px] sm:text-[9px] font-bold bg-[#FAC417]/10 text-[#FAC417] border border-[#FAC417]/30 px-1 py-0.5 rounded">
+                Verified
               </span>
-              <span className="inline-flex items-center text-[9px] font-bold bg-white/5 text-gray-300 border border-white/10 px-1.5 py-0.5 rounded">
-                Elite Member
+              <span className="inline-flex items-center text-[7px] sm:text-[9px] font-bold bg-white/5 text-gray-300 border border-white/10 px-1 py-0.5 rounded">
+                Elite
               </span>
             </div>
           </div>
 
           {/* QR Code Area */}
           <div className="col-span-3 flex flex-col items-center justify-center text-center">
-            <div className="bg-white p-1.5 rounded-lg shadow-sm border border-[#FAC417]/40 w-16 h-16 flex items-center justify-center">
+            <div className="bg-white p-1 rounded-lg shadow-sm border border-[#FAC417]/40 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
               <QRCodeSVG 
                 value={shareUrl} 
-                size={54} 
+                size={typeof window !== 'undefined' && window.innerWidth < 640 ? 38 : 54} 
                 level={"H"}
                 includeMargin={false}
               />
             </div>
-            <span className="text-[7px] text-gray-400 mt-1 uppercase tracking-wider leading-tight">Scan to view my verified profile</span>
+            <span className="text-[6px] text-gray-400 mt-1 uppercase tracking-wider leading-tight">Scan Profile</span>
           </div>
         </div>
 
-        {/* 5-Column Core Metrics Grid (Bordered Boxes) */}
-        <div className="grid grid-cols-5 gap-1.5 text-center mb-4 relative z-10">
+        {/* Core Metrics Grid (3 columns on mobile, 5 columns on desktop) */}
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center mb-4 relative z-10">
           
           {/* Trust Score */}
           <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
@@ -244,8 +243,8 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             <div className="text-[8px] text-gray-400 truncate leading-none">Client Rating (87 Rev.)</div>
           </div>
 
-          {/* Experience */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
+          {/* Experience (Hidden on mobile) */}
+          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex">
             <div className="flex items-center justify-center">
               <Users className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
@@ -255,8 +254,8 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             <div className="text-[8px] text-gray-400 truncate leading-none">Years Exp. Local Expert</div>
           </div>
 
-          {/* Response Time */}
-          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]">
+          {/* Response Time (Hidden on mobile) */}
+          <div className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex">
             <div className="flex items-center justify-center">
               <Clock className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
             </div>
