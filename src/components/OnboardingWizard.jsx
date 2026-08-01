@@ -306,10 +306,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             {/* Outcome Card Motivation (Positioned Above the CTA) */}
             <div id="mobile-landing-outcome" className="w-full max-w-sm mx-auto overflow-hidden my-1 flex flex-col items-center">
               {/* Preset Selector Dropdown */}
-              <div id="mobile-landing-preset-selector" className="mb-2 flex flex-col items-center w-full max-w-[240px]">
-                <label htmlFor="mobile-preset-select" className="text-[8px] font-extrabold tracking-widest text-[#0A3D62] uppercase mb-1 block text-center">
-                  Choose Preset Outcome
-                </label>
+              <div id="mobile-landing-preset-selector" className="mb-2 w-full max-w-[240px]">
                 <div className="relative w-full">
                   <select
                     id="mobile-preset-select"
@@ -331,12 +328,6 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     <ChevronDown className="w-3 h-3" />
                   </div>
                 </div>
-              </div>
-
-              <div className="text-center mb-1">
-                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest block">
-                  YOUR GUARANTEED OUTCOME
-                </span>
               </div>
               <div className="w-full flex justify-center h-[260px] overflow-hidden">
                 <div className="w-full scale-[0.80] sm:scale-[0.85] origin-top">
@@ -923,10 +914,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             <div className="lg:col-span-5 flex items-center justify-center py-6">
               <div className="w-full scale-110 lg:scale-[1.15] origin-center hover:scale-[1.20] duration-300 flex flex-col items-center">
                 {/* Preset Selector Dropdown */}
-                <div id="landing-preset-selector" className="mb-4 flex flex-col items-center w-full max-w-[280px]">
-                  <label htmlFor="preset-select" className="text-[10px] font-extrabold tracking-widest text-[#0A3D62] uppercase mb-1 block text-center">
-                    Choose Preset Outcome
-                  </label>
+                <div id="landing-preset-selector" className="mb-4 w-full max-w-[280px]">
                   <div className="relative w-full">
                     <select
                       id="preset-select"
@@ -948,12 +936,6 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <ChevronDown className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                </div>
-
-                <div className="text-center mb-4">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest block">
-                    YOUR GUARANTEED OUTCOME
-                  </span>
                 </div>
                 <LivePreviewCard profile={profile} />
               </div>
