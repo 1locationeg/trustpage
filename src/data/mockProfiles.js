@@ -264,7 +264,7 @@ export const MOCK_PRESETS = [
       name: "Kareem Salem",
       title: "Interior Designer",
       company: "Salem Design",
-      photo: "/profile_man_ahmed.png",
+      photo: "/profile_photo.png",
       locations: ["Cairo", "London"],
       specializations: ["High-End Hospitality Design", "Corporate Office Styling", "Custom Yacht Interiors"],
       dealsClosed: 88,
