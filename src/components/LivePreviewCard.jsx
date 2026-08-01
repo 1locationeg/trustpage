@@ -354,7 +354,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           </div>
 
           <div className="flex items-center space-x-1 font-bold text-gray-300 uppercase tracking-wide">
-            <span>Verified by</span>
+            <span>Powered by</span>
             <div className="flex items-center space-x-0.5 text-white bg-white/5 border border-white/10 rounded px-1 py-0.5 leading-none">
               <span className="text-[7px] text-[#FAC417] font-extrabold font-heading">R8</span>
               <span className="text-[7px] font-medium">ESTATE</span>
