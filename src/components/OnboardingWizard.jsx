@@ -1110,39 +1110,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             </div>
 
             {/* Right Column: Live Output Card Preview */}
-            <div className="lg:col-span-5 flex items-center justify-center py-2 lg:pt-6">
+            <div className="lg:col-span-5 flex items-center justify-center py-6 lg:py-10">
               <div className="w-full scale-95 sm:scale-100 lg:scale-[1.02] xl:scale-110 origin-center duration-300 flex flex-col items-center">
-                {/* Preset Selector Dropdown */}
-                <div id="landing-preset-selector" className="mb-4 w-full max-w-[280px]">
-                  <div className="relative w-full">
-                    <select
-                      id="preset-select"
-                      value={MOCK_PRESETS.find(p => p.data.selectedGoal === profile.selectedGoal)?.id || ''}
-                      onChange={(e) => {
-                        const found = MOCK_PRESETS.find(p => p.id === e.target.value);
-                        if (found) setProfile(found.data);
-                      }}
-                      className="w-full bg-white border border-gray-200 text-gray-700 py-2 px-4 pr-10 rounded-full text-xs font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10 focus:border-[#0A3D62] cursor-pointer appearance-none text-center"
-                    >
-                      <option value="" disabled>{language === 'ar' ? '-- اختر نموذج جاهز --' : '-- Select Preset --'}</option>
-                      {MOCK_PRESETS.map((preset) => (
-                        <option key={preset.id} value={preset.id}>
-                          {language === 'ar' ? (
-                            preset.id === 'build-authority' ? t.benefit_0 :
-                            preset.id === 'proven-experience' ? t.benefit_1 :
-                            preset.id === 'client-confidence' ? t.benefit_2 :
-                            preset.id === 'stronger-partnerships' ? t.benefit_3 :
-                            preset.id === 'stand-out' ? t.benefit_4 : t.benefit_5
-                          ) : preset.label}
-                        </option>
-                      ))}
-                    </select>
-                    <div className={`pointer-events-none absolute inset-y-0 flex items-center px-4 text-gray-500 ${language === 'ar' ? 'left-0' : 'right-0'}`}>
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    </div>
-                  </div>
-                </div>
-
                 <LivePreviewCard 
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
