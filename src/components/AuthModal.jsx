@@ -15,13 +15,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   if (!isOpen) return null;
 
   const handleStartOAuth = (provider) => {
-    if (provider === 'google') {
-      const redirectUri = window.location.origin + '/';
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('openid email profile')}&state=google`;
-      window.location.href = authUrl;
-      return;
-    }
-
     setActiveProvider(provider);
     setShowChooser(true);
     setShowCustomInput(false);
@@ -44,8 +37,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   };
 
   const googleAccounts = [
-    'akasi.dev@gmail.com',
-    'akasi.design@gmail.com'
+    '1locationeg@gmail.com',
+    'akasi.dev@gmail.com'
   ];
 
   const linkedinAccounts = [
@@ -187,6 +180,24 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   </form>
                 )}
               </div>
+
+              {activeProvider === 'google' && (
+                <div className="pt-3 border-t border-slate-100 mt-3">
+                  <button
+                    onClick={() => {
+                      const redirectUri = window.location.origin + '/';
+                      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('openid email profile')}&state=google`;
+                      window.location.href = authUrl;
+                    }}
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl text-center transition-all duration-200 text-amber-800 font-bold text-xs cursor-pointer"
+                  >
+                    <span>Launch Real Google Redirect Flow</span>
+                  </button>
+                  <p className="text-[9px] text-slate-400 text-center mt-1">
+                    Use this to test credentials registered on Google Cloud Console.
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-4">
