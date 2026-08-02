@@ -4,6 +4,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import { PROFESSIONS_DICT } from '../data/professionTemplates';
 import { getFallbackPhoto } from '../data/mockProfiles';
 import { TRANSLATIONS } from '../data/translations';
+import Card from './Card';
+import Badge from './Badge';
+import StatTile from './StatTile';
+import Button from './Button';
 
 // Helper component to animate counting statistics
 function AnimatedCounter({ value, duration = 1200, suffix = "" }) {
@@ -179,8 +183,9 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
   return (
     <div id="live-preview-card-container" className="relative w-full max-w-xl mx-auto">
       {/* Dynamic Trust Card Body */}
-      <div 
+      <Card 
         id="live-preview-card-body" 
+        variant="custom"
         className={`bg-gradient-to-br ${activeStateIndex >= 0 ? '' : tc.gradient} rounded-2xl p-4 sm:p-5 border ${activeStateIndex >= 0 ? 'border-white/10' : tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${activeStateIndex >= 0 ? '' : tc.glow} relative min-h-[325px] sm:min-h-[390px]`}
         style={cardStyle}
       >
@@ -198,10 +203,10 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             </div>
           </div>
           
-          <div className="flex items-center gap-1 bg-[#FAC417]/10 text-[#FAC417] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold border border-[#FAC417]/30 tracking-wide uppercase">
+          <Badge variant="accent" size="sm" className="flex items-center gap-1">
             <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#FAC417] animate-pulse" />
             <span>{t.verifiedTrusted}</span>
-          </div>
+          </Badge>
         </div>
 
         {/* Profile Info Grid (Avatar, Name, Title, QR Code) */}
@@ -243,21 +248,23 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             >
               <Briefcase className="w-2.5 h-2.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('company_line') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
               <span className="truncate max-w-[80px] sm:max-w-none">{company || "Emaar Misr"}</span>
-              <span className="inline-flex items-center gap-0.5 px-0.5 bg-emerald-500/10 text-emerald-400 text-[6px] sm:text-[8px] font-extrabold rounded uppercase border border-emerald-500/20 ml-0.5 shrink-0">
+              <Badge variant="success" size="sm" className="px-0.5 py-0 text-[6px] sm:text-[8px] rounded border border-emerald-500/20 ml-0.5 shrink-0 uppercase">
                 {t.verifiedMini}
-              </span>
+              </Badge>
             </div>
 
             <div className="flex items-center gap-1 pt-0.5">
-              <span className="inline-flex items-center text-[7px] sm:text-[9px] font-bold bg-[#FAC417]/10 text-[#FAC417] border border-[#FAC417]/30 px-1 py-0.5 rounded shrink-0">
+              <Badge variant="accent" size="sm" className="text-[7px] sm:text-[9px] px-1 py-0.5 rounded shrink-0">
                 {t.verifiedBadge}
-              </span>
-              <span 
-                className={`inline-flex items-center text-[7px] sm:text-[9px] font-bold px-1 py-0.5 rounded shrink-0 ${activeStateIndex >= 0 ? (isElementHighlighted('elite_badge') ? 'border' : 'bg-white/5 text-gray-300 border border-white/10') : 'bg-white/5 text-gray-300 border border-white/10'}`}
+              </Badge>
+              <Badge 
+                variant="neutral"
+                size="sm"
+                className={`text-[7px] sm:text-[9px] px-1 py-0.5 rounded shrink-0 ${activeStateIndex >= 0 ? (isElementHighlighted('elite_badge') ? 'border' : '') : ''}`}
                 style={getHighlightStyle('elite_badge')}
               >
                 {t.eliteBadge}
-              </span>
+              </Badge>
             </div>
           </div>
 
@@ -277,102 +284,57 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
         {/* Core Metrics Grid (3 columns on mobile, 5 columns on desktop) */}
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center mb-4 relative z-10">
-          
           {/* Trust Score */}
-          <div 
-            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]"
-            style={getHighlightStyle('trust_score')}
-          >
-            <div className="flex items-center justify-center">
-              <Shield className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('trust_score') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
-            </div>
-            <div 
-              className={`text-[12px] font-bold font-heading mt-1 ${activeStateIndex >= 0 ? '' : tc.accentText}`}
-              style={activeStateIndex >= 0 ? { color: isElementHighlighted('trust_score') ? activeAccent : '#FAC417' } : undefined}
-            >
-              <AnimatedCounter value={trustScore} suffix="%" />
-            </div>
-            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('trust_score') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
-              {t.trustScoreLabel}
-            </div>
-          </div>
+          <StatTile
+            variant="dark"
+            highlighted={isElementHighlighted('trust_score')}
+            activeAccent={activeAccent}
+            value={<AnimatedCounter value={trustScore} suffix="%" />}
+            label={t.trustScoreLabel}
+            icon={<Shield />}
+          />
 
           {/* Deals Closed */}
-          <div 
-            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]"
-            style={getHighlightStyle('deals_advised')}
-          >
-            <div className="flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('deals_advised') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
-            </div>
-            <div 
-              className="text-[12px] font-bold font-heading mt-1"
-              style={activeStateIndex >= 0 ? { color: isElementHighlighted('deals_advised') ? activeAccent : '#ffffff' } : undefined}
-            >
-              <AnimatedCounter value={dealsClosed} suffix={kpi0?.unit || "+"} />
-            </div>
-            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('deals_advised') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
-              {kpi0 ? kpi0.label : "Deals Closed"}
-            </div>
-          </div>
+          <StatTile
+            variant="dark"
+            highlighted={isElementHighlighted('deals_advised')}
+            activeAccent={activeAccent}
+            value={<AnimatedCounter value={dealsClosed} suffix={kpi0?.unit || "+"} />}
+            label={kpi0 ? kpi0.label : "Deals Closed"}
+            icon={<Zap />}
+          />
 
           {/* Client Rating */}
-          <div 
-            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]"
-            style={getHighlightStyle('client_rating')}
-          >
-            <div className="flex items-center justify-center">
-              <Star className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('client_rating') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
-            </div>
-            <div 
-              className={`text-[12px] font-bold font-heading mt-1 ${activeStateIndex >= 0 ? '' : tc.accentText}`}
-              style={activeStateIndex >= 0 ? { color: isElementHighlighted('client_rating') ? activeAccent : '#FAC417' } : undefined}
-            >
-              4.9
-            </div>
-            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('client_rating') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
-              {t.clientRatingLabel}
-            </div>
-          </div>
+          <StatTile
+            variant="dark"
+            highlighted={isElementHighlighted('client_rating')}
+            activeAccent={activeAccent}
+            value="4.9"
+            label={t.clientRatingLabel}
+            icon={<Star />}
+          />
 
           {/* Experience (Hidden on mobile) */}
-          <div 
-            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex"
-            style={getHighlightStyle('practice_years')}
-          >
-            <div className="flex items-center justify-center">
-              <Users className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('practice_years') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
-            </div>
-            <div 
-              className="text-[12px] font-bold font-heading mt-1"
-              style={activeStateIndex >= 0 ? { color: isElementHighlighted('practice_years') ? activeAccent : '#ffffff' } : undefined}
-            >
-              <AnimatedCounter value={yearsExp} suffix={kpi2?.unit || "+"} />
-            </div>
-            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('practice_years') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
-              {kpi2 ? kpi2.label : t.yearsExpDefault}
-            </div>
-          </div>
+          <StatTile
+            variant="dark"
+            className="hidden sm:flex"
+            highlighted={isElementHighlighted('practice_years')}
+            activeAccent={activeAccent}
+            value={<AnimatedCounter value={yearsExp} suffix={kpi2?.unit || "+"} />}
+            label={kpi2 ? kpi2.label : t.yearsExpDefault}
+            icon={<Users />}
+          />
 
           {/* Response Time (Hidden on mobile) */}
-          <div 
-            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex"
-            style={getHighlightStyle('avg_response')}
-          >
-            <div className="flex items-center justify-center">
-              <Clock className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('avg_response') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
-            </div>
-            <div 
-              className="text-[12px] font-bold font-heading mt-1"
-              style={activeStateIndex >= 0 ? { color: isElementHighlighted('avg_response') ? activeAccent : '#ffffff' } : undefined}
-            >
-              {avgResponseTime}
-            </div>
-            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('avg_response') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
-              {t.avgResponseLabel}
-            </div>
-          </div>
-
+          <StatTile
+            variant="dark"
+            className="hidden sm:flex"
+            highlighted={isElementHighlighted('avg_response')}
+            activeAccent={activeAccent}
+            value={avgResponseTime}
+            label={t.avgResponseLabel}
+            icon={<Clock />}
+          />
         </div>
 
         {/* Why Clients Choose Me Section */}
@@ -408,7 +370,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           <div className="flex items-center gap-1 font-bold text-gray-300 uppercase tracking-wide">
             <span>{t.poweredBy}</span>
             <div className="flex items-center gap-0.5 text-white bg-white/5 border border-white/10 rounded px-1 py-0.5 leading-none" dir="ltr">
-              <span className="text-[7px] text-[#FAC417] font-extrabold font-heading">R8</span>
+              <span className="text-[7px] text-[#FF1744] font-extrabold font-heading">R8</span>
               <span className="text-[7px] font-medium">ESTATE</span>
             </div>
           </div>
@@ -416,17 +378,19 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
         {/* Action Button inside card if full page preview needed */}
         {onOpenFullPage && (
-          <button
+          <Button
             id="btn-preview-full-page-inside-card"
             onClick={onOpenFullPage}
-            className="w-full mt-4 py-2 px-4 bg-[#FAC417] text-slate-900 font-bold text-xs rounded-full hover:bg-[#E5B210] transition-all shadow-md flex items-center justify-center gap-1.5 font-heading z-20 relative"
+            variant="primary"
+            size="sm"
+            className="w-full mt-4 flex items-center justify-center gap-1.5 z-20 relative"
           >
             <span>{t.connectVerify}</span>
             <ExternalLink className="w-3.5 h-3.5 shrink-0 ltr:rotate-0 rtl:rotate-180" />
-          </button>
+          </Button>
         )}
 
-      </div>
+      </Card>
     </div>
   );
 }

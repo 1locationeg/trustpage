@@ -10,6 +10,10 @@ import { PROFESSIONS_DICT, USER_GOALS } from '../data/professionTemplates';
 import { getFallbackPhoto, MOCK_PRESETS } from '../data/mockProfiles';
 import LivePreviewCard from './LivePreviewCard';
 import { TRANSLATIONS } from '../data/translations';
+import Button from './Button';
+import Badge from './Badge';
+import Card from './Card';
+import StatTile from './StatTile';
 
 export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en' }) {
   const [isLanding, setIsLanding] = useState(true);
@@ -476,20 +480,20 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* CTA Button Block (Bottom) */}
             <div className="space-y-1.5 shrink-0 text-center px-2">
-              <button
+              <Button
                 id="btn-mobile-start-cta"
                 onClick={handleStartBuilder}
-                className={`w-full py-3 font-bold text-xs rounded-full transition-all shadow-md flex items-center justify-center space-x-2 ${
-                  activeStateIndex === 6
-                    ? 'bg-[#FF1744] text-white hover:bg-[#D50000] ring-4 ring-[#FF1744]/30 scale-105 animate-pulse'
-                    : 'bg-slate-950 text-white hover:bg-slate-900'
+                variant={activeStateIndex === 6 ? 'danger' : 'dark'}
+                size="md"
+                className={`w-full flex items-center justify-center space-x-2 ${
+                  activeStateIndex === 6 ? 'ring-4 ring-[#FF1744]/30 scale-105 animate-pulse' : ''
                 }`}
               >
-                <span>Get My Trust Card</span>
+                <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
                 <ArrowRight className="w-4 h-4 text-[#FAC417]" />
-              </button>
+              </Button>
               <span className="text-[9px] text-gray-400 block mt-1 text-center">
-                90 seconds - Instant preview - No signup
+                {language === 'ar' ? '90 ثانية - معاينة فورية - بدون تسجيل' : '90 seconds - Instant preview - No signup'}
               </span>
             </div>
 
@@ -986,17 +990,17 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     /* 1. LANDING STATE (CLASSIC SPLIT HERO + STAT STRIP + HOW IT WORKS) */
     if (isLanding) {
       return (
-        <div id="desktop-landing-container" className="min-h-[calc(100vh-100px)] flex flex-col justify-center py-12 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-16">
+        <div id="desktop-landing-container" className="min-h-[calc(100vh-80px)] flex flex-col justify-center py-6 md:py-8 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-8 md:space-y-12">
           {/* Split Hero Grid */}
           <div 
             id="desktop-landing-grid" 
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-start w-full"
           >
             
             {/* Left Column: Heading, CTA, Bullets */}
-            <div className="lg:col-span-7 space-y-6 py-4">
+            <div className="lg:col-span-7 space-y-4 xl:space-y-5 py-2">
               
               {/* Header Tag / Trust Strip */}
               <div id="landing-trust-strip" className={`flex items-center gap-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit ${language === 'ar' ? 'mr-0 ml-auto' : 'ml-0 mr-auto'}`}>
@@ -1014,10 +1018,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </span>
                 
                 {/* Word-rotator container */}
-                <div className="overflow-hidden h-[60px] md:h-[80px] relative flex items-center justify-start">
+                <div className="overflow-hidden h-[50px] sm:h-[65px] lg:h-[75px] xl:h-[85px] relative flex items-center justify-start">
                   <span 
                     key={activeStateIndex}
-                    className={`absolute text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
+                    className={`absolute text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
                       activeStateIndex === 6 ? 'scale-105 transition-all duration-300' : ''
                     } ${language === 'ar' ? 'right-0' : 'left-0'}`}
                     style={{
@@ -1062,7 +1066,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </p>
                 
                 <span className="text-sm text-slate-500 font-semibold block">
-                  ⭐ {t.poweredBy} R8 ESTATE
+                  ⭐ {t.poweredBy} <span className="text-[#FF1744]">R8</span> ESTATE
                 </span>
               </div>
 
@@ -1086,18 +1090,18 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
               {/* Direct CTA Button */}
               <div className="pt-2 max-w-sm">
-                <button
+                <Button
                   id="btn-landing-cta"
                   onClick={handleStartBuilder}
-                  className={`w-full py-4 font-bold text-base rounded-full transition-all shadow-md flex items-center justify-center gap-2 font-heading ${
-                    activeStateIndex === 6
-                      ? 'bg-[#FF1744] text-white hover:bg-[#D50000] ring-4 ring-[#FF1744]/30 scale-105 animate-pulse'
-                      : 'bg-slate-950 text-white hover:bg-slate-900'
+                  variant={activeStateIndex === 6 ? 'danger' : 'dark'}
+                  size="lg"
+                  className={`w-full flex items-center justify-center gap-2 ${
+                    activeStateIndex === 6 ? 'scale-105 animate-pulse ring-4 ring-[#FF1744]/30' : ''
                   }`}
                 >
                   <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
                   <ArrowRight className="w-4 h-4 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
-                </button>
+                </Button>
                 <span className="text-xs text-slate-400 block mt-2">
                   {language === 'ar' ? '90 ثانية - معاينة فورية - بدون تسجيل' : '90 seconds - Instant preview - No signup'}
                 </span>
@@ -1105,9 +1109,9 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             </div>
 
-            {/* Right Column: Live Output Card Preview (Scaled 15% Up) */}
-            <div className="lg:col-span-5 flex items-center justify-center py-6">
-              <div className="w-full scale-110 lg:scale-[1.15] origin-center hover:scale-[1.20] duration-300 flex flex-col items-center">
+            {/* Right Column: Live Output Card Preview */}
+            <div className="lg:col-span-5 flex items-center justify-center py-2 lg:pt-6">
+              <div className="w-full scale-95 sm:scale-100 lg:scale-[1.02] xl:scale-110 origin-center duration-300 flex flex-col items-center">
                 {/* Preset Selector Dropdown */}
                 <div id="landing-preset-selector" className="mb-4 w-full max-w-[280px]">
                   <div className="relative w-full">
@@ -1150,17 +1154,19 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </div>
 
           {/* Stat Strip */}
-          <div id="desktop-landing-stats" className="border-t border-b border-gray-200/85 py-8 grid grid-cols-4 gap-4 text-center max-w-5xl mx-auto w-full">
+          <div id="desktop-landing-stats" className="border-t border-b border-gray-200/85 py-6 md:py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center max-w-5xl mx-auto w-full">
             {[
               { value: "100+", label: language === 'ar' ? "محترف موثق" : "Verified professionals" },
               { value: "3", label: language === 'ar' ? "دول مفعلة" : "Countries live" },
               { value: "94%", label: language === 'ar' ? "متوسط مؤشر الثقة" : "Avg trust score" },
               { value: "<12m", label: language === 'ar' ? "سرعة الاستجابة" : "Avg response time" }
             ].map((stat, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <span className="text-2xl font-extrabold text-slate-900 font-heading">{stat.value}</span>
-                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">{stat.label}</span>
-              </div>
+              <StatTile
+                key={idx}
+                variant="light"
+                value={stat.value}
+                label={stat.label}
+              />
             ))}
           </div>
 
@@ -1171,19 +1177,19 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <h2 className="text-2xl font-extrabold text-slate-900 font-heading mt-1">HOW IT WORKS</h2>
             </div>
             
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { step: "1", title: "Verify", desc: "Link your verified land registries, professional license credentials, and corporate affiliations to authorize your public trust index." },
                 { step: "2", title: "Generate", desc: "Our adaptive engine formats your transaction volumes, ratings, and experience into a high-fidelity, verified R8 trust card." },
                 { step: "3", title: "Share", desc: "Embed your verified trust identity across property listings, emails, WhatsApp messages, or print QR codes." }
               ].map((card, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-3 hover:shadow-md transition-all duration-300">
+                <Card key={idx} variant="clean" className="space-y-3 hover:shadow-md transition-all duration-300 p-6 rounded-2xl">
                   <div className="w-8 h-8 rounded-full bg-[#0A3D62]/10 flex items-center justify-center text-xs font-extrabold text-[#0A3D62] font-heading">
                     {card.step}
                   </div>
                   <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide font-heading">{card.title}</h3>
                   <p className="text-[11px] text-gray-500 leading-relaxed">{card.desc}</p>
-                </div>
+                </Card>
               ))}
             </div>
           </div>
@@ -1667,23 +1673,27 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* Wizard Navigation Footer */}
             <div id="wizard-navigation-footer" className="flex items-center justify-between border-t border-gray-150 pt-4 mt-4">
-              <button
+              <Button
                 id="btn-prev"
                 onClick={handlePrev}
-                className="px-5 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 font-bold text-xs rounded-lg flex items-center space-x-1"
+                variant="secondary"
+                size="sm"
+                className="rounded-lg flex items-center space-x-1"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back</span>
-              </button>
+              </Button>
 
-              <button
+              <Button
                 id="btn-next"
                 onClick={handleNext}
-                className="px-6 py-2.5 bg-[#FAC417] text-slate-900 font-bold text-xs rounded-full hover:bg-[#E5B210] flex items-center space-x-1.5 shadow-sm transition-all font-heading"
+                variant="primary"
+                size="sm"
+                className="flex items-center space-x-1.5 shadow-sm font-heading"
               >
                 <span>{currentStep === 12 ? "Publish My Page" : "Next Step"}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
 
