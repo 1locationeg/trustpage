@@ -70,35 +70,63 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
     avgResponseTime = "2h"
   } = profile;
 
+  // Parallax Tilt & Light Shine States
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [shine, setShine] = useState({ x: 50, y: 50 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Calculate card rotation angles (max 10 degrees tilt)
+    const rotateX = -(y - rect.height / 2) / (rect.height / 2) * 10;
+    const rotateY = (x - rect.width / 2) / (rect.width / 2) * 10;
+
+    setTilt({ x: rotateX, y: rotateY });
+    setShine({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTilt({ x: 0, y: 0 });
+  };
+
   // Theme-specific CSS styling classes
   const themeConfigs = {
     gold: {
-      gradient: "from-[#0B1329] via-[#020617] to-[#131C35]",
-      border: "border-[#FAC417]/50",
+      gradient: "from-[#0A0F1D] via-[#050811] to-[#121A30]",
+      border: "border-[#FAC417]/35",
       accent: "#FAC417",
       accentText: "text-[#FAC417]",
       bgAccent: "bg-[#FAC417]/10",
-      borderAccent: "border-[#FAC417]/30",
+      borderAccent: "border-[#FAC417]/25",
       glow: "animate-gold-glow",
       fillAccent: "fill-[#FAC417]",
     },
     silver: {
-      gradient: "from-[#0F172A] via-[#0B0F19] to-[#1E293B]",
-      border: "border-slate-400/40",
+      gradient: "from-[#111827] via-[#080B10] to-[#1F2937]",
+      border: "border-slate-500/30",
       accent: "#94A3B8",
       accentText: "text-slate-300",
-      bgAccent: "bg-slate-400/10",
-      borderAccent: "border-slate-400/30",
+      bgAccent: "bg-slate-500/10",
+      borderAccent: "border-slate-500/20",
       glow: "animate-silver-glow",
       fillAccent: "fill-slate-300",
     },
     emerald: {
-      gradient: "from-[#064E3B] via-[#022C22] to-[#0D5C46]",
-      border: "border-emerald-500/40",
+      gradient: "from-[#022C22] via-[#01140F] to-[#0A3D30]",
+      border: "border-emerald-500/35",
       accent: "#10B981",
       accentText: "text-emerald-400",
       bgAccent: "bg-emerald-500/10",
-      borderAccent: "border-emerald-500/30",
+      borderAccent: "border-emerald-500/25",
       glow: "animate-emerald-glow",
       fillAccent: "fill-emerald-400",
     }
@@ -138,27 +166,40 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
         return {
           borderColor: activeAccent,
           backgroundColor: `${activeAccent}15`,
-          boxShadow: `0 0 12px ${activeAccent}35`,
-          transform: 'scale(1.05)',
-          transition: 'all 0.3s ease'
+          boxShadow: `0 0 14px ${activeAccent}35`,
+          transform: 'scale(1.04)',
+          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
         };
       }
       return {
-        borderColor: 'rgba(255, 255, 255, 0.05)',
-        backgroundColor: 'rgba(10, 17, 40, 0.6)',
-        transition: 'all 0.3s ease'
+        borderColor: 'rgba(255, 255, 255, 0.04)',
+        backgroundColor: 'rgba(10, 17, 40, 0.55)',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       };
     }
     return {};
   };
 
+  // Base card styles with Stripe-like inner highlight and dark premium shadows
   const cardStyle = activeStateIndex >= 0 ? {
-    background: 'linear-gradient(155deg, #071f33 0%, #0a2f4e 55%, #0c3557 100%)',
-    borderColor: activeStateIndex === 6 ? '#fac417' : 'rgba(255, 255, 255, 0.1)',
-    boxShadow: activeStateIndex === 6 ? '0 0 25px rgba(250, 196, 23, 0.45), inset 0 0 12px rgba(250, 196, 23, 0.25)' : undefined,
-    transition: 'all 0.4s ease'
+    background: 'linear-gradient(155deg, #090E1A 0%, #03060F 50%, #121A30 100%)',
+    borderColor: activeStateIndex === 6 ? '#fac417' : 'rgba(255, 255, 255, 0.08)',
+    boxShadow: activeStateIndex === 6 
+      ? '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(250, 196, 23, 0.35), inset 0 1px 0 rgba(255,255,255,0.08)' 
+      : '0 25px 50px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.05)',
   } : {
-    transition: 'all 0.4s ease'
+    background: 'linear-gradient(155deg, #090E1A 0%, #03060F 50%, #121A30 100%)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.05)',
+  };
+
+  // Apply real-time tilt calculations
+  const finalCardStyle = {
+    ...cardStyle,
+    transform: isHovered 
+      ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.015, 1.015, 1.015)`
+      : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+    transition: isHovered ? 'none' : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease',
   };
 
   // Debounced name & title for silky smooth live updating
@@ -177,7 +218,6 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
     return () => clearTimeout(handler);
   }, [name, title, activeProf.label]);
 
-  // Construct a shareable URL for the QR code
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/?profile=${profile.id || 'ahmed-hassan'}` : 'https://r8estate.com/ahmed-hassan';
 
   return (
@@ -186,12 +226,25 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
       <Card 
         id="live-preview-card-body" 
         variant="custom"
-        className={`bg-gradient-to-br ${activeStateIndex >= 0 ? '' : tc.gradient} rounded-2xl p-4 sm:p-5 border ${activeStateIndex >= 0 ? 'border-white/10' : tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${activeStateIndex >= 0 ? '' : tc.glow} relative min-h-[325px] sm:min-h-[390px]`}
-        style={cardStyle}
+        className={`bg-gradient-to-br ${activeStateIndex >= 0 ? '' : tc.gradient} rounded-[28px] p-4 sm:p-5 border ${activeStateIndex >= 0 ? 'border-white/10' : tc.border} text-white shadow-2xl overflow-hidden animate-card-shine relative min-h-[325px] sm:min-h-[390px] cursor-default`}
+        style={finalCardStyle}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Subtle mesh background overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(250,196,23,0.06),transparent_50%)] pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#FAC417]/20 to-transparent pointer-events-none" />
+
+        {/* Dynamic Hover Shine Highlight */}
+        {isHovered && (
+          <div 
+            className="absolute inset-0 pointer-events-none mix-blend-overlay z-30 transition-opacity duration-300" 
+            style={{
+              background: `radial-gradient(circle at ${shine.x}% ${shine.y}%, rgba(255, 255, 255, 0.22) 0%, transparent 60%)`
+            }}
+          />
+        )}
 
         {/* Card Header Ribbon */}
         <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5 sm:pb-3 sm:mb-4 relative z-10">
@@ -203,7 +256,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             </div>
           </div>
           
-          <Badge variant="accent" size="sm" className="flex items-center gap-1">
+          <Badge variant="accent" size="sm" className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full">
             <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#FAC417] animate-pulse" />
             <span>{t.verifiedTrusted}</span>
           </Badge>
@@ -214,7 +267,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           {/* Avatar Area */}
           <div className="col-span-3 flex flex-col items-center justify-center">
             <div className="relative">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-0.5 bg-gradient-to-tr from-[#FAC417] via-amber-200 to-[#FAC417]/30 shadow-md">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[3px] bg-gradient-to-tr from-[#FAC417] via-amber-200 to-[#FAC417]/20 shadow-[0_0_12px_rgba(250,196,23,0.12)]">
                 <img
                   src={photo || getFallbackPhoto(debouncedName)}
                   alt={debouncedName}
@@ -270,7 +323,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
           {/* QR Code Area */}
           <div className="col-span-3 flex flex-col items-center justify-center text-center">
-            <div className="bg-white p-1 rounded-lg shadow-sm border border-[#FAC417]/40 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
+            <div className="bg-white p-1 rounded-lg shadow-sm border border-[#FAC417]/30 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
               <QRCodeSVG 
                 value={shareUrl} 
                 size={typeof window !== 'undefined' && window.innerWidth < 640 ? 38 : 54} 
@@ -282,7 +335,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           </div>
         </div>
 
-        {/* Core Metrics Grid (3 columns on mobile, 5 columns on desktop) */}
+        {/* Core Metrics Grid */}
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center mb-4 relative z-10">
           {/* Trust Score */}
           <StatTile

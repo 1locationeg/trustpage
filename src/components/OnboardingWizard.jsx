@@ -654,7 +654,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                         value={profile.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         placeholder="Ahmed Hassan"
-                        className="w-full bg-white border border-gray-300 rounded-lg px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10"
+                        className="w-full bg-slate-50/50 border border-gray-200 rounded-[16px] px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FAC417]/20 focus:border-[#FAC417] focus:bg-white transition-all duration-300"
                       />
                     </div>
                     <div>
@@ -665,7 +665,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                         value={profile.title || ''}
                         onChange={(e) => handleInputChange('title', e.target.value)}
                         placeholder="Senior Advisor"
-                        className="w-full bg-white border border-gray-300 rounded-lg px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10"
+                        className="w-full bg-slate-50/50 border border-gray-200 rounded-[16px] px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FAC417]/20 focus:border-[#FAC417] focus:bg-white transition-all duration-300"
                       />
                     </div>
                     <div>
@@ -676,7 +676,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                         value={profile.company || ''}
                         onChange={(e) => handleInputChange('company', e.target.value)}
                         placeholder="Independent Studio"
-                        className="w-full bg-white border border-gray-300 rounded-lg px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10"
+                        className="w-full bg-slate-50/50 border border-gray-200 rounded-[16px] px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FAC417]/20 focus:border-[#FAC417] focus:bg-white transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -1150,7 +1150,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
       <div id="desktop-builder-grid" className="max-w-7xl mx-auto px-6 py-8 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start text-left animate-fade-up">
         
         {/* Left Column: Form & Onboarding Wizard Container */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-gray-200 p-6 md:p-8 shadow-sm relative flex flex-col justify-between min-h-[540px]">
+        <div className="lg:col-span-7 bg-white rounded-[24px] border border-gray-200/80 p-8 md:p-10 shadow-premium-soft relative flex flex-col justify-between min-h-[560px]">
           
           <div id="builder-state-container" className="space-y-6 flex-1 flex flex-col justify-between">
             
@@ -1166,17 +1166,17 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </div>
 
               {/* Step indicator bars */}
-              <div id="progress-bars-container" className="grid grid-cols-12 gap-1 mb-2">
+              <div id="progress-bars-container" className="grid grid-cols-12 gap-1.5 mb-2">
                 {stepsList.map((st, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentStep(idx + 1)}
                     title={`Step ${idx + 1}: ${st}`}
-                    className={`h-1.5 rounded-full transition-all ${
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
                       idx + 1 === currentStep
-                        ? 'bg-[#0A3D62] scale-105'
+                        ? 'bg-[#FAC417] scale-y-125 shadow-[0_0_12px_rgba(250,196,23,0.6)] animate-step-active'
                         : idx + 1 < currentStep
-                        ? 'bg-emerald-600'
+                        ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]'
                         : 'bg-gray-200'
                     }`}
                   />
@@ -1300,7 +1300,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       value={profile.name || ''}
                       onChange={(e) => updateProfile({ name: e.target.value })}
                       placeholder="e.g. Ahmed Hassan"
-                      className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/20 focus:border-[#0A3D62]"
+                      className="w-full bg-slate-50/50 border border-gray-200 rounded-[16px] px-4 py-3 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FAC417]/20 focus:border-[#FAC417] focus:bg-white transition-all duration-300"
                     />
                   </div>
 
@@ -1314,7 +1314,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       value={profile.title || ''}
                       onChange={(e) => updateProfile({ title: e.target.value })}
                       placeholder={`e.g. ${activeProfession.label}`}
-                      className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/20 focus:border-[#0A3D62]"
+                      className="w-full bg-slate-50/50 border border-gray-200 rounded-[16px] px-4 py-3 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FAC417]/20 focus:border-[#FAC417] focus:bg-white transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -1399,7 +1399,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       value={profile.company || ''}
                       onChange={(e) => updateProfile({ company: e.target.value })}
                       placeholder="e.g. Sovereign Capital / Independent Studio"
-                      className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/20 focus:border-[#0A3D62]"
+                      className="w-full bg-slate-50/50 border border-gray-200 rounded-[16px] px-4 py-3 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FAC417]/20 focus:border-[#FAC417] focus:bg-white transition-all duration-300"
                     />
                   </div>
                 </div>

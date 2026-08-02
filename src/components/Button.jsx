@@ -12,22 +12,22 @@ export default function Button({
   children,
   ...props
 }) {
-  // Variant styling classes
+  // 2026 visual language button styling configurations
   const variantClasses = {
-    primary: 'bg-[#FAC417] text-slate-900 hover:bg-[#E5B210] font-semibold shadow-sm focus:ring-[#FAC417]/30',
-    secondary: 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 focus:ring-gray-200/50',
-    dark: 'bg-slate-950 text-white hover:bg-slate-900 focus:ring-slate-900/30',
-    danger: 'bg-[#FF1744] text-white hover:bg-[#D50000] focus:ring-[#FF1744]/30',
-    ghost: 'bg-transparent text-gray-600 hover:text-slate-900 hover:bg-gray-100/50 focus:ring-gray-100',
+    primary: 'bg-gradient-to-br from-[#FAC417] via-[#FAC417] to-[#E5B210] text-slate-950 hover:shadow-[0_6px_22px_rgba(250,196,23,0.32)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] font-bold border-t border-white/25',
+    secondary: 'bg-white/40 backdrop-blur-sm border border-gray-250 text-gray-700 hover:bg-white/80 hover:border-gray-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] font-medium shadow-sm',
+    dark: 'bg-gradient-to-br from-[#1E293B] to-[#0F172A] text-white hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] font-semibold border-t border-white/10',
+    danger: 'bg-gradient-to-br from-[#FF1744] to-[#D50000] text-white hover:shadow-[0_6px_22px_rgba(255,23,68,0.32)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] font-bold border-t border-white/20',
+    ghost: 'bg-transparent text-gray-600 hover:text-slate-900 hover:bg-gray-150/50 active:scale-[0.97] font-medium',
   };
 
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-xs rounded-full',
-    md: 'px-5 py-2.5 text-sm rounded-full',
-    lg: 'px-7 py-3 text-base rounded-full',
+    sm: 'px-4 py-2 text-xs rounded-full',
+    md: 'px-6 py-3 text-sm rounded-full',
+    lg: 'px-8 py-3.5 text-base rounded-full',
   };
 
-  const baseClasses = 'inline-flex items-center justify-center gap-2 font-heading transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+  const baseClasses = 'inline-flex items-center justify-center gap-2 font-heading transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
 
   const fullClassName = `${baseClasses} ${variantClasses[variant] || variantClasses.primary} ${sizeClasses[size] || sizeClasses.md} ${className}`;
 
