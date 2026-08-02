@@ -441,31 +441,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             </div>
 
             {/* Outcome Card Motivation (Positioned Above the CTA) */}
-            <div id="mobile-landing-outcome" className="w-full max-w-sm mx-auto overflow-hidden my-1 flex flex-col items-center">
-              {/* Preset Selector Dropdown */}
-              <div id="mobile-landing-preset-selector" className="mb-2 w-full max-w-[240px]">
-                <div className="relative w-full">
-                  <select
-                    id="mobile-preset-select"
-                    value={MOCK_PRESETS.find(p => p.data.selectedGoal === profile.selectedGoal)?.id || ''}
-                    onChange={(e) => {
-                      const found = MOCK_PRESETS.find(p => p.id === e.target.value);
-                      if (found) setProfile(found.data);
-                    }}
-                    className="w-full bg-white border border-gray-200 text-gray-700 py-1.5 px-3 pr-8 rounded-full text-[10px] font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10 focus:border-[#0A3D62] cursor-pointer appearance-none text-center"
-                  >
-                    <option value="" disabled>-- Select Preset --</option>
-                    {MOCK_PRESETS.map((preset) => (
-                      <option key={preset.id} value={preset.id}>
-                        {preset.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                    <ChevronDown className="w-3 h-3" />
-                  </div>
-                </div>
-              </div>
+            <div id="mobile-landing-outcome" className="w-full max-w-sm mx-auto overflow-hidden mt-3 mb-1 flex flex-col items-center">
               <div className="w-full flex justify-center h-[260px] overflow-hidden">
                 <div className="w-full scale-[0.80] sm:scale-[0.85] origin-top">
                   <LivePreviewCard 
