@@ -96,6 +96,7 @@ export default function App() {
                         onFinish={() => setViewMode('public')}
                         isMobileView={true}
                         language={language}
+                        setLanguage={setLanguage}
                       />
                     )}
                     {viewMode === 'card' && (
@@ -140,6 +141,7 @@ export default function App() {
                               onFinish={() => setViewMode('public')}
                               isMobileView={true}
                               language={language}
+                              setLanguage={setLanguage}
                             />
                           )}
                           {viewMode === 'card' && (

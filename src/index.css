@@ -339,3 +339,44 @@
   animation: pulseClimax 2s infinite ease-in-out;
 }
 
+/* PWA Safe Area Helpers */
+.pt-safe-top {
+  padding-top: env(safe-area-inset-top, 12px);
+}
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 12px);
+}
+.pl-safe-left {
+  padding-left: env(safe-area-inset-left, 16px);
+}
+.pr-safe-right {
+  padding-right: env(safe-area-inset-right, 16px);
+}
+
+/* Mobile-First Entrance Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes cardSlideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes ctaPulseOnce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+.animate-card-slide-up {
+  animation: cardSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.animate-cta-pulse-once {
+  animation: ctaPulseOnce 0.6s ease-in-out forwards;
+  animation-delay: 0.4s;
+}
+
+

@@ -15,7 +15,7 @@ import Badge from './Badge';
 import Card from './Card';
 import StatTile from './StatTile';
 
-export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en' }) {
+export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en', setLanguage }) {
   const [isLanding, setIsLanding] = useState(true);
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [currentStep, setCurrentStep] = useState(1);
@@ -369,111 +369,105 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
     if (isLanding) {
       return (
-        <div id="mobile-landing-pwa" className="flex-1 flex flex-col justify-between bg-white text-gray-900 overflow-hidden px-4 py-4 min-h-0">
-          {/* Header Strip */}
-          <div id="mobile-landing-strip" className="flex items-center justify-center space-x-2 text-[9px] font-semibold text-gray-500 bg-gray-50 p-1.5 rounded-lg border border-gray-200 w-full mb-2 shrink-0">
-            <Shield 
-              className="w-3.5 h-3.5 text-[#0A3D62] fill-[#0A3D62]" 
-              strokeWidth={3} 
-            />
-            <span>Real Estate Trust System <strong className="font-bold">(REITS)</strong> ™️</span>
+        <div id="mobile-landing-pwa" className="h-[100svh] md:h-full w-full max-w-[420px] mx-auto flex flex-col justify-between bg-white text-gray-900 overflow-hidden px-4 py-4 pb-safe-bottom pt-safe-top relative animate-fade-in">
+          
+          {/* Native-style Compact Header */}
+          <div className="flex items-center justify-between py-2 px-1 shrink-0 border-b border-gray-100/60">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-black tracking-wider text-slate-800 font-heading">
+                <span className="text-[#FF1744]">R8</span> ESTATE
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              {/* Language toggler */}
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-500">
+                <button 
+                  onClick={() => setLanguage && setLanguage('en')} 
+                  className={`hover:text-slate-900 cursor-pointer ${language === 'en' ? 'text-slate-900 font-extrabold underline decoration-2 decoration-[#FF1744] underline-offset-2' : 'text-gray-400'}`}
+                >
+                  EN
+                </button>
+                <span className="text-gray-300">/</span>
+                <button 
+                  onClick={() => setLanguage && setLanguage('ar')} 
+                  className={`hover:text-slate-900 font-arabic cursor-pointer ${language === 'ar' ? 'text-slate-900 font-extrabold underline decoration-2 decoration-[#FF1744] underline-offset-2' : 'text-gray-400 font-arabic'}`}
+                >
+                  ع
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Hero Section (Flex Container) */}
-          <div id="mobile-landing-hero" className="flex-1 flex flex-col justify-around py-1 min-h-0">
-            {/* Title / Header block with Rotator */}
-            <div 
-              className="text-center space-y-2 py-2"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
-            >
-              <span className="text-[9px] font-extrabold tracking-widest text-[#0A3D62] uppercase block">
-                Real Estate Professional Looking for
+          {/* Outcome Carousel Header */}
+          <div className="text-center py-2 shrink-0 space-y-1">
+            <span className="text-[9px] font-bold tracking-wider text-slate-400 uppercase block">
+              {language === 'ar' ? 'بطاقة الثقة تمنحك' : 'YOUR TRUST CARD SECURES'}
+            </span>
+            <div className="h-6 overflow-hidden relative flex items-center justify-center">
+              <span 
+                key={activeStateIndex}
+                className="text-sm font-extrabold tracking-tight text-slate-800 font-heading animate-slide-up-in block"
+              >
+                {language === 'ar' ? (
+                  activeStateIndex === 0 ? 'المزيد من العملاء' :
+                  activeStateIndex === 1 ? 'المزيد من العقارات' :
+                  activeStateIndex === 2 ? 'المزيد من الصفقات الناجحة' :
+                  activeStateIndex === 3 ? 'إحالات أعلى' :
+                  activeStateIndex === 4 ? 'صفر اعتراضات' :
+                  activeStateIndex === 5 ? 'توثيق مطلق' : 'R8 ESTATE'
+                ) : ROTATOR_STATES[activeStateIndex].text}
               </span>
-              
-              {/* Word-rotator container */}
-              <div className="overflow-hidden h-[44px] relative flex items-center justify-center">
-                <span 
-                  key={activeStateIndex}
-                  className={`absolute text-3xl font-extrabold tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
-                    activeStateIndex === 6 ? 'scale-105 transition-all duration-300' : ''
-                  }`}
-                  style={{
-                    animation: activeStateIndex === 6 ? 'slideUpIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, pulse 2s infinite ease-in-out' : undefined
+            </div>
+            {/* Compact dots indicator */}
+            <div className="flex items-center space-x-1.5 justify-center mt-1">
+              {ROTATOR_STATES.map((state, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setActiveStateIndex(idx);
+                    setIsPaused(true);
                   }}
-                >
-                  {ROTATOR_STATES[activeStateIndex].text}
-                </span>
-              </div>
-
-              {/* Progress bar container */}
-              <div className="w-full max-w-[200px] h-[3px] bg-gray-100 rounded-full overflow-hidden mx-auto mt-1.5">
-                <div 
-                  key={activeStateIndex}
-                  className={`h-full bg-[#0A3D62] rounded-full animate-progress-bar ${
-                    isPaused ? 'animate-progress-bar-paused' : ''
+                  className={`w-1 h-1 rounded-full transition-all duration-300 ${
+                    idx === activeStateIndex ? 'bg-[#FF1744] w-2.5' : 'bg-gray-200'
                   }`}
                 />
-              </div>
-
-              {/* Navigation dots */}
-              <div className="flex items-center space-x-1.5 justify-center mt-2">
-                {ROTATOR_STATES.map((state, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setActiveStateIndex(idx);
-                      setIsPaused(true);
-                    }}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                      idx === activeStateIndex
-                        ? 'bg-[#0A3D62] w-3'
-                        : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
-                    title={state.text}
-                  />
-                ))}
-              </div>
-
-              <p className="text-xs font-bold text-gray-800 leading-none pt-2">
-                Get them all now 👇
-              </p>
+              ))}
             </div>
-
-            {/* Outcome Card Motivation (Positioned Above the CTA) */}
-            <div id="mobile-landing-outcome" className="w-full max-w-sm mx-auto overflow-hidden mt-3 mb-1 flex flex-col items-center">
-              <div className="w-full flex justify-center h-[260px] overflow-hidden">
-                <div className="w-full scale-[0.80] sm:scale-[0.85] origin-top">
-                  <LivePreviewCard 
-                    profile={profile} 
-                    activeStateIndex={activeStateIndex}
-                    theme={ROTATOR_STATES[activeStateIndex]?.theme || 'gold'}
-                    language={language}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Button Block (Bottom) */}
-            <div className="space-y-1.5 shrink-0 text-center px-2">
-              <Button
-                id="btn-mobile-start-cta"
-                onClick={handleStartBuilder}
-                variant={activeStateIndex === 6 ? 'danger' : 'dark'}
-                size="md"
-                className={`w-full flex items-center justify-center space-x-2 ${
-                  activeStateIndex === 6 ? 'ring-4 ring-[#FF1744]/30 scale-105 animate-pulse' : ''
-                }`}
-              >
-                <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
-                <ArrowRight className="w-4 h-4 text-[#FAC417]" />
-              </Button>
-              <span className="text-[9px] text-gray-400 block mt-1 text-center">
-                {language === 'ar' ? '90 ثانية - معاينة فورية - بدون تسجيل' : '90 seconds - Instant preview - No signup'}
-              </span>
-            </div>
-
           </div>
+
+          {/* Large Premium Trust Card (Nearly full width inside a max-h-[380px] flex container) */}
+          <div id="mobile-landing-outcome" className="flex-1 w-full flex items-center justify-center py-2 shrink-0 animate-card-slide-up">
+            <div className="w-full flex justify-center items-center h-full max-h-[380px]">
+              <div className="w-full scale-[0.86] sm:scale-[0.92] origin-center drop-shadow-xl">
+                <LivePreviewCard 
+                  profile={profile} 
+                  activeStateIndex={activeStateIndex}
+                  theme={ROTATOR_STATES[activeStateIndex]?.theme || 'gold'}
+                  language={language}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Primary CTA directly below with 16px spacing */}
+          <div className="space-y-3 shrink-0 text-center px-2 mt-4">
+            <Button
+              id="btn-mobile-start-cta"
+              onClick={handleStartBuilder}
+              variant={activeStateIndex === 6 ? 'danger' : 'dark'}
+              size="md"
+              className={`w-full flex items-center justify-center space-x-2 py-3 rounded-[24px] transition-all duration-300 animate-cta-pulse-once ${
+                activeStateIndex === 6 ? 'ring-4 ring-[#FF1744]/30 scale-[1.02] shadow-[0_0_20px_rgba(255,23,68,0.2)]' : ''
+              }`}
+            >
+              <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
+              <ArrowRight className="w-4 h-4 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
+            </Button>
+            <span className="text-[10px] text-gray-400 font-medium block text-center">
+              {language === 'ar' ? '90 ثانية • معاينة فورية • بدون تسجيل' : '90 seconds • Instant preview • No signup'}
+            </span>
+          </div>
+
         </div>
       );
     }
@@ -483,14 +477,22 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
       <div id="mobile-builder-pwa" className="flex-1 flex flex-col justify-between bg-[#FAFAF9] text-gray-900 relative">
         
         {/* Sticky Mobile PWA Header */}
-        <div id="pwa-header" className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center space-x-2">
-            <Shield className="w-5 h-5 text-[#0A3D62]" />
-            <span className="font-extrabold text-sm text-[#0A3D62]">R8 ESTATE PWA</span>
+        <div id="pwa-header" className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0">
+          <div className="flex items-center space-x-1.5">
+            <Shield className="w-4 h-4 text-[#0A3D62]" />
+            <span className="font-extrabold text-xs tracking-wider text-slate-800 font-heading">
+              <span className="text-[#FF1744]">R8</span> ESTATE
+            </span>
           </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
-              Active Sync
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500 border border-gray-200 rounded-full px-2 py-0.5 bg-gray-50">
+              <button onClick={() => setLanguage && setLanguage('en')} className={`${language === 'en' ? 'text-slate-900 font-black' : 'text-gray-400'}`}>EN</button>
+              <span className="text-gray-300">/</span>
+              <button onClick={() => setLanguage && setLanguage('ar')} className={`${language === 'ar' ? 'text-slate-900 font-black font-arabic' : 'text-gray-400 font-arabic'}`}>ع</button>
+            </div>
+            <span className="text-[9px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
+              {language === 'ar' ? 'مزامنة' : 'Sync'}
             </span>
           </div>
         </div>
@@ -507,7 +509,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             <div id="tab-home-container" className="space-y-5 animate-fade-up">
               
               {/* Trust Score Health Panel */}
-              <div className="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm space-y-3">
+              <div className="bg-white rounded-[24px] p-5 border border-gray-150 shadow-sm space-y-3.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-gray-400 uppercase">Trust Analytics</span>
                   <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -911,13 +913,13 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
         {/* Sticky iOS-style PWA Bottom Tabbar */}
         <div 
           id="pwa-bottom-tabbar" 
-          className="absolute bottom-0 inset-x-0 bg-white border-t border-gray-200 flex items-center justify-around py-2.5 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]"
-          style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 12px))' }} // respects notches and safe zones
+          className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-gray-100 flex items-center justify-around py-3 z-40 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]"
+          style={{ paddingBottom: 'calc(10px + env(safe-area-inset-bottom, 12px))' }} // respects notches and safe zones
         >
           <button
             onClick={() => setMobileTab('home')}
-            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
-              mobileTab === 'home' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold transition-colors duration-200 ${
+              mobileTab === 'home' ? 'text-[#FF1744] font-extrabold' : 'text-gray-400'
             }`}
           >
             <Compass className="w-5 h-5 mb-0.5 pointer-events-none" />
@@ -926,8 +928,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
           <button
             onClick={() => setMobileTab('build')}
-            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
-              mobileTab === 'build' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold transition-colors duration-200 ${
+              mobileTab === 'build' ? 'text-[#FF1744] font-extrabold' : 'text-gray-400'
             }`}
           >
             <Edit className="w-5 h-5 mb-0.5 pointer-events-none" />
@@ -936,8 +938,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
           <button
             onClick={() => setMobileTab('dashboard')}
-            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
-              mobileTab === 'dashboard' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold transition-colors duration-200 ${
+              mobileTab === 'dashboard' ? 'text-[#FF1744] font-extrabold' : 'text-gray-400'
             }`}
           >
             <TrendingUp className="w-5 h-5 mb-0.5 pointer-events-none" />
@@ -946,8 +948,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
           <button
             onClick={() => setMobileTab('card')}
-            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold ${
-              mobileTab === 'card' ? 'text-[#0A3D62] font-extrabold' : 'text-gray-400'
+            className={`flex flex-col items-center justify-center w-14 text-[9px] font-bold transition-colors duration-200 ${
+              mobileTab === 'card' ? 'text-[#FF1744] font-extrabold' : 'text-gray-400'
             }`}
           >
             <Eye className="w-5 h-5 mb-0.5 pointer-events-none" />
