@@ -15,7 +15,7 @@ import Badge from './Badge';
 import Card from './Card';
 import StatTile from './StatTile';
 
-export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en', setLanguage }) {
+export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en', setLanguage, user, onSignInClick }) {
   const [isLanding, setIsLanding] = useState(true);
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [currentStep, setCurrentStep] = useState(1);
@@ -133,13 +133,46 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     setMobileTab('home');
   };
 
+  const renderLockScreen = (titleText, descText) => {
+    return (
+      <div className="flex flex-col items-center justify-center py-10 px-5 text-center space-y-5 animate-fade-in min-h-[48vh] bg-white rounded-[24px] border border-gray-100 shadow-sm mt-2">
+        <div className="relative">
+          <div className="w-14 h-14 rounded-full bg-[#FAC417]/10 flex items-center justify-center border border-[#FAC417]/30 shadow-[0_0_16px_rgba(250,196,23,0.12)]">
+            <Lock className="w-5 h-5 text-[#FAC417]" />
+          </div>
+          <div className="absolute -inset-1.5 rounded-full bg-[#FAC417]/5 blur-sm pointer-events-none" />
+        </div>
+        <div className="space-y-1.5 max-w-xs">
+          <h3 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider font-heading">{titleText}</h3>
+          <p className="text-[11px] text-gray-500 leading-relaxed">{descText}</p>
+        </div>
+        <Button 
+          onClick={onSignInClick}
+          variant="dark"
+          size="sm"
+          className="w-full max-w-[220px] flex items-center justify-center space-x-2 py-2.5 rounded-full hover:shadow-md transition-all"
+        >
+          <Shield className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
+          <span>{language === 'ar' ? 'تسجيل الدخول مع جوجل' : 'Sign In with Google'}</span>
+        </Button>
+        <span className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider">
+          {language === 'ar' ? 'أمان تام ومزامنة فورية عبر OAuth 2.0' : 'Secure OAuth 2.0 Verification'}
+        </span>
+      </div>
+    );
+  };
+
   const handleNext = () => {
     if (currentStep < 12) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       updateProfile({ completionPercentage: Math.min(100, Math.round((nextStep / 12) * 100)) });
     } else {
-      onFinish();
+      if (!user) {
+        onSignInClick();
+      } else {
+        onFinish();
+      }
     }
   };
 
@@ -395,6 +428,24 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   ع
                 </button>
               </div>
+
+              {/* User profile identifier */}
+              {user ? (
+                <div className="w-6 h-6 rounded-full bg-slate-950 text-white flex items-center justify-center font-bold text-[9px] uppercase border border-slate-100 overflow-hidden shrink-0 shadow-sm">
+                  {user.picture ? (
+                    <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    user.initials || 'U'
+                  )}
+                </div>
+              ) : (
+                <button 
+                  onClick={onSignInClick}
+                  className="text-[9px] font-bold text-slate-800 bg-slate-50 hover:bg-slate-100 border border-gray-250 rounded-full px-2 py-0.5"
+                >
+                  {language === 'ar' ? 'دخول' : 'Sign In'}
+                </button>
+              )}
             </div>
           </div>
 
@@ -506,10 +557,11 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           
           {/* TAB 1: HOME/OVERVIEW */}
           {mobileTab === 'home' && (
-            <div id="tab-home-container" className="space-y-5 animate-fade-up">
-              
-              {/* Trust Score Health Panel */}
-              <div className="bg-white rounded-[24px] p-5 border border-gray-150 shadow-sm space-y-3.5">
+            !user ? renderLockScreen(t.privateWorkspace || 'Private Analytics', t.verifyUnlock || 'Verify your identity to unlock deep trust analytics, credentials, and verification tools.') : (
+              <div id="tab-home-container" className="space-y-5 animate-fade-up">
+                
+                {/* Trust Score Health Panel */}
+                <div className="bg-white rounded-[24px] p-5 border border-gray-150 shadow-sm space-y-3.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-gray-400 uppercase">Trust Analytics</span>
                   <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -621,7 +673,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <ArrowRight className="w-4 h-4 text-[#FAC417]" />
               </button>
             </div>
-          )}
+          )
+        )}
 
           {/* TAB 2: BUILD CARD (ACCORDIONS) */}
           {mobileTab === 'build' && (
@@ -804,46 +857,48 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
           {/* TAB 3: DASHBOARD METRICS */}
           {mobileTab === 'dashboard' && (
-            <div id="tab-dashboard-container" className="space-y-4 animate-fade-up text-left">
-              <h2 className="text-lg font-bold text-slate-900 font-heading">Decision Dashboard</h2>
-              <p className="text-xs text-gray-500">Real-time credibility indicators configured for your profile.</p>
+            !user ? renderLockScreen(t.privateWorkspace || 'Workspace Dashboard', t.verifyUnlockDashboard || 'Sign in to access your listings scoreboards, partner leads, and verification dashboard.') : (
+              <div id="tab-dashboard-container" className="space-y-4 animate-fade-up text-left">
+                <h2 className="text-lg font-bold text-slate-900 font-heading">Decision Dashboard</h2>
+                <p className="text-xs text-gray-500">Real-time credibility indicators configured for your profile.</p>
 
-              <div className="grid grid-cols-2 gap-3.5 pt-2">
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">Trust score</span>
-                  <span className="text-3xl font-extrabold text-slate-900 font-heading">{profile.trustScore}%</span>
-                  <span className="text-[9px] text-[#FAC417] font-semibold">Gold Certified</span>
+                <div className="grid grid-cols-2 gap-3.5 pt-2">
+                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase">Trust score</span>
+                    <span className="text-3xl font-extrabold text-slate-900 font-heading">{profile.trustScore}%</span>
+                    <span className="text-[9px] text-[#FAC417] font-semibold">Gold Certified</span>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase">Opportunity index</span>
+                    <span className="text-3xl font-extrabold text-[#0A3D62] font-heading">{profile.opportunityScore}/100</span>
+                    <span className="text-[9px] text-emerald-600 font-semibold">Excellent Rating</span>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase">Hiring readiness</span>
+                    <span className="text-3xl font-extrabold text-slate-900 font-heading">{profile.hiringReadiness}%</span>
+                    <span className="text-[9px] text-gray-500 font-semibold">Instant Response</span>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase">Referrals</span>
+                    <span className="text-3xl font-extrabold text-slate-900 font-heading">44%</span>
+                    <span className="text-[9px] text-[#0A3D62] font-semibold">High Repeat Rate</span>
+                  </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">Opportunity index</span>
-                  <span className="text-3xl font-extrabold text-[#0A3D62] font-heading">{profile.opportunityScore}/100</span>
-                  <span className="text-[9px] text-emerald-600 font-semibold">Excellent Rating</span>
-                </div>
-
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">Hiring readiness</span>
-                  <span className="text-3xl font-extrabold text-slate-900 font-heading">{profile.hiringReadiness}%</span>
-                  <span className="text-[9px] text-gray-500 font-semibold">Instant Response</span>
-                </div>
-
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between min-h-[90px]">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">Referrals</span>
-                  <span className="text-3xl font-extrabold text-slate-900 font-heading">44%</span>
-                  <span className="text-[9px] text-[#0A3D62] font-semibold">High Repeat Rate</span>
+                <div className="bg-slate-950 text-white rounded-2xl p-5 border border-slate-800 shadow-lg space-y-3 mt-4">
+                  <h3 className="text-sm font-bold text-[#FAC417] font-heading flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#FAC417]" />
+                    <span>Verified Decision Asset</span>
+                  </h3>
+                  <p className="text-[11px] text-gray-400 leading-relaxed">
+                    Your credentials have been aggregated into R8 ESTATE's secure decentralized identity index, ensuring complete verifiability on the regional trust networks.
+                  </p>
                 </div>
               </div>
-
-              <div className="bg-slate-950 text-white rounded-2xl p-5 border border-slate-800 shadow-lg space-y-3 mt-4">
-                <h3 className="text-sm font-bold text-[#FAC417] font-heading flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#FAC417]" />
-                  <span>Verified Decision Asset</span>
-                </h3>
-                <p className="text-[11px] text-gray-400 leading-relaxed">
-                  Your credentials have been aggregated into R8 ESTATE's secure decentralized identity index, ensuring complete verifiability on the regional trust networks.
-                </p>
-              </div>
-            </div>
+            )
           )}
 
           {/* TAB 4: SWIPEABLE TRUST CARD PREVIEW */}

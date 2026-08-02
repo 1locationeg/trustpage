@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { X, Check, Loader2, ArrowLeft, Plus } from 'lucide-react';
 import Button from './Button';
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "336829777595-sfe0t1iih47c6lgg958k36pbfslphkgi.apps.googleusercontent.com";
+
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [loadingProvider, setLoadingProvider] = useState(null); // 'google' | 'linkedin' | null
   const [success, setSuccess] = useState(false);
@@ -13,6 +15,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   if (!isOpen) return null;
 
   const handleStartOAuth = (provider) => {
+    if (provider === 'google') {
+      const redirectUri = window.location.origin + '/';
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('openid email profile')}&state=google`;
+      window.location.href = authUrl;
+      return;
+    }
+
     setActiveProvider(provider);
     setShowChooser(true);
     setShowCustomInput(false);

@@ -31,9 +31,69 @@ export default function App() {
 
   const [language, setLanguage] = useState('en');
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [user, setUser] = useState(null); // { provider, email }
+
+  // Initialize session from localStorage
+  const [user, setUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('r8estate_user');
+      return saved ? JSON.parse(saved) : null;
+    }
+    return null;
+  });
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
+
+  // Google OAuth callback listener
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get('access_token');
+
+      if (accessToken) {
+        // Fetch user information from Google API
+        fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`)
+          .then((res) => {
+            if (!res.ok) throw new Error('Failed to fetch Google profile');
+            return res.json();
+          })
+          .then((data) => {
+            const googleUser = {
+              provider: 'google',
+              email: data.email,
+              name: data.name,
+              picture: data.picture,
+              initials: data.given_name ? data.given_name[0] : (data.name ? data.name[0] : 'G')
+            };
+
+            // Prevent duplicate emails in simulated local database
+            const registeredStr = localStorage.getItem('r8estate_users') || '[]';
+            const registered = JSON.parse(registeredStr);
+            if (!registered.includes(googleUser.email)) {
+              registered.push(googleUser.email);
+              localStorage.setItem('r8estate_users', JSON.stringify(registered));
+            }
+
+            // Save user state & persist
+            setUser(googleUser);
+            localStorage.setItem('r8estate_user', JSON.stringify(googleUser));
+
+            // Clear hash parameters from URL bar
+            window.history.replaceState(null, null, window.location.pathname + window.location.search);
+          })
+          .catch((err) => {
+            console.error('Google OAuth failed:', err);
+          });
+      }
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    setUser(null);
+    localStorage.removeItem('r8estate_user');
+  };
 
   // Detect actual mobile screen sizes
   useEffect(() => {
@@ -77,7 +137,7 @@ export default function App() {
             language={language}
             setLanguage={setLanguage}
             user={user}
-            onSignOut={() => setUser(null)}
+            onSignOut={handleSignOut}
             onSignInClick={() => setIsAuthOpen(true)}
             translations={t}
           />
@@ -97,6 +157,8 @@ export default function App() {
                         isMobileView={true}
                         language={language}
                         setLanguage={setLanguage}
+                        user={user}
+                        onSignInClick={() => setIsAuthOpen(true)}
                       />
                     )}
                     {viewMode === 'card' && (
@@ -142,6 +204,8 @@ export default function App() {
                               isMobileView={true}
                               language={language}
                               setLanguage={setLanguage}
+                              user={user}
+                              onSignInClick={() => setIsAuthOpen(true)}
                             />
                           )}
                           {viewMode === 'card' && (
@@ -175,6 +239,8 @@ export default function App() {
                       onFinish={() => setViewMode('public')}
                       isMobileView={false}
                       language={language}
+                      user={user}
+                      onSignInClick={() => setIsAuthOpen(true)}
                     />
                   )}
 
