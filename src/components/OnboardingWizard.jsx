@@ -9,9 +9,11 @@ import {
 import { PROFESSIONS_DICT, USER_GOALS } from '../data/professionTemplates';
 import { getFallbackPhoto, MOCK_PRESETS } from '../data/mockProfiles';
 import LivePreviewCard from './LivePreviewCard';
+import { TRANSLATIONS } from '../data/translations';
 
-export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode }) {
+export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en' }) {
   const [isLanding, setIsLanding] = useState(true);
+  const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [currentStep, setCurrentStep] = useState(1);
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -61,13 +63,13 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
   // Vertical Word-Rotator States (7 states)
   const ROTATOR_STATES = [
-    { text: "Build Authority", presetId: "build-authority", theme: "silver" },
-    { text: "Proven Experience", presetId: "proven-experience", theme: "gold" },
-    { text: "Client Confidence", presetId: "client-confidence", theme: "emerald" },
-    { text: "Stronger Partnerships", presetId: "stronger-partnerships", theme: "silver" },
-    { text: "Stand Out", presetId: "stand-out", theme: "emerald" },
-    { text: "More Opportunities", presetId: "more-opportunities", theme: "gold" },
-    { text: "More Clients", presetId: "client-confidence", theme: "gold", isClimax: true }
+    { text: t.benefit_0, presetId: "build-authority", theme: "silver" },
+    { text: t.benefit_1, presetId: "proven-experience", theme: "gold" },
+    { text: t.benefit_2, presetId: "client-confidence", theme: "emerald" },
+    { text: t.benefit_3, presetId: "stronger-partnerships", theme: "silver" },
+    { text: t.benefit_4, presetId: "stand-out", theme: "emerald" },
+    { text: t.benefit_5, presetId: "more-opportunities", theme: "gold" },
+    { text: t.benefit_6, presetId: "client-confidence", theme: "gold", isClimax: true }
   ];
 
   const [activeStateIndex, setActiveStateIndex] = useState(0);
@@ -145,7 +147,64 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     }
   };
 
-  const stepsList = [
+  const getGoalTranslation = (goal) => {
+    if (language !== 'ar') return { label: goal.label, desc: goal.description };
+    const map = {
+      career: { label: "النمو المهني / التوظيف", desc: "جذب مسؤولي التوظيف والشركات الكبرى." },
+      business: { label: "تنمية أعمالي", desc: "توليد استفسارات عملاء مؤهلين وصفقات عالية القيمة." },
+      partnerships: { label: "كسب شراكات أفضل", desc: "التواصل مع المستثمرين والمطورين والشركاء العقاريين." },
+      authority: { label: "بناء سمعتي ومصداقيتي", desc: "تأسيس سلطة مطلقة غير قابلة للنقاش في السوق." },
+      expertise: { label: "استعراض خبراتي", desc: "تحويل سنوات العمل الجاد إلى سجل إثبات مالي مدقق." },
+      visibility: { label: "زيادة حضوري العقاري", desc: "التميز والبروز في الأسواق العقارية المحلية والدولية." }
+    };
+    return map[goal.id] || { label: goal.label, desc: goal.description };
+  };
+
+  const getProfessionTranslation = (prof) => {
+    if (language !== 'ar') return { label: prof.label, category: prof.category };
+    const map = {
+      broker: { label: "وسيط عقاري / بروكر", category: "مبيعات وتأجير" },
+      developer: { label: "مطور عقاري / مالك", category: "تطوير وإنشاء" },
+      advisor: { label: "مستشار استثماري", category: "استشارات مالية وعقارية" },
+      consultant: { label: "خبير ومستشار عقاري", category: "دراسات واستراتيجيات" },
+      lawyer: { label: "محامٍ ومستشار قانوني", category: "قوانين عقارية وعقود" },
+      interior: { label: "مهندس تصميم داخلي", category: "تصميم وديكور" }
+    };
+    return map[prof.id] || { label: prof.label, category: prof.category };
+  };
+
+  const getSpecTranslation = (spec) => {
+    if (language !== 'ar') return spec;
+    const map = {
+      "Sustainable Planning": "التخطيط المستدام",
+      "Luxury Residential": "السكني الفاخر",
+      "Commercial Development": "التطوير التجاري",
+      "Investment Portfolios": "المحافظ الاستثمارية",
+      "Off-Plan Strategy": "البيع على الخارطة",
+      "Legal Advisory": "الاستشارات القانونية",
+      "Asset Yield Optimization": "تحسين عائد الأصول",
+      "Contract Delivery": "تسليم وتوقيع العقود"
+    };
+    return map[spec] || spec;
+  };
+
+  const getKpiTranslation = (label) => {
+    if (language !== 'ar') return label;
+    const map = {
+      "Deals Advised": "الصفقات المغلقة",
+      "Volume Structured": "حجم المعاملات الموثقة",
+      "Practice Years": "سنوات الخبرة",
+      "Client Rating": "تقييم العملاء",
+      "Spaces Styled": "مساحات تم تصميمها",
+      "Design Awards": "جوائز التصميم",
+      "Avg Response": "سرعة الاستجابة"
+    };
+    return map[label] || label;
+  };
+
+  const stepsList = language === 'ar' ? [
+    "الهدف", "المهنة", "الهوية", "الخبرة", "الشركة والأسواق", "الصورة الشخصية", "التوثيق", "سجل الأداء", "الإثباتات", "الذكاء العقاري", "الملخص", "جاهز"
+  ] : [
     "Goal", "Profession", "Identity", "Expertise", "Company & Markets",
     "Photo", "Verification", "Track Record", "Proof", "Intelligence", "Summary", "Ready"
   ];
@@ -409,6 +468,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     profile={profile} 
                     activeStateIndex={activeStateIndex}
                     theme={ROTATOR_STATES[activeStateIndex]?.theme || 'gold'}
+                    language={language}
                   />
                 </div>
               </div>
@@ -825,6 +885,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   profile={profile} 
                   onOpenFullPage={onFinish}
                   theme={cardTheme}
+                  language={language}
                 />
               </div>
 
@@ -938,18 +999,18 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             <div className="lg:col-span-7 space-y-6 py-4">
               
               {/* Header Tag / Trust Strip */}
-              <div id="landing-trust-strip" className="flex items-center space-x-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit">
+              <div id="landing-trust-strip" className={`flex items-center gap-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit ${language === 'ar' ? 'mr-0 ml-auto' : 'ml-0 mr-auto'}`}>
                 <Shield 
                   className="w-4 h-4 text-[#0A3D62] fill-[#0A3D62]" 
                   strokeWidth={3} 
                 />
-                <span>Real Estate Trust System <strong className="font-bold">(REITS)</strong> ™️</span>
+                <span>{language === 'ar' ? 'نظام الثقة العقارية ' : 'Real Estate Trust System '}<strong className="font-bold">(REITS)</strong> ™️</span>
               </div>
 
               {/* Premium Gold Typography Hero Section with Rotator */}
               <div className="space-y-4">
                 <span className="text-xs font-extrabold tracking-widest text-slate-500 uppercase block">
-                  Real Estate Professional Looking for
+                  {t.heroIntro}
                 </span>
                 
                 {/* Word-rotator container */}
@@ -958,7 +1019,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     key={activeStateIndex}
                     className={`absolute text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
                       activeStateIndex === 6 ? 'scale-105 transition-all duration-300' : ''
-                    }`}
+                    } ${language === 'ar' ? 'right-0' : 'left-0'}`}
                     style={{
                       animation: activeStateIndex === 6 ? 'slideUpIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, pulse 2s infinite ease-in-out' : undefined
                     }}
@@ -978,7 +1039,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </div>
 
                 {/* Navigation dots */}
-                <div className="flex items-center space-x-1.5 justify-start mt-3">
+                <div className="flex items-center gap-1.5 justify-start mt-3">
                   {ROTATOR_STATES.map((state, idx) => (
                     <button
                       key={idx}
@@ -997,21 +1058,25 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </div>
 
                 <p className="text-2xl font-bold text-slate-900 leading-tight pt-2">
-                  Get them all now 👇
+                  {language === 'ar' ? 'احصل عليها جميعاً الآن 👇' : 'Get them all now 👇'}
                 </p>
                 
                 <span className="text-sm text-slate-500 font-semibold block">
-                  ⭐ Powered by R8 ESTATE
+                  ⭐ {t.poweredBy} R8 ESTATE
                 </span>
               </div>
 
               {/* Strategic highlights loop */}
-              <div className="space-y-2 border-l-2 border-gray-200 pl-4 py-1">
-                {[
+              <div className={`space-y-2 py-1 ${language === 'ar' ? 'border-r-2 border-gray-200 pr-4' : 'border-l-2 border-gray-200 pl-4'}`}>
+                {(language === 'ar' ? [
+                  { title: "توثيق عالمي", desc: "اربط السجلات التنظيمية والعقود الموثقة فوراً." },
+                  { title: "هوية ثقة ممتازة", desc: "بروز فريد في رسائل البريد الإلكتروني، القوائم، والمراسلات." },
+                  { title: "لا توجد نصوص مؤقتة", desc: "إحصاءاتك الحقيقية يتم تحديثها مباشرة عبر محرك المزامنة الخاص بنا." }
+                ] : [
                   { title: "Universal verification", desc: "Instantly link verified regulatory registries & contracts." },
                   { title: "Premium trust identity", desc: "Stand out in emails, listings, and messages." },
                   { title: "No placeholders", desc: "Your real statistics updated live via our sync engine." }
-                ].map((h, i) => (
+                ]).map((h, i) => (
                   <div key={i} className="text-xs">
                     <span className="font-bold text-slate-800">{h.title}:</span>{" "}
                     <span className="text-gray-500">{h.desc}</span>
@@ -1024,17 +1089,17 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <button
                   id="btn-landing-cta"
                   onClick={handleStartBuilder}
-                  className={`w-full py-4 font-bold text-base rounded-full transition-all shadow-md flex items-center justify-center space-x-2 font-heading ${
+                  className={`w-full py-4 font-bold text-base rounded-full transition-all shadow-md flex items-center justify-center gap-2 font-heading ${
                     activeStateIndex === 6
                       ? 'bg-[#FF1744] text-white hover:bg-[#D50000] ring-4 ring-[#FF1744]/30 scale-105 animate-pulse'
                       : 'bg-slate-950 text-white hover:bg-slate-900'
                   }`}
                 >
-                  <span>Get My Trust Card</span>
-                  <ArrowRight className="w-4 h-4 text-[#FAC417]" />
+                  <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
+                  <ArrowRight className="w-4 h-4 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
                 </button>
                 <span className="text-xs text-slate-400 block mt-2">
-                  90 seconds - Instant preview - No signup
+                  {language === 'ar' ? '90 ثانية - معاينة فورية - بدون تسجيل' : '90 seconds - Instant preview - No signup'}
                 </span>
               </div>
 
@@ -1055,14 +1120,20 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       }}
                       className="w-full bg-white border border-gray-200 text-gray-700 py-2 px-4 pr-10 rounded-full text-xs font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10 focus:border-[#0A3D62] cursor-pointer appearance-none text-center"
                     >
-                      <option value="" disabled>-- Select Preset --</option>
+                      <option value="" disabled>{language === 'ar' ? '-- اختر نموذج جاهز --' : '-- Select Preset --'}</option>
                       {MOCK_PRESETS.map((preset) => (
                         <option key={preset.id} value={preset.id}>
-                          {preset.label}
+                          {language === 'ar' ? (
+                            preset.id === 'build-authority' ? t.benefit_0 :
+                            preset.id === 'proven-experience' ? t.benefit_1 :
+                            preset.id === 'client-confidence' ? t.benefit_2 :
+                            preset.id === 'stronger-partnerships' ? t.benefit_3 :
+                            preset.id === 'stand-out' ? t.benefit_4 : t.benefit_5
+                          ) : preset.label}
                         </option>
                       ))}
                     </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                    <div className={`pointer-events-none absolute inset-y-0 flex items-center px-4 text-gray-500 ${language === 'ar' ? 'left-0' : 'right-0'}`}>
                       <ChevronDown className="w-3.5 h-3.5" />
                     </div>
                   </div>
@@ -1072,6 +1143,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
                   theme={isLanding ? (ROTATOR_STATES[activeStateIndex]?.theme || 'gold') : cardTheme}
+                  language={language}
                 />
               </div>
             </div>
@@ -1080,10 +1152,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           {/* Stat Strip */}
           <div id="desktop-landing-stats" className="border-t border-b border-gray-200/85 py-8 grid grid-cols-4 gap-4 text-center max-w-5xl mx-auto w-full">
             {[
-              { value: "100+", label: "Verified professionals" },
-              { value: "3", label: "Countries live" },
-              { value: "94%", label: "Avg trust score" },
-              { value: "<12m", label: "Avg response time" }
+              { value: "100+", label: language === 'ar' ? "محترف موثق" : "Verified professionals" },
+              { value: "3", label: language === 'ar' ? "دول مفعلة" : "Countries live" },
+              { value: "94%", label: language === 'ar' ? "متوسط مؤشر الثقة" : "Avg trust score" },
+              { value: "<12m", label: language === 'ar' ? "سرعة الاستجابة" : "Avg response time" }
             ].map((stat, idx) => (
               <div key={idx} className="flex flex-col items-center">
                 <span className="text-2xl font-extrabold text-slate-900 font-heading">{stat.value}</span>
@@ -1133,7 +1205,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             <div id="wizard-progress-header">
               <div className="flex items-center justify-between text-xs font-semibold text-gray-500 mb-2">
                 <span className="text-[#0A3D62] text-xs font-semibold uppercase tracking-wider">
-                  STEP {currentStep} OF 12
+                  {language === 'ar' ? `الخطوة ${currentStep} من 12` : `STEP ${currentStep} OF 12`}
                 </span>
                 <span className="text-gray-700 font-medium text-xs">
                   {stepsList[currentStep - 1]}
@@ -1161,40 +1233,41 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 1: GOAL SELECTION */}
             {currentStep === 1 && (
-              <div id="step-1-container" className="space-y-5 text-left">
+              <div id="step-1-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    STEP 1 • PERSONALIZED OUTCOME
+                    {language === 'ar' ? 'الخطوة 1 • النتيجة الشخصية' : 'STEP 1 • PERSONALIZED OUTCOME'}
                   </span>
-                  <h2 className="text-2xl font-bold text-gray-900 font-heading mt-1">
-                    What do you want to achieve, {profile.name || 'Professional'}?
+                  <h2 className="text-2xl font-bold text-gray-900 font-heading mt-1 text-start">
+                    {language === 'ar' ? `ماذا تريد أن تحقق، ${profile.name || 'أيها المحترف'}؟` : `What do you want to achieve, ${profile.name || 'Professional'}?`}
                   </h2>
-                  <p className="text-sm text-gray-600">
-                    Select your primary objective to customize your trust engine.
+                  <p className="text-sm text-gray-600 text-start">
+                    {language === 'ar' ? 'اختر هدفك الرئيسي لتخصيص محرك الثقة الخاص بك.' : 'Select your primary objective to customize your trust engine.'}
                   </p>
                 </div>
 
                 <div id="goals-grid" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {USER_GOALS.map((goal) => {
                     const isSelected = profile.selectedGoal === goal.id;
+                    const gt = getGoalTranslation(goal);
                     return (
                       <button
                         key={goal.id}
                         onClick={() => updateProfile({ selectedGoal: goal.id })}
-                        className={`p-4 rounded-xl border text-left transition-all ${
+                        className={`p-4 rounded-xl border text-start transition-all ${
                           isSelected
                             ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-sm font-bold'
                             : 'bg-white border-gray-200 text-gray-800 hover:border-gray-300'
                         }`}
                       >
-                        <div className="flex items-center space-x-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1">
                           <span className="text-lg">{goal.icon}</span>
                           <span className={`font-semibold text-sm font-heading ${isSelected ? 'text-white' : 'text-gray-900'}`}>
-                            {goal.label}
+                            {gt.label}
                           </span>
                         </div>
                         <p className={`text-xs leading-relaxed ${isSelected ? 'text-gray-200' : 'text-gray-500'}`}>
-                          {goal.description}
+                          {gt.desc}
                         </p>
                       </button>
                     );
@@ -1205,27 +1278,28 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 2: PROFESSION SELECTION */}
             {currentStep === 2 && (
-              <div id="step-2-container" className="space-y-5 text-left">
+              <div id="step-2-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    STEP 2 • ADAPTIVE TRUST ENGINE
+                    {language === 'ar' ? 'الخطوة 2 • محرك الثقة المتكيف' : 'STEP 2 • ADAPTIVE TRUST ENGINE'}
                   </span>
-                  <h2 className="text-2xl font-bold text-gray-900 font-heading mt-1">
-                    What best describes your profession?
+                  <h2 className="text-2xl font-bold text-gray-900 font-heading mt-1 text-start">
+                    {language === 'ar' ? 'ما هو تخصصك المهني الأدق؟' : 'What best describes your profession?'}
                   </h2>
-                  <p className="text-sm text-gray-600">
-                    R8 ESTATE automatically configures relevant KPIs, proof records, and verification criteria for your field.
+                  <p className="text-sm text-gray-600 text-start">
+                    {language === 'ar' ? 'يمنحك R8 ESTATE تلقائياً مؤشرات الأداء وسجلات الإثبات المناسبة لمجالك.' : 'R8 ESTATE automatically configures relevant KPIs, proof records, and verification criteria for your field.'}
                   </p>
                 </div>
 
                 <div id="professions-list" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-1">
                   {Object.values(PROFESSIONS_DICT).map((prof) => {
                     const isSelected = profile.professionId === prof.id;
+                    const pt = getProfessionTranslation(prof);
                     return (
                       <button
                         key={prof.id}
                         onClick={() => updateProfile({ professionId: prof.id })}
-                        className={`p-3.5 rounded-xl border text-left transition-all flex items-center justify-between ${
+                        className={`p-3.5 rounded-xl border text-start transition-all flex items-center justify-between ${
                           isSelected
                             ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-sm font-bold'
                             : 'bg-white border-gray-200 text-gray-800 hover:border-gray-300'
@@ -1233,13 +1307,13 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       >
                         <div>
                           <div className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-gray-900'}`}>
-                            {prof.label}
+                            {pt.label}
                           </div>
                           <div className={`text-xs ${isSelected ? 'text-gray-200' : 'text-gray-500'}`}>
-                            {prof.category}
+                            {pt.category}
                           </div>
                         </div>
-                        {isSelected && <Check className="w-4 h-4 text-white" />}
+                        {isSelected && <Check className="w-4 h-4 text-white shrink-0" />}
                       </button>
                     );
                   })}
@@ -1249,23 +1323,23 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 3: IDENTITY DETAILS */}
             {currentStep === 3 && (
-              <div id="step-3-container" className="space-y-5 text-left">
+              <div id="step-3-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    STEP 3 • PROFESSIONAL IDENTITY
+                    {language === 'ar' ? 'الخطوة 3 • الهوية المهنية' : 'STEP 3 • PROFESSIONAL IDENTITY'}
                   </span>
-                  <h2 className="text-2xl font-bold text-gray-900 font-heading mt-1">
-                    Confirm your professional identity
+                  <h2 className="text-2xl font-bold text-gray-900 font-heading mt-1 text-start">
+                    {language === 'ar' ? 'أكد هويتك المهنية الرسمية' : 'Confirm your professional identity'}
                   </h2>
-                  <p className="text-sm text-gray-600">
-                    Clear identity details build instant baseline credibility.
+                  <p className="text-sm text-gray-600 text-start">
+                    {language === 'ar' ? 'التفاصيل الواضحة للهوية تبني مصداقية أساسية فورية.' : 'Clear identity details build instant baseline credibility.'}
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label htmlFor="input-profile-name" className="block text-xs font-semibold text-gray-700 mb-1">
-                      Your Full Official Name
+                    <label htmlFor="input-profile-name" className="block text-xs font-semibold text-gray-700 mb-1 text-start">
+                      {language === 'ar' ? 'الاسم الرسمي الكامل الخاص بك' : 'Your Full Official Name'}
                     </label>
                     <input
                       id="input-profile-name"
@@ -1631,6 +1705,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             <LivePreviewCard
               profile={profile}
               onOpenFullPage={onFinish}
+              language={language}
             />
           </div>
         </div>

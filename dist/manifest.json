@@ -1,0 +1,16 @@
+{
+  "short_name": "R8ESTATE",
+  "name": "R8ESTATE Trust App",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#0B1329",
+  "display": "standalone",
+  "orientation": "portrait"
+}

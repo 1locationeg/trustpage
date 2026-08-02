@@ -1,0 +1,101 @@
+import React, { useState } from 'react';
+import { X, Check, Loader2 } from 'lucide-react';
+
+export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
+  const [loadingProvider, setLoadingProvider] = useState(null); // 'google' | 'linkedin' | null
+  const [success, setSuccess] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleOAuth = (provider) => {
+    setLoadingProvider(provider);
+    setTimeout(() => {
+      setLoadingProvider(null);
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        onAuthSuccess(provider);
+        onClose();
+      }, 1200);
+    }, 1800);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative border border-slate-100 animate-in fade-in zoom-in-95 duration-200 text-slate-800">
+        
+        {/* Header */}
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-slate-900 font-heading">
+            {success ? "Authentication Successful" : "Access R8 ESTATE"}
+          </h3>
+          <button 
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-600 rounded-full p-1 hover:bg-slate-100 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {success ? (
+            <div className="flex flex-col items-center justify-center py-6 space-y-3">
+              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center animate-bounce">
+                <Check className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-semibold text-slate-800 text-center">Welcome back to your Decision Space!</p>
+              <p className="text-xs text-slate-500 text-center">Redirecting you securely...</p>
+            </div>
+          ) : loadingProvider ? (
+            <div className="flex flex-col items-center justify-center py-6 space-y-3">
+              <Loader2 className="w-10 h-10 text-slate-800 animate-spin" />
+              <p className="text-sm font-medium text-slate-700 text-center">
+                Connecting to {loadingProvider === 'google' ? 'Google' : 'LinkedIn'}...
+              </p>
+              <p className="text-xs text-slate-400 text-center">Verifying secure OAuth credentials</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="text-center mb-6">
+                <p className="text-sm text-slate-600">
+                  Verify your professional identity instantly. Sign up or log in to secure your Trust Index.
+                </p>
+              </div>
+
+              {/* Google Button */}
+              <button
+                onClick={() => handleOAuth('google')}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl shadow-sm transition-all duration-200"
+              >
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.74 1.64 15.06 1 12 1 7.24 1 3.2 3.74 1.25 7.74l3.88 3.01C6.07 7.79 8.78 5.04 12 5.04z"/>
+                  <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.47h6.47c-.28 1.48-1.12 2.73-2.38 3.58l3.69 2.87c2.16-1.99 3.41-4.91 3.41-8.56z"/>
+                  <path fill="#FBBC05" d="M5.13 14.25c-.24-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29L1.25 6.66C.45 8.27 0 10.08 0 12s.45 3.73 1.25 5.34l3.88-3.09z"/>
+                  <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.69-2.87c-1.03.69-2.34 1.1-3.96 1.1-3.22 0-5.93-2.75-6.9-6.72L1.25 14.7C3.2 19.26 7.24 23 12 23z"/>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+
+              {/* LinkedIn Button */}
+              <button
+                onClick={() => handleOAuth('linkedin')}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[#0A66C2] hover:bg-[#004182] text-white font-bold text-sm rounded-xl shadow-sm transition-all duration-200"
+              >
+                <svg className="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+                <span>Continue with LinkedIn</span>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 bg-slate-50 text-center text-[10px] text-slate-400 border-t border-slate-100">
+          Secure OAuth 2.0 connection. R8 ESTATE does not share your private credentials.
+        </div>
+      </div>
+    </div>
+  );
+}

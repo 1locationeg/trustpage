@@ -9,8 +9,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import ProofModal from './ProofModal';
 import { PROFESSIONS_DICT } from '../data/professionTemplates';
 import { getFallbackPhoto } from '../data/mockProfiles';
+import { TRANSLATIONS } from '../data/translations';
 
-export default function PublicTrustPage({ profile, onBackToBuilder }) {
+export default function PublicTrustPage({ profile, onBackToBuilder, language = 'en' }) {
+  const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [selectedProof, setSelectedProof] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -62,7 +64,7 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
       {/* Top Header */}
       <header id="public-header" className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/" className="flex items-center space-x-2.5 hover:opacity-90 transition-opacity">
+          <a href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
             <div id="public-brand-logo" className="flex items-center shrink-0">
               <img
                 src="/favicon.svg"
@@ -70,23 +72,23 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
                 className="h-8 w-8 object-contain"
               />
             </div>
-            <div className="flex flex-col text-left">
+            <div className="flex flex-col text-start">
               <span className="text-[19px] sm:text-[20px] font-extrabold text-slate-900 leading-none tracking-tight">
                 <span className="text-[#FF1744]">R8</span> ESTATE
               </span>
               <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.18em] leading-none mt-1">
-                Decision Intelligence
+                {t.decisionIntelligence}
               </span>
             </div>
           </a>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <button
               id="btn-edit-builder"
               onClick={onBackToBuilder}
               className="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-lg border border-gray-300 transition-all font-heading"
             >
-              Edit in Builder
+              {t.backToBuilder}
             </button>
             <button
               id="btn-share-page"
@@ -94,7 +96,7 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
               className="px-3.5 py-1.5 bg-[#FAC417] text-slate-900 font-semibold text-xs rounded-full hover:bg-[#E5B210] transition-all shadow-sm flex items-center gap-1 font-heading"
             >
               <Share2 className="w-3.5 h-3.5" />
-              <span>Share Page</span>
+              <span>{language === 'ar' ? 'مشاركة الصفحة' : 'Share Page'}</span>
             </button>
           </div>
         </div>
@@ -119,11 +121,11 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
               </div>
             </div>
 
-            <div className="md:col-span-8 space-y-3">
+            <div className="md:col-span-8 space-y-3 text-start">
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-                  Verified Professional
+                  <CheckCircle2 className="w-3.5 h-3.5 me-1 text-emerald-600" />
+                  {language === 'ar' ? 'محترف عقاري معتمد' : 'Verified Professional'}
                 </span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200 font-medium">
                   {authorityStatus}
@@ -157,17 +159,17 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
                   href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-full shadow-sm flex items-center space-x-2 font-heading transition-all"
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-full shadow-sm flex items-center gap-2 font-heading transition-all"
                 >
                   <MessageSquare className="w-4 h-4" />
-                  <span>Connect Directly</span>
+                  <span>{language === 'ar' ? 'تواصل مباشرة' : 'Connect Directly'}</span>
                 </a>
                 <a
                   href="#screen-2"
-                  className="px-5 py-2.5 bg-[#FAC417] text-slate-900 font-semibold text-xs rounded-full hover:bg-[#E5B210] transition-all shadow-sm flex items-center space-x-2 font-heading"
+                  className="px-5 py-2.5 bg-[#FAC417] text-slate-900 font-semibold text-xs rounded-full hover:bg-[#E5B210] transition-all shadow-sm flex items-center gap-2 font-heading"
                 >
                   <Calendar className="w-4 h-4" />
-                  <span>View Credentials</span>
+                  <span>{language === 'ar' ? 'عرض الوثائق والشهادات' : 'View Credentials'}</span>
                 </a>
               </div>
             </div>
@@ -176,25 +178,25 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
         </section>
 
         {/* SCREEN 2: VERIFICATION CENTER */}
-        <section id="screen-2" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm space-y-6">
+        <section id="screen-2" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm space-y-6 text-start">
           <div className="border-b border-gray-100 pb-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">VERIFICATION CENTER</span>
-            <h2 className="text-2xl font-bold text-gray-900 font-heading mt-0.5">Why should I trust this professional?</h2>
-            <p className="text-sm text-gray-600">Independent credentials and regulatory verifications.</p>
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{language === 'ar' ? 'مركز التوثيق والتحقق' : 'VERIFICATION CENTER'}</span>
+            <h2 className="text-2xl font-bold text-gray-900 font-heading mt-0.5">{language === 'ar' ? 'لماذا يجب علي الثقة بهذا المحترف؟' : 'Why should I trust this professional?'}</h2>
+            <p className="text-sm text-gray-600">{language === 'ar' ? 'الوثائق والشهادات المستقلة وعمليات التحقق التنظيمية.' : 'Independent credentials and regulatory verifications.'}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {verifications.map((v, i) => (
               <div key={i} className="p-4 bg-gray-50 rounded-xl border border-gray-200 flex items-start justify-between text-xs">
                 <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span className="font-semibold text-gray-900 text-sm">{v.title}</span>
                   </div>
-                  <div className="text-gray-500 text-xs pl-6">Source: {v.source}</div>
+                  <div className="text-gray-500 text-xs ps-6">{language === 'ar' ? 'المصدر:' : 'Source:'} {v.source}</div>
                 </div>
-                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded text-[11px] font-medium">
-                  Verified
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded text-[11px] font-medium shrink-0">
+                  {t.verifiedBadge}
                 </span>
               </div>
             ))}
@@ -202,11 +204,11 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
         </section>
 
         {/* SCREEN 4: ADAPTIVE TRACK RECORD */}
-        <section id="screen-4" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm space-y-6">
+        <section id="screen-4" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm space-y-6 text-start">
           <div className="border-b border-gray-100 pb-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">TRACK RECORD & METRICS</span>
-            <h2 className="text-2xl font-bold text-gray-900 font-heading mt-0.5">Has this person actually done this?</h2>
-            <p className="text-sm text-gray-600">Verified performance metrics tailored for {activeProf.label}.</p>
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{language === 'ar' ? 'سجل العمل والمؤشرات' : 'TRACK RECORD & METRICS'}</span>
+            <h2 className="text-2xl font-bold text-gray-900 font-heading mt-0.5">{language === 'ar' ? 'هل قام هذا الشخص بهذا العمل بالفعل؟' : 'Has this person actually done this?'}</h2>
+            <p className="text-sm text-gray-600">{language === 'ar' ? `مؤشرات أداء موثقة ومخصصة لـ ${activeProf.label}.` : `Verified performance metrics tailored for ${activeProf.label}.`}</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -230,15 +232,15 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
         </section>
 
         {/* SCREEN 6: PROOF CENTER */}
-        <section id="screen-6" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm space-y-6">
+        <section id="screen-6" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm space-y-6 text-start">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-4">
             <div>
-              <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
                 <ShieldCheck className="w-4 h-4 text-[#0A3D62]" />
-                <span>PROOF CENTER • {activeProf.proofTitle.toUpperCase()}</span>
+                <span>{language === 'ar' ? 'مركز الإثباتات' : 'PROOF CENTER'} • {activeProf.proofTitle.toUpperCase()}</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 font-heading">Can I verify these results?</h2>
-              <p className="text-sm text-gray-600">Click any record to inspect the audited evidence level.</p>
+              <h2 className="text-2xl font-bold text-gray-900 font-heading">{language === 'ar' ? 'هل يمكنني التحقق من هذه النتائج؟' : 'Can I verify these results?'}</h2>
+              <p className="text-sm text-gray-600">{language === 'ar' ? 'اضغط على أي سجل لفحص مستوى الإثبات المالي المدقق.' : 'Click any record to inspect the audited evidence level.'}</p>
             </div>
           </div>
 
@@ -253,7 +255,7 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
                   <span className="text-xs font-semibold text-[#0A3D62] bg-gray-200 px-2 py-0.5 rounded uppercase">
                     {item.type}
                   </span>
-                  <span className="text-xs font-semibold text-emerald-700">{item.confidence}% Match</span>
+                  <span className="text-xs font-semibold text-emerald-700">{item.confidence}% {language === 'ar' ? 'تطابق' : 'Match'}</span>
                 </div>
 
                 <h3 className="font-bold text-gray-900 text-sm font-heading group-hover:text-[#0A3D62] transition-colors">
@@ -262,8 +264,8 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
 
                 <p className="text-xs text-gray-600 line-clamp-2">{item.details}</p>
                 <div className="pt-2 flex items-center justify-between text-xs text-[#0A3D62] font-semibold border-t border-gray-200">
-                  <span>View Audited Proof Record</span>
-                  <ArrowUpRight className="w-4 h-4" />
+                  <span>{language === 'ar' ? 'عرض وثيقة الإثبات المدققة' : 'View Audited Proof Record'}</span>
+                  <ArrowUpRight className="w-4 h-4 shrink-0 ltr:rotate-0 rtl:rotate-180" />
                 </div>
               </div>
             ))}
@@ -273,25 +275,25 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
         {/* SCREEN 10: INTELLIGENCE ENGINE */}
         <section id="screen-10" className="bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-sm text-center space-y-6">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            DECISION INTELLIGENCE REPORT
+            {language === 'ar' ? 'تقرير ذكاء القرار المهني' : 'DECISION INTELLIGENCE REPORT'}
           </span>
 
           <h2 className="text-3xl font-bold text-[#0A3D62] font-heading">
-            Professional Decision Score: {trustScore}/100
+            {language === 'ar' ? 'مؤشر القرار المهني:' : 'Professional Decision Score:'} {trustScore}/100
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-xs">
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-              <div className="text-gray-500 text-xs">Opportunity Rating</div>
+              <div className="text-gray-500 text-xs">{language === 'ar' ? 'تقييم الفرصة' : 'Opportunity Rating'}</div>
               <div className="text-2xl font-bold text-emerald-700 font-heading">{opportunityScore}/100</div>
             </div>
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-              <div className="text-gray-500 text-xs">Hiring Readiness</div>
+              <div className="text-gray-500 text-xs">{language === 'ar' ? 'جاهزية التوظيف' : 'Hiring Readiness'}</div>
               <div className="text-2xl font-bold text-[#0A3D62] font-heading">{hiringReadiness}%</div>
             </div>
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-              <div className="text-gray-500 text-xs">Decision Risk</div>
-              <div className="text-2xl font-bold text-gray-900 font-heading">Low ({riskLevel})</div>
+              <div className="text-gray-500 text-xs">{language === 'ar' ? 'مخاطر القرار' : 'Decision Risk'}</div>
+              <div className="text-2xl font-bold text-gray-900 font-heading">{language === 'ar' ? 'منخفضة' : 'Low'} ({riskLevel})</div>
             </div>
           </div>
         </section>
@@ -305,13 +307,13 @@ export default function PublicTrustPage({ profile, onBackToBuilder }) {
       {showShareModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="relative w-full max-w-sm bg-white rounded-xl p-6 border border-gray-200 text-center text-gray-900 shadow-xl space-y-4">
-            <button onClick={() => setShowShareModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
-            <h3 className="text-lg font-bold text-[#0A3D62] font-heading">Share Verified Identity</h3>
+            <button onClick={() => setShowShareModal(false)} className={`absolute top-4 text-gray-400 hover:text-gray-600 ${language === 'ar' ? 'left-4' : 'right-4'}`}>✕</button>
+            <h3 className="text-lg font-bold text-[#0A3D62] font-heading">{language === 'ar' ? 'مشاركة الهوية الموثقة' : 'Share Verified Identity'}</h3>
             <div className="p-4 bg-white border border-gray-200 rounded-xl inline-block shadow-sm mx-auto">
               <QRCodeSVG value={window.location.href} size={160} />
             </div>
             <button onClick={handleCopyShareLink} className="w-full py-2.5 bg-[#FAC417] text-slate-900 font-semibold text-xs rounded-full font-heading">
-              {copiedLink ? "Copied!" : "Copy Profile Link"}
+              {copiedLink ? (language === 'ar' ? "تم النسخ!" : "Copied!") : (language === 'ar' ? "نسخ رابط الملف الشخصي" : "Copy Profile Link")}
             </button>
           </div>
         </div>

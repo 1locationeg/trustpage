@@ -3,6 +3,7 @@ import { ShieldCheck, Award, MapPin, Briefcase, Star, CheckCircle2, TrendingUp, 
 import { QRCodeSVG } from 'qrcode.react';
 import { PROFESSIONS_DICT } from '../data/professionTemplates';
 import { getFallbackPhoto } from '../data/mockProfiles';
+import { TRANSLATIONS } from '../data/translations';
 
 // Helper component to animate counting statistics
 function AnimatedCounter({ value, duration = 1200, suffix = "" }) {
@@ -38,7 +39,8 @@ function AnimatedCounter({ value, duration = 1200, suffix = "" }) {
   return <span>{count}</span>;
 }
 
-export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold', activeStateIndex = -1 }) {
+export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold', activeStateIndex = -1, language = 'en' }) {
+  const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const activeProf = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
   const kpi0 = activeProf.kpis?.[0];
   const kpi2 = activeProf.kpis?.[2];
@@ -100,37 +102,56 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
   const tc = themeConfigs[theme] || themeConfigs.gold;
 
-  // Dynamic stat highlights mapping and styles
-  const getStatHighlightStyle = (index) => {
-    // If climax state (6), all stats glow
-    const isHighlighted = activeStateIndex === 6 || (
-      (activeStateIndex === 0 && index === 1) || // Build Authority -> Deals Advised
-      (activeStateIndex === 1 && index === 1) || // Proven Experience -> Spaces Styled
-      (activeStateIndex === 2 && index === 0) || // Client Confidence -> Trust Score
-      (activeStateIndex === 3 && index === 1) || // Stronger Partnerships -> Projects Designed
-      (activeStateIndex === 4 && index === 1) || // Stand Out -> Units Managed
-      (activeStateIndex === 5 && index === 1)    // More Opportunities -> Master Projects
-    );
-    
-    if (isHighlighted) {
-      return {
-        borderColor: tc.accent,
-        boxShadow: `0 0 15px ${tc.accent}40`,
-        transform: 'scale(1.05)',
-        transition: 'all 0.3s ease',
-        backgroundColor: 'rgba(10, 17, 40, 0.85)'
-      };
-    }
-    return {
-      borderColor: 'rgba(255, 255, 255, 0.05)',
-      transition: 'all 0.3s ease',
-      backgroundColor: 'rgba(10, 17, 40, 0.6)'
-    };
+  const STATE_ACCENTS = {
+    0: '#fac417', // Build Authority -> Trust Score
+    1: '#2dd4bf', // Proven Experience -> Practice Years (Teal)
+    2: '#ed1b40', // Client Confidence -> Client Rating (Red)
+    3: '#38bdf8', // Stronger Partnerships -> company/agency line (Sky blue)
+    4: '#a78bfa', // Stand Out -> Elite badge (Violet)
+    5: '#22c55e', // More Opportunities -> Deals Advised (Green)
+    6: '#fac417'  // More Clients -> Climax (Gold)
   };
 
-  const cardStyle = activeStateIndex === 6 ? {
-    borderColor: '#FF1744', // Red border for climax payoff
-    boxShadow: `0 0 25px rgba(255, 23, 68, 0.45), inset 0 0 12px rgba(255, 23, 68, 0.25)`,
+  const activeAccent = activeStateIndex >= 0 ? (STATE_ACCENTS[activeStateIndex] || '#fac417') : tc.accent;
+
+  const isElementHighlighted = (elementKey) => {
+    if (activeStateIndex === 6) return true;
+    
+    if (activeStateIndex === 0 && elementKey === 'trust_score') return true;
+    if (activeStateIndex === 1 && elementKey === 'practice_years') return true;
+    if (activeStateIndex === 2 && elementKey === 'client_rating') return true;
+    if (activeStateIndex === 3 && elementKey === 'company_line') return true;
+    if (activeStateIndex === 4 && elementKey === 'elite_badge') return true;
+    if (activeStateIndex === 5 && elementKey === 'deals_advised') return true;
+    
+    return false;
+  };
+
+  const getHighlightStyle = (elementKey) => {
+    const highlighted = isElementHighlighted(elementKey);
+    if (activeStateIndex >= 0) {
+      if (highlighted) {
+        return {
+          borderColor: activeAccent,
+          backgroundColor: `${activeAccent}15`,
+          boxShadow: `0 0 12px ${activeAccent}35`,
+          transform: 'scale(1.05)',
+          transition: 'all 0.3s ease'
+        };
+      }
+      return {
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+        backgroundColor: 'rgba(10, 17, 40, 0.6)',
+        transition: 'all 0.3s ease'
+      };
+    }
+    return {};
+  };
+
+  const cardStyle = activeStateIndex >= 0 ? {
+    background: 'linear-gradient(155deg, #071f33 0%, #0a2f4e 55%, #0c3557 100%)',
+    borderColor: activeStateIndex === 6 ? '#fac417' : 'rgba(255, 255, 255, 0.1)',
+    boxShadow: activeStateIndex === 6 ? '0 0 25px rgba(250, 196, 23, 0.45), inset 0 0 12px rgba(250, 196, 23, 0.25)' : undefined,
     transition: 'all 0.4s ease'
   } : {
     transition: 'all 0.4s ease'
@@ -160,7 +181,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
       {/* Dynamic Trust Card Body */}
       <div 
         id="live-preview-card-body" 
-        className={`bg-gradient-to-br ${tc.gradient} rounded-2xl p-4 sm:p-5 border ${tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${tc.glow} relative min-h-[325px] sm:min-h-[390px]`}
+        className={`bg-gradient-to-br ${activeStateIndex >= 0 ? '' : tc.gradient} rounded-2xl p-4 sm:p-5 border ${activeStateIndex >= 0 ? 'border-white/10' : tc.border} text-white shadow-2xl overflow-hidden transition-all duration-300 ${activeStateIndex >= 0 ? '' : tc.glow} relative min-h-[325px] sm:min-h-[390px]`}
         style={cardStyle}
       >
         {/* Subtle mesh background overlays */}
@@ -169,17 +190,17 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
         {/* Card Header Ribbon */}
         <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5 sm:pb-3 sm:mb-4 relative z-10">
-          <div id="card-brand-logo" className="flex items-center space-x-2">
+          <div id="card-brand-logo" className="flex items-center gap-2">
             <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#FAC417]" />
-            <div className="flex flex-col">
-              <span className="text-[12px] sm:text-[14px] font-extrabold tracking-widest text-white leading-none">TRUST CARD</span>
-              <span className="text-[7px] sm:text-[8px] text-[#FAC417] font-semibold tracking-wider leading-none mt-0.5 sm:mt-1 uppercase">REAL ESTATE PROFESSIONAL</span>
+            <div className="flex flex-col text-start">
+              <span className="text-[12px] sm:text-[14px] font-extrabold tracking-widest text-white leading-none">{t.trustCard}</span>
+              <span className="text-[7px] sm:text-[8px] text-[#FAC417] font-semibold tracking-wider leading-none mt-0.5 sm:mt-1 uppercase">{t.rePro}</span>
             </div>
           </div>
           
-          <div className="flex items-center space-x-1 bg-[#FAC417]/10 text-[#FAC417] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold border border-[#FAC417]/30 tracking-wide uppercase">
+          <div className="flex items-center gap-1 bg-[#FAC417]/10 text-[#FAC417] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold border border-[#FAC417]/30 tracking-wide uppercase">
             <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#FAC417] animate-pulse" />
-            <span>VERIFIED · TRUSTED</span>
+            <span>{t.verifiedTrusted}</span>
           </div>
         </div>
 
@@ -204,7 +225,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           </div>
 
           {/* Name & Titles */}
-          <div className="col-span-6 space-y-1 pl-1 text-left">
+          <div className="col-span-6 space-y-1 ps-1 text-start">
             <div className="flex flex-wrap items-center gap-1">
               <h3 className={`text-sm sm:text-lg font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
                 {debouncedName}
@@ -216,20 +237,26 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
               {debouncedTitle}
             </p>
 
-            <div className="flex items-center gap-1 text-[9px] sm:text-[11px] text-gray-400">
-              <Briefcase className="w-2.5 h-2.5 text-[#FAC417]" />
+            <div 
+              className={`flex items-center gap-1 text-[9px] sm:text-[11px] ${activeStateIndex >= 0 ? (isElementHighlighted('company_line') ? 'px-1.5 py-0.5 rounded border' : 'text-gray-400') : 'text-gray-400'}`}
+              style={getHighlightStyle('company_line')}
+            >
+              <Briefcase className="w-2.5 h-2.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('company_line') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
               <span className="truncate max-w-[80px] sm:max-w-none">{company || "Emaar Misr"}</span>
-              <span className="inline-flex items-center gap-0.5 px-0.5 bg-emerald-500/10 text-emerald-400 text-[6px] sm:text-[8px] font-extrabold rounded uppercase border border-emerald-500/20 ml-0.5">
-                VERIFIED
+              <span className="inline-flex items-center gap-0.5 px-0.5 bg-emerald-500/10 text-emerald-400 text-[6px] sm:text-[8px] font-extrabold rounded uppercase border border-emerald-500/20 ml-0.5 shrink-0">
+                {t.verifiedMini}
               </span>
             </div>
 
             <div className="flex items-center gap-1 pt-0.5">
-              <span className="inline-flex items-center text-[7px] sm:text-[9px] font-bold bg-[#FAC417]/10 text-[#FAC417] border border-[#FAC417]/30 px-1 py-0.5 rounded">
-                Verified
+              <span className="inline-flex items-center text-[7px] sm:text-[9px] font-bold bg-[#FAC417]/10 text-[#FAC417] border border-[#FAC417]/30 px-1 py-0.5 rounded shrink-0">
+                {t.verifiedBadge}
               </span>
-              <span className="inline-flex items-center text-[7px] sm:text-[9px] font-bold bg-white/5 text-gray-300 border border-white/10 px-1 py-0.5 rounded">
-                Elite
+              <span 
+                className={`inline-flex items-center text-[7px] sm:text-[9px] font-bold px-1 py-0.5 rounded shrink-0 ${activeStateIndex >= 0 ? (isElementHighlighted('elite_badge') ? 'border' : 'bg-white/5 text-gray-300 border border-white/10') : 'bg-white/5 text-gray-300 border border-white/10'}`}
+                style={getHighlightStyle('elite_badge')}
+              >
+                {t.eliteBadge}
               </span>
             </div>
           </div>
@@ -244,7 +271,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
                 includeMargin={false}
               />
             </div>
-            <span className="text-[6px] text-gray-400 mt-1 uppercase tracking-wider leading-tight">Scan Profile</span>
+            <span className="text-[6px] text-gray-400 mt-1 uppercase tracking-wider leading-tight">{t.scanProfile}</span>
           </div>
         </div>
 
@@ -253,109 +280,134 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           
           {/* Trust Score */}
           <div 
-            className="rounded-lg p-2 border flex flex-col justify-between min-h-[58px]"
-            style={getStatHighlightStyle(0)}
+            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]"
+            style={getHighlightStyle('trust_score')}
           >
             <div className="flex items-center justify-center">
-              <Shield className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
+              <Shield className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('trust_score') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
             </div>
-            <div className={`text-[12px] font-bold ${tc.accentText} font-heading mt-1`}>
+            <div 
+              className={`text-[12px] font-bold font-heading mt-1 ${activeStateIndex >= 0 ? '' : tc.accentText}`}
+              style={activeStateIndex >= 0 ? { color: isElementHighlighted('trust_score') ? activeAccent : '#FAC417' } : undefined}
+            >
               <AnimatedCounter value={trustScore} suffix="%" />
             </div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">Trust Score Excellent</div>
+            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('trust_score') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
+              {t.trustScoreLabel}
+            </div>
           </div>
 
           {/* Deals Closed */}
           <div 
-            className="rounded-lg p-2 border flex flex-col justify-between min-h-[58px]"
-            style={getStatHighlightStyle(1)}
+            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]"
+            style={getHighlightStyle('deals_advised')}
           >
             <div className="flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
+              <Zap className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('deals_advised') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
             </div>
-            <div className="text-[12px] font-bold text-white font-heading mt-1">
+            <div 
+              className="text-[12px] font-bold font-heading mt-1"
+              style={activeStateIndex >= 0 ? { color: isElementHighlighted('deals_advised') ? activeAccent : '#ffffff' } : undefined}
+            >
               <AnimatedCounter value={dealsClosed} suffix={kpi0?.unit || "+"} />
             </div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">
+            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('deals_advised') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
               {kpi0 ? kpi0.label : "Deals Closed"}
             </div>
           </div>
 
           {/* Client Rating */}
           <div 
-            className="rounded-lg p-2 border flex flex-col justify-between min-h-[58px]"
-            style={getStatHighlightStyle(2)}
+            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex flex-col justify-between min-h-[58px]"
+            style={getHighlightStyle('client_rating')}
           >
             <div className="flex items-center justify-center">
-              <Star className={`w-3.5 h-3.5 ${tc.fillAccent} ${tc.accentText} shrink-0`} />
+              <Star className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('client_rating') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
             </div>
-            <div className={`text-[12px] font-bold ${tc.accentText} font-heading mt-1`}>4.9</div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">Client Rating (87 Rev.)</div>
+            <div 
+              className={`text-[12px] font-bold font-heading mt-1 ${activeStateIndex >= 0 ? '' : tc.accentText}`}
+              style={activeStateIndex >= 0 ? { color: isElementHighlighted('client_rating') ? activeAccent : '#FAC417' } : undefined}
+            >
+              4.9
+            </div>
+            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('client_rating') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
+              {t.clientRatingLabel}
+            </div>
           </div>
 
           {/* Experience (Hidden on mobile) */}
           <div 
-            className="rounded-lg p-2 border flex-col justify-between min-h-[58px] hidden sm:flex"
-            style={getStatHighlightStyle(3)}
+            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex"
+            style={getHighlightStyle('practice_years')}
           >
             <div className="flex items-center justify-center">
-              <Users className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
+              <Users className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('practice_years') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
             </div>
-            <div className="text-[12px] font-bold text-white font-heading mt-1">
+            <div 
+              className="text-[12px] font-bold font-heading mt-1"
+              style={activeStateIndex >= 0 ? { color: isElementHighlighted('practice_years') ? activeAccent : '#ffffff' } : undefined}
+            >
               <AnimatedCounter value={yearsExp} suffix={kpi2?.unit || "+"} />
             </div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">
-              {kpi2 ? kpi2.label : "Years Exp."}
+            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('practice_years') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
+              {kpi2 ? kpi2.label : t.yearsExpDefault}
             </div>
           </div>
 
           {/* Response Time (Hidden on mobile) */}
           <div 
-            className="rounded-lg p-2 border flex-col justify-between min-h-[58px] hidden sm:flex"
-            style={getStatHighlightStyle(4)}
+            className="bg-[#0A1128]/60 rounded-lg p-2 border border-white/5 flex-col justify-between min-h-[58px] hidden sm:flex"
+            style={getHighlightStyle('avg_response')}
           >
             <div className="flex items-center justify-center">
-              <Clock className="w-3.5 h-3.5 text-[#FAC417] shrink-0" />
+              <Clock className="w-3.5 h-3.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('avg_response') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
             </div>
-            <div className="text-[12px] font-bold text-white font-heading mt-1">{avgResponseTime}</div>
-            <div className="text-[8px] text-gray-400 truncate leading-none">Avg. Response Time</div>
+            <div 
+              className="text-[12px] font-bold font-heading mt-1"
+              style={activeStateIndex >= 0 ? { color: isElementHighlighted('avg_response') ? activeAccent : '#ffffff' } : undefined}
+            >
+              {avgResponseTime}
+            </div>
+            <div className={`text-[8px] truncate leading-none ${activeStateIndex >= 0 ? (isElementHighlighted('avg_response') ? '' : 'text-gray-400') : 'text-gray-400'}`}>
+              {t.avgResponseLabel}
+            </div>
           </div>
 
         </div>
 
         {/* Why Clients Choose Me Section */}
         <div className="border-t border-white/5 pt-3 pb-2 relative z-10 text-center">
-          <div className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mb-1.5">WHY CLIENTS CHOOSE ME</div>
-          <div className="flex flex-row items-center justify-center space-x-3 text-[8px] sm:text-[9px] whitespace-nowrap overflow-hidden">
+          <div className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mb-1.5">{t.whyMe}</div>
+          <div className="flex flex-row items-center justify-center gap-3 text-[8px] sm:text-[9px] whitespace-nowrap overflow-hidden">
             <span className="inline-flex items-center text-gray-300 font-medium">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] mr-1 shrink-0" />
-              Verified Identity
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] me-1 shrink-0" />
+              {t.verifiedIdentity}
             </span>
             <span className="inline-flex items-center text-gray-300 font-medium">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] mr-1 shrink-0" />
-              Real Client Reviews
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] me-1 shrink-0" />
+              {t.realReviews}
             </span>
             <span className="inline-flex items-center text-gray-300 font-medium">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] mr-1 shrink-0" />
-              Proven Results
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] me-1 shrink-0" />
+              {t.provenResults}
             </span>
           </div>
         </div>
 
         {/* Card Footer (Avatars + R8ESTATE verification badge) */}
         <div className="border-t border-white/10 pt-3 mt-1.5 flex items-center justify-between text-[9px] text-gray-400 relative z-10">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <div className="flex -space-x-1.5 overflow-hidden">
               <img className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Client 1" />
               <img className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Client 2" />
               <img className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&auto=format&fit=crop&q=80" alt="Client 3" />
             </div>
-            <span>Trusted by 100+ clients. Real reviews. Real results.</span>
+            <span>{t.trustedByClients}</span>
           </div>
 
-          <div className="flex items-center space-x-1 font-bold text-gray-300 uppercase tracking-wide">
-            <span>Powered by</span>
-            <div className="flex items-center space-x-0.5 text-white bg-white/5 border border-white/10 rounded px-1 py-0.5 leading-none">
+          <div className="flex items-center gap-1 font-bold text-gray-300 uppercase tracking-wide">
+            <span>{t.poweredBy}</span>
+            <div className="flex items-center gap-0.5 text-white bg-white/5 border border-white/10 rounded px-1 py-0.5 leading-none" dir="ltr">
               <span className="text-[7px] text-[#FAC417] font-extrabold font-heading">R8</span>
               <span className="text-[7px] font-medium">ESTATE</span>
             </div>
@@ -367,10 +419,10 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           <button
             id="btn-preview-full-page-inside-card"
             onClick={onOpenFullPage}
-            className="w-full mt-4 py-2 px-4 bg-[#FAC417] text-slate-900 font-bold text-xs rounded-full hover:bg-[#E5B210] transition-all shadow-md flex items-center justify-center space-x-1.5 font-heading z-20 relative"
+            className="w-full mt-4 py-2 px-4 bg-[#FAC417] text-slate-900 font-bold text-xs rounded-full hover:bg-[#E5B210] transition-all shadow-md flex items-center justify-center gap-1.5 font-heading z-20 relative"
           >
-            <span>Preview Full Decision Page</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <span>{t.connectVerify}</span>
+            <ExternalLink className="w-3.5 h-3.5 shrink-0 ltr:rotate-0 rtl:rotate-180" />
           </button>
         )}
 
