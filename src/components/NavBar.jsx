@@ -59,8 +59,11 @@ export default function NavBar({
 
           {user ? (
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-slate-950 text-[#FAC417] font-extrabold text-[10px] flex items-center justify-center border border-[#FAC417]/40 shadow-sm uppercase">
-                {user.provider[0]}
+              <div 
+                className="w-6 h-6 rounded-full bg-slate-950 text-[#FAC417] font-extrabold text-[10px] flex items-center justify-center border border-[#FAC417]/40 shadow-sm uppercase"
+                title={user.email}
+              >
+                {user.email ? user.email[0] : user.provider[0]}
               </div>
               <button 
                 onClick={onSignOut}

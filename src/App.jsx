@@ -222,10 +222,10 @@ export default function App() {
       <AuthModal 
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
-        onAuthSuccess={(provider) => {
+        onAuthSuccess={(provider, email) => {
           setUser({
             provider,
-            email: provider === 'google' ? 'user@gmail.com' : 'user@linkedin.com'
+            email: email || (provider === 'google' ? 'user@gmail.com' : 'user@linkedin.com')
           });
         }}
       />

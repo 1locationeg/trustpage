@@ -1,38 +1,79 @@
 import React, { useState } from 'react';
-import { X, Check, Loader2 } from 'lucide-react';
+import { X, Check, Loader2, ArrowLeft, Plus } from 'lucide-react';
 import Button from './Button';
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [loadingProvider, setLoadingProvider] = useState(null); // 'google' | 'linkedin' | null
   const [success, setSuccess] = useState(false);
+  const [showChooser, setShowChooser] = useState(false);
+  const [activeProvider, setActiveProvider] = useState(null);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customEmail, setCustomEmail] = useState('');
 
   if (!isOpen) return null;
 
-  const handleOAuth = (provider) => {
-    setLoadingProvider(provider);
+  const handleStartOAuth = (provider) => {
+    setActiveProvider(provider);
+    setShowChooser(true);
+    setShowCustomInput(false);
+    setCustomEmail('');
+  };
+
+  const handleSelectAccount = (email) => {
+    setShowChooser(false);
+    setLoadingProvider(activeProvider);
     setTimeout(() => {
       setLoadingProvider(null);
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
-        onAuthSuccess(provider);
+        onAuthSuccess(activeProvider, email);
         onClose();
+        setActiveProvider(null);
       }, 1200);
     }, 1800);
   };
 
+  const googleAccounts = [
+    'akasi.dev@gmail.com',
+    'akasi.design@gmail.com'
+  ];
+
+  const linkedinAccounts = [
+    'akasi.dev@linkedin.com',
+    'akasi.consulting@linkedin.com'
+  ];
+
+  const accounts = activeProvider === 'google' ? googleAccounts : linkedinAccounts;
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative border border-slate-100 animate-in fade-in zoom-in-95 duration-200 text-slate-800">
         
         {/* Header */}
         <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-slate-900 font-heading">
-            {success ? "Authentication Successful" : "Access R8 ESTATE"}
-          </h3>
+          <div className="flex items-center gap-3">
+            {showChooser && !success && !loadingProvider && (
+              <button 
+                onClick={() => { setShowChooser(false); setShowCustomInput(false); }}
+                className="text-slate-400 hover:text-slate-600 rounded-full p-1 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            )}
+            <h3 className="text-lg font-bold text-slate-900 font-heading">
+              {success 
+                ? "Authentication Successful" 
+                : loadingProvider 
+                ? "Connecting..." 
+                : showChooser 
+                ? (activeProvider === 'google' ? "Sign in with Google" : "Sign in with LinkedIn") 
+                : "Access R8 ESTATE"}
+            </h3>
+          </div>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 rounded-full p-1 hover:bg-slate-100 transition-colors"
+            className="text-slate-400 hover:text-slate-600 rounded-full p-1 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -56,6 +97,88 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               </p>
               <p className="text-xs text-slate-400 text-center">Verifying secure OAuth credentials</p>
             </div>
+          ) : showChooser ? (
+            <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="text-center mb-4">
+                <p className="text-sm text-slate-500">
+                  Choose an account to continue to <span className="font-bold text-[#0A3D62]"><span className="text-[#FF1744]">R8</span> ESTATE</span>
+                </p>
+              </div>
+
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {accounts.map((email) => (
+                  <button
+                    key={email}
+                    onClick={() => handleSelectAccount(email)}
+                    className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 border border-slate-100 hover:border-slate-200 rounded-xl text-left transition-all duration-200 group cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs uppercase">
+                        {email[0]}
+                      </div>
+                      <span className="text-sm font-semibold text-slate-700">{email}</span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                      Select
+                    </span>
+                  </button>
+                ))}
+                
+                {!showCustomInput ? (
+                  <button
+                    onClick={() => setShowCustomInput(true)}
+                    className="w-full flex items-center gap-3 p-3 bg-white hover:bg-slate-50 border border-dashed border-slate-200 hover:border-slate-300 rounded-xl text-left transition-all duration-200 text-slate-500 cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-slate-50 border border-dashed border-slate-300 flex items-center justify-center">
+                      <Plus className="w-4 h-4 text-slate-400" />
+                    </div>
+                    <span className="text-sm font-semibold">Use another account</span>
+                  </button>
+                ) : (
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (customEmail.trim()) {
+                        handleSelectAccount(customEmail.trim());
+                      }
+                    }}
+                    className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-250"
+                  >
+                    <div>
+                      <label htmlFor="custom-oauth-email" className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Enter email address</label>
+                      <input
+                        id="custom-oauth-email"
+                        type="email"
+                        placeholder="e.g. name@example.com"
+                        required
+                        value={customEmail}
+                        onChange={(e) => setCustomEmail(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0A3D62]/10 focus:border-[#0A3D62]"
+                        autoFocus
+                      />
+                    </div>
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setShowCustomInput(false)}
+                        className="px-3.5 py-1.5 rounded-lg text-xs"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        variant="dark"
+                        size="sm"
+                        className="px-4 py-1.5 rounded-lg text-xs"
+                      >
+                        Continue
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
           ) : (
             <div className="space-y-4">
               <div className="text-center mb-6">
@@ -66,7 +189,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
               {/* Google Button */}
               <Button
-                onClick={() => handleOAuth('google')}
+                onClick={() => handleStartOAuth('google')}
                 variant="secondary"
                 className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl shadow-sm transition-all duration-200"
               >
@@ -81,7 +204,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
               {/* LinkedIn Button */}
               <Button
-                onClick={() => handleOAuth('linkedin')}
+                onClick={() => handleStartOAuth('linkedin')}
                 variant="dark"
                 className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[#0A66C2] hover:bg-[#004182] border-none text-white font-bold text-sm rounded-xl shadow-sm transition-all duration-200"
               >
