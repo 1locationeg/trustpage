@@ -402,10 +402,12 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
     if (isLanding) {
       return (
-        <div id="mobile-landing-pwa" className="h-[100svh] md:h-full w-full max-w-[420px] mx-auto flex flex-col justify-between bg-white text-gray-900 overflow-hidden px-4 py-4 pb-safe-bottom pt-safe-top relative animate-fade-in">
-          
-          {/* Native-style Compact Header */}
-          <div className="flex items-center justify-between py-2 px-1 shrink-0 border-b border-gray-100/60">
+        <div 
+          id="mobile-landing-pwa" 
+          className="min-h-screen w-full max-w-[640px] mx-auto flex flex-col bg-white text-gray-900 overflow-x-hidden relative animate-fade-in"
+        >
+          {/* Sticky PWA Header Bar */}
+          <header className="sticky top-0 z-30 w-full bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-black tracking-wider text-slate-800 font-heading">
                 <span className="text-[#FF1744]">R8</span> ESTATE
@@ -447,49 +449,55 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </button>
               )}
             </div>
-          </div>
+          </header>
 
-          {/* Outcome Carousel Header */}
-          <div className="text-center py-2 shrink-0 space-y-1">
-            <span className="text-[9px] font-bold tracking-wider text-slate-400 uppercase block">
-              {language === 'ar' ? 'بطاقة الثقة تمنحك' : 'YOUR TRUST CARD SECURES'}
-            </span>
-            <div className="h-6 overflow-hidden relative flex items-center justify-center">
+          {/* Scrollable Viewport Content Area */}
+          <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col justify-center space-y-4">
+            
+            {/* Outcome Carousel Header */}
+            <div className="text-center shrink-0 space-y-1">
               <span 
-                key={activeStateIndex}
-                className="text-sm font-extrabold tracking-tight text-slate-800 font-heading animate-slide-up-in block"
+                className="font-bold tracking-wider text-slate-400 uppercase block"
+                style={{ fontSize: 'clamp(8px, 2vw, 10px)' }}
               >
-                {language === 'ar' ? (
-                  activeStateIndex === 0 ? 'المزيد من العملاء' :
-                  activeStateIndex === 1 ? 'المزيد من العقارات' :
-                  activeStateIndex === 2 ? 'المزيد من الصفقات الناجحة' :
-                  activeStateIndex === 3 ? 'إحالات أعلى' :
-                  activeStateIndex === 4 ? 'صفر اعتراضات' :
-                  activeStateIndex === 5 ? 'توثيق مطلق' : 'R8 ESTATE'
-                ) : ROTATOR_STATES[activeStateIndex].text}
+                {language === 'ar' ? 'بطاقة الثقة تمنحك' : 'YOUR TRUST CARD SECURES'}
               </span>
+              <div className="h-7 overflow-hidden relative flex items-center justify-center">
+                <span 
+                  key={activeStateIndex}
+                  className="font-extrabold tracking-tight text-slate-800 font-heading animate-slide-up-in block"
+                  style={{ fontSize: 'clamp(13px, 3.5vw, 18px)' }}
+                >
+                  {language === 'ar' ? (
+                    activeStateIndex === 0 ? 'المزيد من العملاء' :
+                    activeStateIndex === 1 ? 'المزيد من العقارات' :
+                    activeStateIndex === 2 ? 'المزيد من الصفقات الناجحة' :
+                    activeStateIndex === 3 ? 'إحالات أعلى' :
+                    activeStateIndex === 4 ? 'صفر اعتراضات' :
+                    activeStateIndex === 5 ? 'توثيق مطلق' : 'R8 ESTATE'
+                  ) : ROTATOR_STATES[activeStateIndex].text}
+                </span>
+              </div>
+              {/* Compact dots indicator */}
+              <div className="flex items-center space-x-1.5 justify-center mt-1">
+                {ROTATOR_STATES.map((state, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setActiveStateIndex(idx);
+                      setIsPaused(true);
+                    }}
+                    className={`w-1 h-1 rounded-full transition-all duration-300 ${
+                      idx === activeStateIndex ? 'bg-[#FF1744] w-2.5' : 'bg-gray-200'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
-            {/* Compact dots indicator */}
-            <div className="flex items-center space-x-1.5 justify-center mt-1">
-              {ROTATOR_STATES.map((state, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setActiveStateIndex(idx);
-                    setIsPaused(true);
-                  }}
-                  className={`w-1 h-1 rounded-full transition-all duration-300 ${
-                    idx === activeStateIndex ? 'bg-[#FF1744] w-2.5' : 'bg-gray-200'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
 
-          {/* Large Premium Trust Card (Nearly full width inside a max-h-[380px] flex container) */}
-          <div id="mobile-landing-outcome" className="flex-1 w-full flex items-center justify-center py-2 shrink-0 animate-card-slide-up">
-            <div className="w-full flex justify-center items-center h-full max-h-[380px]">
-              <div className="w-full scale-[0.86] sm:scale-[0.92] origin-center drop-shadow-xl">
+            {/* Premium Trust Card Container (Fluid & Centered) */}
+            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-2 shrink-0 animate-card-slide-up">
+              <div className="w-full max-w-[480px] sm:max-w-[520px] mx-auto drop-shadow-xl">
                 <LivePreviewCard 
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
@@ -498,10 +506,11 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 />
               </div>
             </div>
+
           </div>
 
-          {/* Primary CTA directly below with 16px spacing */}
-          <div className="space-y-3 shrink-0 text-center px-2 mt-4">
+          {/* Sticky Bottom CTA Bar */}
+          <div className="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-100 py-3.5 px-4 w-full shrink-0 pb-safe-bottom">
             <Button
               id="btn-mobile-start-cta"
               onClick={handleStartBuilder}
@@ -514,7 +523,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
               <ArrowRight className="w-4 h-4 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
             </Button>
-            <span className="text-[10px] text-gray-400 font-medium block text-center">
+            <span 
+              className="text-gray-400 font-medium block text-center mt-2"
+              style={{ fontSize: 'clamp(8px, 1.8vw, 10px)' }}
+            >
               {language === 'ar' ? '90 ثانية • معاينة فورية • بدون تسجيل' : '90 seconds • Instant preview • No signup'}
             </span>
           </div>

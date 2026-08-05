@@ -226,10 +226,15 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
       <Card 
         id="live-preview-card-body" 
         variant="custom"
-        className={`bg-gradient-to-br ${activeStateIndex >= 0 ? '' : tc.gradient} rounded-[28px] p-4 sm:p-5 border ${activeStateIndex >= 0 ? 'border-white/10' : tc.border} text-white shadow-2xl overflow-hidden animate-card-shine relative min-h-[325px] sm:min-h-[390px] cursor-default`}
-        style={finalCardStyle}
+        className={`bg-gradient-to-br ${activeStateIndex >= 0 ? '' : tc.gradient} border ${activeStateIndex >= 0 ? 'border-white/10' : tc.border} text-white shadow-2xl overflow-hidden animate-card-shine relative cursor-default`}
+        style={{
+          ...finalCardStyle,
+          borderRadius: 'clamp(16px, 4.5vw, 28px)',
+          padding: 'clamp(0.75rem, 3.5vw, 1.25rem)',
+          minHeight: 'clamp(280px, 60vw, 390px)'
+        }}
         onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
+        onMouseEnter={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
         {/* Subtle mesh background overlays */}
@@ -247,96 +252,194 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
         )}
 
         {/* Card Header Ribbon */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5 sm:pb-3 sm:mb-4 relative z-10">
+        <div 
+          className="flex items-center justify-between border-b border-white/10 relative z-10"
+          style={{
+            paddingBottom: 'clamp(0.4rem, 1.5vw, 0.75rem)',
+            marginBottom: 'clamp(0.5rem, 2.5vw, 1rem)'
+          }}
+        >
           <div id="card-brand-logo" className="flex items-center gap-2">
-            <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#FAC417]" />
+            <Shield 
+              style={{
+                width: 'clamp(14px, 3.5vw, 20px)',
+                height: 'clamp(14px, 3.5vw, 20px)'
+              }}
+              className="text-[#FAC417]"
+            />
             <div className="flex flex-col text-start">
-              <span className="text-[12px] sm:text-[14px] font-extrabold tracking-widest text-white leading-none">{t.trustCard}</span>
-              <span className="text-[7px] sm:text-[8px] text-[#FAC417] font-semibold tracking-wider leading-none mt-0.5 sm:mt-1 uppercase">{t.rePro}</span>
+              <span 
+                className="font-extrabold tracking-widest text-white leading-none"
+                style={{ fontSize: 'clamp(10px, 2.5vw, 14px)' }}
+              >
+                {t.trustCard}
+              </span>
+              <span 
+                className="text-[#FAC417] font-semibold tracking-wider leading-none uppercase"
+                style={{
+                  fontSize: 'clamp(6px, 1.5vw, 8px)',
+                  marginTop: 'clamp(2px, 0.5vw, 4px)'
+                }}
+              >
+                {t.rePro}
+              </span>
             </div>
           </div>
           
-          <Badge variant="accent" size="sm" className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full">
+          <Badge 
+            variant="accent" 
+            size="sm" 
+            className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full"
+            style={{
+              fontSize: 'clamp(7px, 1.5vw, 9px)',
+              padding: 'clamp(2px, 0.5vw, 4px) clamp(6px, 1.5vw, 10px)'
+            }}
+          >
             <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#FAC417] animate-pulse" />
             <span>{t.verifiedTrusted}</span>
           </Badge>
         </div>
 
-        {/* Profile Info Grid (Avatar, Name, Title, QR Code) */}
-        <div className="grid grid-cols-12 gap-2 sm:gap-3 items-center mb-3 sm:mb-4 relative z-10">
-          {/* Avatar Area */}
-          <div className="col-span-3 flex flex-col items-center justify-center">
-            <div className="relative">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[3px] bg-gradient-to-tr from-[#FAC417] via-amber-200 to-[#FAC417]/20 shadow-[0_0_12px_rgba(250,196,23,0.12)]">
+        {/* Profile Info Row (Avatar + Name & Title Left, QR Code Right) */}
+        <div 
+          className="flex flex-row flex-wrap items-center justify-between gap-3 relative z-10 w-full"
+          style={{ marginBottom: 'clamp(0.5rem, 2.5vw, 1rem)' }}
+        >
+          {/* Profile Details (Avatar + Name/Title) */}
+          <div className="flex items-center gap-3 flex-1 min-w-[200px]">
+            {/* Avatar Area */}
+            <div className="relative shrink-0">
+              <div 
+                className="rounded-full bg-gradient-to-tr from-[#FAC417] via-amber-200 to-[#FAC417]/20 shadow-[0_0_12px_rgba(250,196,23,0.12)]"
+                style={{
+                  width: 'clamp(60px, 16vw, 80px)',
+                  height: 'clamp(60px, 16vw, 80px)',
+                  padding: 'clamp(2px, 0.6vw, 3px)'
+                }}
+              >
                 <img
                   src={photo || getFallbackPhoto(debouncedName)}
                   alt={debouncedName}
                   className="w-full h-full rounded-full object-cover border border-[#020617]"
                 />
               </div>
-              <div className="absolute -bottom-1 -right-1 bg-[#020617] p-0.5 rounded-full border border-white/20">
-                <div className="bg-[#FAC417] text-slate-900 p-0.5 rounded-full font-bold" title={`Verified: ${verificationLevel}`}>
-                  <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-950" />
+              <div 
+                className="absolute -bottom-1 -right-1 bg-[#020617] rounded-full border border-white/20 flex items-center justify-center"
+                style={{ padding: 'clamp(1px, 0.4vw, 3px)' }}
+              >
+                <div 
+                  className="bg-[#FAC417] text-slate-900 rounded-full font-bold flex items-center justify-center"
+                  title={`Verified: ${verificationLevel}`}
+                  style={{
+                    padding: 'clamp(1px, 0.4vw, 3px)'
+                  }}
+                >
+                  <ShieldCheck style={{ width: 'clamp(10px, 2.5vw, 14px)', height: 'clamp(10px, 2.5vw, 14px)' }} className="text-slate-950" />
                 </div>
+              </div>
+            </div>
+
+            {/* Name & Titles */}
+            <div className="space-y-1 text-start">
+              <div className="flex flex-wrap items-center gap-1">
+                <h3 
+                  className={`font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}
+                  style={{ fontSize: 'clamp(12px, 3.5vw, 18px)' }}
+                >
+                  {debouncedName}
+                </h3>
+                <CheckCircle2 style={{ width: 'clamp(11px, 2.5vw, 14px)', height: 'clamp(11px, 2.5vw, 14px)' }} className="text-emerald-400 inline shrink-0" />
+              </div>
+
+              <p 
+                className={`text-gray-300 font-medium transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}
+                style={{ fontSize: 'clamp(9px, 2.2vw, 12px)' }}
+              >
+                {debouncedTitle}
+              </p>
+
+              <div 
+                className={`flex items-center gap-1 ${activeStateIndex >= 0 ? (isElementHighlighted('company_line') ? 'px-1.5 py-0.5 rounded border' : 'text-gray-400') : 'text-gray-400'}`}
+                style={{
+                  ...getHighlightStyle('company_line'),
+                  fontSize: 'clamp(8px, 2vw, 11px)'
+                }}
+              >
+                <Briefcase style={{ width: 'clamp(9px, 2vw, 12px)', height: 'clamp(9px, 2vw, 12px)' }} className="shrink-0" />
+                <span className="truncate max-w-[120px] sm:max-w-none">{company || "Emaar Misr"}</span>
+                <Badge 
+                  variant="success" 
+                  size="sm" 
+                  className="rounded border border-emerald-500/20 ml-0.5 shrink-0 uppercase"
+                  style={{
+                    fontSize: 'clamp(6px, 1.5vw, 8px)',
+                    padding: '1px 2px'
+                  }}
+                >
+                  {t.verifiedMini}
+                </Badge>
+              </div>
+
+              <div className="flex items-center gap-1 pt-0.5">
+                <Badge 
+                  variant="accent" 
+                  size="sm" 
+                  className="rounded shrink-0"
+                  style={{
+                    fontSize: 'clamp(7px, 1.5vw, 9px)',
+                    padding: 'clamp(1px, 0.4vw, 2px) clamp(3px, 0.8vw, 6px)'
+                  }}
+                >
+                  {t.verifiedBadge}
+                </Badge>
+                <Badge 
+                  variant="neutral"
+                  size="sm"
+                  className={`rounded shrink-0 ${activeStateIndex >= 0 ? (isElementHighlighted('elite_badge') ? 'border' : '') : ''}`}
+                  style={{
+                    ...getHighlightStyle('elite_badge'),
+                    fontSize: 'clamp(7px, 1.5vw, 9px)',
+                    padding: 'clamp(1px, 0.4vw, 2px) clamp(3px, 0.8vw, 6px)'
+                  }}
+                >
+                  {t.eliteBadge}
+                </Badge>
               </div>
             </div>
           </div>
 
-          {/* Name & Titles */}
-          <div className="col-span-6 space-y-1 ps-1 text-start">
-            <div className="flex flex-wrap items-center gap-1">
-              <h3 className={`text-sm sm:text-lg font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
-                {debouncedName}
-              </h3>
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 inline shrink-0" />
-            </div>
-
-            <p className={`text-[10px] sm:text-xs text-gray-300 font-medium transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}>
-              {debouncedTitle}
-            </p>
-
-            <div 
-              className={`flex items-center gap-1 text-[9px] sm:text-[11px] ${activeStateIndex >= 0 ? (isElementHighlighted('company_line') ? 'px-1.5 py-0.5 rounded border' : 'text-gray-400') : 'text-gray-400'}`}
-              style={getHighlightStyle('company_line')}
-            >
-              <Briefcase className="w-2.5 h-2.5 shrink-0" style={activeStateIndex >= 0 ? { color: isElementHighlighted('company_line') ? activeAccent : '#FAC417' } : { color: tc.accent }} />
-              <span className="truncate max-w-[80px] sm:max-w-none">{company || "Emaar Misr"}</span>
-              <Badge variant="success" size="sm" className="px-0.5 py-0 text-[6px] sm:text-[8px] rounded border border-emerald-500/20 ml-0.5 shrink-0 uppercase">
-                {t.verifiedMini}
-              </Badge>
-            </div>
-
-            <div className="flex items-center gap-1 pt-0.5">
-              <Badge variant="accent" size="sm" className="text-[7px] sm:text-[9px] px-1 py-0.5 rounded shrink-0">
-                {t.verifiedBadge}
-              </Badge>
-              <Badge 
-                variant="neutral"
-                size="sm"
-                className={`text-[7px] sm:text-[9px] px-1 py-0.5 rounded shrink-0 ${activeStateIndex >= 0 ? (isElementHighlighted('elite_badge') ? 'border' : '') : ''}`}
-                style={getHighlightStyle('elite_badge')}
-              >
-                {t.eliteBadge}
-              </Badge>
-            </div>
-          </div>
-
           {/* QR Code Area */}
-          <div className="col-span-3 flex flex-col items-center justify-center text-center">
-            <div className="bg-white p-1 rounded-lg shadow-sm border border-[#FAC417]/30 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center text-center shrink-0">
+            <div 
+              className="bg-white rounded-lg shadow-sm border border-[#FAC417]/30 flex items-center justify-center"
+              style={{
+                width: 'clamp(48px, 12vw, 64px)',
+                height: 'clamp(48px, 12vw, 64px)',
+                padding: 'clamp(2px, 0.6vw, 4px)'
+              }}
+            >
               <QRCodeSVG 
                 value={shareUrl} 
-                size={typeof window !== 'undefined' && window.innerWidth < 640 ? 38 : 54} 
+                size={128}
+                style={{ width: '100%', height: '100%' }}
                 level={"H"}
                 includeMargin={false}
               />
             </div>
-            <span className="text-[6px] text-gray-400 mt-1 uppercase tracking-wider leading-tight">{t.scanProfile}</span>
+            <span 
+              className="text-gray-400 mt-1 uppercase tracking-wider leading-tight"
+              style={{ fontSize: 'clamp(5px, 1.2vw, 7px)' }}
+            >
+              {t.scanProfile}
+            </span>
           </div>
         </div>
 
         {/* Core Metrics Grid */}
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center mb-4 relative z-10">
+        <div 
+          className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center relative z-10"
+          style={{ marginBottom: 'clamp(0.5rem, 2.5vw, 1rem)' }}
+        >
           {/* Trust Score */}
           <StatTile
             variant="dark"
@@ -391,31 +494,55 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
         </div>
 
         {/* Why Clients Choose Me Section */}
-        <div className="border-t border-white/5 pt-3 pb-2 relative z-10 text-center">
-          <div className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mb-1.5">{t.whyMe}</div>
-          <div className="flex flex-row items-center justify-center gap-3 text-[8px] sm:text-[9px] whitespace-nowrap overflow-hidden">
+        <div 
+          className="border-t border-white/5 relative z-10 text-center"
+          style={{
+            paddingTop: 'clamp(0.5rem, 2vw, 0.75rem)',
+            paddingBottom: 'clamp(0.4rem, 1.5vw, 0.6rem)'
+          }}
+        >
+          <div 
+            className="text-gray-400 font-bold uppercase tracking-widest"
+            style={{
+              fontSize: 'clamp(7px, 1.8vw, 9px)',
+              marginBottom: 'clamp(0.25rem, 1vw, 0.4rem)'
+            }}
+          >
+            {t.whyMe}
+          </div>
+          <div 
+            className="flex flex-row items-center justify-center gap-3 whitespace-nowrap overflow-hidden"
+            style={{ fontSize: 'clamp(7px, 1.8vw, 9px)' }}
+          >
             <span className="inline-flex items-center text-gray-300 font-medium">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] me-1 shrink-0" />
+              <ShieldCheck style={{ width: 'clamp(8px, 2vw, 12px)', height: 'clamp(8px, 2vw, 12px)' }} className="text-[#FAC417] me-1 shrink-0" />
               {t.verifiedIdentity}
             </span>
             <span className="inline-flex items-center text-gray-300 font-medium">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] me-1 shrink-0" />
+              <ShieldCheck style={{ width: 'clamp(8px, 2vw, 12px)', height: 'clamp(8px, 2vw, 12px)' }} className="text-[#FAC417] me-1 shrink-0" />
               {t.realReviews}
             </span>
             <span className="inline-flex items-center text-gray-300 font-medium">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FAC417] me-1 shrink-0" />
+              <ShieldCheck style={{ width: 'clamp(8px, 2vw, 12px)', height: 'clamp(8px, 2vw, 12px)' }} className="text-[#FAC417] me-1 shrink-0" />
               {t.provenResults}
             </span>
           </div>
         </div>
 
         {/* Card Footer (Avatars + R8ESTATE verification badge) */}
-        <div className="border-t border-white/10 pt-3 mt-1.5 flex items-center justify-between text-[9px] text-gray-400 relative z-10">
+        <div 
+          className="border-t border-white/10 flex items-center justify-between text-gray-400 relative z-10"
+          style={{
+            paddingTop: 'clamp(0.5rem, 2vw, 0.75rem)',
+            marginTop: 'clamp(0.25rem, 1.5vw, 0.5rem)',
+            fontSize: 'clamp(7px, 1.8vw, 9px)'
+          }}
+        >
           <div className="flex items-center gap-2">
             <div className="flex -space-x-1.5 overflow-hidden">
-              <img className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Client 1" />
-              <img className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Client 2" />
-              <img className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&auto=format&fit=crop&q=80" alt="Client 3" />
+              <img style={{ width: 'clamp(12px, 3.2vw, 16px)', height: 'clamp(12px, 3.2vw, 16px)' }} className="inline-block rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Client 1" />
+              <img style={{ width: 'clamp(12px, 3.2vw, 16px)', height: 'clamp(12px, 3.2vw, 16px)' }} className="inline-block rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Client 2" />
+              <img style={{ width: 'clamp(12px, 3.2vw, 16px)', height: 'clamp(12px, 3.2vw, 16px)' }} className="inline-block rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&auto=format&fit=crop&q=80" alt="Client 3" />
             </div>
             <span>{t.trustedByClients}</span>
           </div>
