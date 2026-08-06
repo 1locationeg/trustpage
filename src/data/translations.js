@@ -21,7 +21,7 @@ export const TRANSLATIONS = {
     connectVerify: "Connect & Verify",
     scanProfile: "Scan Profile",
     trustCard: "TRUST CARD",
-    reits: "REITS ™️",
+    reits: "REITS ™",
     
     // Benefits
     benefit_0: "Build Authority",
@@ -101,7 +101,7 @@ export const TRANSLATIONS = {
     connectVerify: "تواصل وتأكد",
     scanProfile: "امسح الملف",
     trustCard: "بطاقة الثقة",
-    reits: "REITS ™️",
+    reits: "REITS ™",
     
     // Benefits
     benefit_0: "بناء الهيئة والتميز",

@@ -3,6 +3,9 @@ import { X, Check, Loader2, ArrowLeft, Plus } from 'lucide-react';
 import Button from './Button';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "336829777595-sfe0t1iih47c6lgg958k36pbfslphkgi.apps.googleusercontent.com";
+const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || "dev-1locationeg.us.auth0.com";
+const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || "aBuv1AaaMpVIIx0iFCu8BXEoxbQhu7qF";
+
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [loadingProvider, setLoadingProvider] = useState(null); // 'google' | 'linkedin' | null
@@ -186,15 +189,15 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   <button
                     onClick={() => {
                       const redirectUri = window.location.origin + '/';
-                      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('openid email profile')}&state=google`;
+                      const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=token&client_id=${AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('openid email profile')}&state=auth0`;
                       window.location.href = authUrl;
                     }}
-                    className="w-full flex items-center justify-center gap-2 p-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl text-center transition-all duration-200 text-amber-800 font-bold text-xs cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-center transition-all duration-200 text-blue-800 font-bold text-xs cursor-pointer"
                   >
-                    <span>Launch Real Google Redirect Flow</span>
+                    <span>Launch Real Google Login via Auth0</span>
                   </button>
                   <p className="text-[9px] text-slate-400 text-center mt-1">
-                    Use this to test credentials registered on Google Cloud Console.
+                    Uses Auth0 Client Credentials to sign in with Google connection.
                   </p>
                 </div>
               )}

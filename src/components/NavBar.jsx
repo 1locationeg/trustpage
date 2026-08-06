@@ -10,6 +10,8 @@ export default function NavBar({
   onSignOut,
   onSignInClick,
   translations,
+  deviceMode,
+  setDeviceMode,
 }) {
   const t = translations;
   
@@ -41,6 +43,32 @@ export default function NavBar({
 
         {/* Inspiration Header Controls */}
         <div className="flex items-center gap-4">
+          {/* Device Simulator Toggle */}
+          {setDeviceMode && (
+            <div className="hidden md:flex items-center bg-slate-100/80 rounded-full p-0.5 border border-slate-200/50 shadow-sm mr-1">
+              <button
+                onClick={() => setDeviceMode('desktop')}
+                className={`px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                  deviceMode === 'desktop'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                Desktop
+              </button>
+              <button
+                onClick={() => setDeviceMode('mobile_sim')}
+                className={`px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                  deviceMode === 'mobile_sim'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                Mobile Sim
+              </button>
+            </div>
+          )}
+
           <div className="flex items-center gap-1.5 text-xs font-bold text-gray-600">
             <button 
               onClick={() => setLanguage('en')}

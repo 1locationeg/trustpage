@@ -43,7 +43,7 @@ export default function App() {
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
 
-  // Google OAuth callback listener
+  // OAuth callback listener (Google / Auth0)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -51,40 +51,51 @@ export default function App() {
     if (hash) {
       const params = new URLSearchParams(hash.substring(1));
       const accessToken = params.get('access_token');
+      const state = params.get('state');
 
       if (accessToken) {
-        // Fetch user information from Google API
-        fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`)
+        const isAuth0 = state === 'auth0';
+        const auth0Domain = import.meta.env.VITE_AUTH0_DOMAIN || "dev-1locationeg.us.auth0.com";
+        const userinfoUrl = isAuth0
+          ? `https://${auth0Domain}/userinfo`
+          : `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`;
+
+        const fetchOptions = isAuth0
+          ? { headers: { Authorization: `Bearer ${accessToken}` } }
+          : {};
+
+        fetch(userinfoUrl, fetchOptions)
           .then((res) => {
-            if (!res.ok) throw new Error('Failed to fetch Google profile');
+            if (!res.ok) throw new Error('Failed to fetch user profile');
             return res.json();
           })
           .then((data) => {
-            const googleUser = {
-              provider: 'google',
+            const providerName = isAuth0 ? 'auth0-google' : 'google';
+            const oauthUser = {
+              provider: providerName,
               email: data.email,
               name: data.name,
               picture: data.picture,
-              initials: data.given_name ? data.given_name[0] : (data.name ? data.name[0] : 'G')
+              initials: data.given_name ? data.given_name[0] : (data.name ? data.name[0] : (data.email ? data.email[0].toUpperCase() : 'G'))
             };
 
             // Prevent duplicate emails in simulated local database
             const registeredStr = localStorage.getItem('r8estate_users') || '[]';
             const registered = JSON.parse(registeredStr);
-            if (!registered.includes(googleUser.email)) {
-              registered.push(googleUser.email);
+            if (oauthUser.email && !registered.includes(oauthUser.email)) {
+              registered.push(oauthUser.email);
               localStorage.setItem('r8estate_users', JSON.stringify(registered));
             }
 
             // Save user state & persist
-            setUser(googleUser);
-            localStorage.setItem('r8estate_user', JSON.stringify(googleUser));
+            setUser(oauthUser);
+            localStorage.setItem('r8estate_user', JSON.stringify(oauthUser));
 
             // Clear hash parameters from URL bar
             window.history.replaceState(null, null, window.location.pathname + window.location.search);
           })
           .catch((err) => {
-            console.error('Google OAuth failed:', err);
+            console.error('OAuth callback processing failed:', err);
           });
       }
     }
@@ -140,6 +151,8 @@ export default function App() {
             onSignOut={handleSignOut}
             onSignInClick={() => setIsAuthOpen(true)}
             translations={t}
+            deviceMode={deviceMode}
+            setDeviceMode={setDeviceMode}
           />
 
           {/* 2. Main Layout Area */}
@@ -172,7 +185,7 @@ export default function App() {
                   </main>
                 ) : (
                   /* Desktop Screen Simulator - Renders iPhone Bezel Mockup with Status & Home Indicator */
-                  <main id="pwa-simulator-main" className="flex-1 flex flex-col items-center justify-center py-8 px-4 bg-slate-50 min-h-[85vh]">
+                  <main id="pwa-simulator-main" className="flex-1 flex flex-col items-center justify-center py-8 px-4 bg-[#0B132A] bg-luxury-bezel-ambient min-h-[85vh] transition-all duration-500">
                     <div className="phone-bezel animate-gold-glow">
                       
                       {/* Simulated Notch */}

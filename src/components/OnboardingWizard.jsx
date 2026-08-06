@@ -4,7 +4,7 @@ import {
   Building2, UserCheck, Phone, Mail, FileText, Star, 
   TrendingUp, QrCode, Share2, Download, CheckCircle2, RefreshCw, Plus, Minus,
   Briefcase, Target, Layers, Compass, CheckSquare, Zap, Lock, Sparkles, AlertCircle, Edit, Eye, ShieldAlert,
-  ChevronDown
+  ChevronDown, Users, Globe
 } from 'lucide-react';
 import { PROFESSIONS_DICT, USER_GOALS } from '../data/professionTemplates';
 import { getFallbackPhoto, MOCK_PRESETS } from '../data/mockProfiles';
@@ -15,12 +15,88 @@ import Badge from './Badge';
 import Card from './Card';
 import StatTile from './StatTile';
 
+const getGoalIcon = (goalId, isSelected) => {
+  const colorClass = isSelected ? 'text-white' : 'text-[#0A3D62]';
+  switch (goalId) {
+    case 'grow_business':
+      return <TrendingUp className={`w-4.5 h-4.5 ${colorClass}`} />;
+    case 'get_hired':
+      return <Briefcase className={`w-4.5 h-4.5 ${colorClass}`} />;
+    case 'build_reputation':
+      return <Award className={`w-4.5 h-4.5 ${colorClass}`} />;
+    case 'win_partnerships':
+      return <Users className={`w-4.5 h-4.5 ${colorClass}`} />;
+    case 'increase_visibility':
+      return <Globe className={`w-4.5 h-4.5 ${colorClass}`} />;
+    case 'showcase_expertise':
+      return <FileText className={`w-4.5 h-4.5 ${colorClass}`} />;
+    default:
+      return <Target className={`w-4.5 h-4.5 ${colorClass}`} />;
+  }
+};
+
+const STEP_REWARDS = {
+  1: { text: "+12 Trust ✨", detail: "Goal Registered" },
+  2: { text: "+8 Confidence", detail: "Profession Context Set" },
+  3: { text: "+12 Authority", detail: "Name Verified" },
+  4: { text: "+15 Capability", detail: "Expertise Matrix Mapped" },
+  5: { text: "+10 Visibility", detail: "Company Registered" },
+  6: { text: "+14 Authority", detail: "Headshot Linked" },
+  7: { text: "+18 Trust Score", detail: "Identity & Reg Audits Checked" },
+  8: { text: "+20 Performance", detail: "KPI Metrics Verified" },
+  9: { text: "+25 Evidence Level", detail: "Proof Records Connected" },
+  10: { text: "+15 Score", detail: "Decision Intelligence Computed" },
+  11: { text: "+10 Client Match", detail: "Contact Channels verified" },
+  12: { text: "Elite Level Unlocked! 🏆", detail: "Viral Share Ready" }
+};
+
 export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en', setLanguage, user, onSignInClick }) {
   const [isLanding, setIsLanding] = useState(true);
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [currentStep, setCurrentStep] = useState(1);
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+
+  // Redesigned interactive landing states
+  const [typedName, setTypedName] = useState(profile.name || "");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionPhase, setTransitionPhase] = useState(0);
+
+  useEffect(() => {
+    if (profile.name && !hasUserTyped) {
+      setTypedName(profile.name);
+    }
+  }, [profile.name]);
+
+  const handleStartPlay = (e) => {
+    if (e) e.preventDefault();
+    if (!typedName || typedName.trim() === "") return;
+
+    setIsTransitioning(true);
+    setTransitionPhase(1);
+
+    setTimeout(() => {
+      setTransitionPhase(2);
+      updateProfile({ company: "Apex Holdings" });
+    }, 500);
+
+    setTimeout(() => {
+      setTransitionPhase(3);
+      updateProfile({ trustScore: 78 });
+    }, 1000);
+
+    setTimeout(() => {
+      setTransitionPhase(4);
+      updateProfile({ authorityStatus: "Verified Specialist" });
+    }, 1500);
+
+    setTimeout(() => {
+      setIsTransitioning(false);
+      setTransitionPhase(0);
+      setIsLanding(false);
+      setCurrentStep(1);
+    }, 2100);
+  };
   
   // Mobile active tab: 'home' | 'build' | 'dashboard' | 'card'
   const [mobileTab, setMobileTab] = useState('home');
@@ -377,8 +453,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
                   }`}
                 >
-                  <span className="flex items-center gap-2 pointer-events-none">
-                    <span className="pointer-events-none">{goal.icon}</span>
+                  <span className="flex items-center gap-2.5 pointer-events-none">
+                    {getGoalIcon(goal.id, isSelected)}
                     <span className="pointer-events-none">{goal.label}</span>
                   </span>
                   {isSelected && <Check className="w-3.5 h-3.5 text-[#FAC417]" />}
@@ -404,10 +480,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
       return (
         <div 
           id="mobile-landing-pwa" 
-          className="min-h-screen w-full max-w-[640px] mx-auto flex flex-col bg-white text-gray-900 overflow-x-hidden relative animate-fade-in"
+          className="min-h-screen w-full max-w-[640px] mx-auto flex flex-col bg-mobile-glow-ambient text-gray-900 overflow-x-hidden relative animate-fade-in"
         >
           {/* Sticky PWA Header Bar */}
-          <header className="sticky top-0 z-30 w-full bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between shrink-0">
+          <header className="sticky top-0 z-30 w-full bg-white/60 backdrop-blur-md border-b border-gray-100/50 px-4 py-3 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-black tracking-wider text-slate-800 font-heading">
                 <span className="text-[#FF1744]">R8</span> ESTATE
@@ -510,18 +586,20 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </div>
 
           {/* Sticky Bottom CTA Bar */}
-          <div className="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-100 py-3.5 px-4 w-full shrink-0 pb-safe-bottom">
+          <div className="sticky bottom-0 z-30 bg-white/60 backdrop-blur-md border-t border-gray-100/50 py-3.5 px-4 w-full shrink-0 pb-safe-bottom">
             <Button
               id="btn-mobile-start-cta"
               onClick={handleStartBuilder}
               variant={activeStateIndex === 6 ? 'danger' : 'dark'}
               size="md"
-              className={`w-full flex items-center justify-center space-x-2 py-3 rounded-[24px] transition-all duration-300 animate-cta-pulse-once ${
-                activeStateIndex === 6 ? 'ring-4 ring-[#FF1744]/30 scale-[1.02] shadow-[0_0_20px_rgba(255,23,68,0.2)]' : ''
+              className={`w-full flex items-center justify-center space-x-2 py-3.5 rounded-full transition-all duration-300 text-xs uppercase tracking-wider font-extrabold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
+                activeStateIndex === 6 
+                  ? 'bg-rose-600 hover:bg-rose-700 text-white ring-4 ring-rose-500/20' 
+                  : 'bg-gold-gradient text-slate-950 hover:bg-[#E5B210]'
               }`}
             >
               <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
-              <ArrowRight className="w-4 h-4 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
+              <ArrowRight className="w-4 h-4 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
             </Button>
             <span 
               className="text-gray-400 font-medium block text-center mt-2"
@@ -537,7 +615,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
     // Builder Dashboard PWA
     return (
-      <div id="mobile-builder-pwa" className="flex-1 flex flex-col justify-between bg-[#FAFAF9] text-gray-900 relative">
+      <div id="mobile-builder-pwa" className="flex-1 flex flex-col justify-between bg-mobile-glow-ambient text-gray-900 relative">
         
         {/* Sticky Mobile PWA Header */}
         <div id="pwa-header" className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0">
@@ -698,10 +776,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </div>
 
               {/* Accordion 1: Identity & Brand */}
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="glass-premium-light rounded-2xl border border-white/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                 <button
                   onClick={() => setMobileAccordion(mobileAccordion === 'identity' ? '' : 'identity')}
-                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-gray-100 bg-gray-50/50"
+                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-white/40 bg-white/40 hover:bg-[#FAC417]/10 transition-colors duration-200"
                 >
                   <span className="flex items-center gap-2 uppercase tracking-wider pointer-events-none">
                     <UserCheck className="w-4 h-4 text-[#0A3D62] pointer-events-none" />
@@ -749,10 +827,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </div>
 
               {/* Accordion 2: Performance Metrics */}
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="glass-premium-light rounded-2xl border border-white/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                 <button
                   onClick={() => setMobileAccordion(mobileAccordion === 'kpis' ? '' : 'kpis')}
-                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-gray-100 bg-gray-50/50"
+                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-white/40 bg-white/40 hover:bg-[#FAC417]/10 transition-colors duration-200"
                 >
                   <span className="flex items-center gap-2 uppercase tracking-wider pointer-events-none">
                     <TrendingUp className="w-4 h-4 text-[#0A3D62] pointer-events-none" />
@@ -789,10 +867,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </div>
 
               {/* Accordion 3: Verifications */}
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="glass-premium-light rounded-2xl border border-white/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                 <button
                   onClick={() => setMobileAccordion(mobileAccordion === 'verifications' ? '' : 'verifications')}
-                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-gray-100 bg-gray-50/50"
+                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-white/40 bg-white/40 hover:bg-[#FAC417]/10 transition-colors duration-200"
                 >
                   <span className="flex items-center gap-2 uppercase tracking-wider pointer-events-none">
                     <ShieldCheck className="w-4 h-4 text-[#0A3D62] pointer-events-none" />
@@ -816,10 +894,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               </div>
 
               {/* Accordion 4: Goals */}
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="glass-premium-light rounded-2xl border border-white/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                 <button
                   onClick={() => setMobileAccordion(mobileAccordion === 'goals' ? '' : 'goals')}
-                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-gray-100 bg-gray-50/50"
+                  className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-800 border-b border-white/40 bg-white/40 hover:bg-[#FAC417]/10 transition-colors duration-200"
                 >
                   <span className="flex items-center gap-2 uppercase tracking-wider pointer-events-none">
                     <Target className="w-4 h-4 text-[#0A3D62] pointer-events-none" />
@@ -841,8 +919,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                               : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
                           }`}
                         >
-                          <span className="flex items-center gap-2">
-                            <span>{goal.icon}</span>
+                          <span className="flex items-center gap-2.5">
+                            {getGoalIcon(goal.id, isSelected)}
                             <span>{goal.label}</span>
                           </span>
                           {isSelected && <Check className="w-3.5 h-3.5 text-[#FAC417]" />}
@@ -980,7 +1058,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
         {/* Sticky iOS-style PWA Bottom Tabbar */}
         <div 
           id="pwa-bottom-tabbar" 
-          className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-gray-100 flex items-center justify-around py-3 z-40 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]"
+          className="absolute bottom-0 inset-x-0 bg-white/70 backdrop-blur-lg border-t border-gray-150/50 flex items-center justify-around py-3 z-40 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]"
           style={{ paddingBottom: 'calc(10px + env(safe-area-inset-bottom, 12px))' }} // respects notches and safe zones
         >
           <button
@@ -1035,7 +1113,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     /* 1. LANDING STATE (CLASSIC SPLIT HERO + STAT STRIP + HOW IT WORKS) */
     if (isLanding) {
       return (
-        <div id="desktop-landing-container" className="min-h-[calc(100vh-80px)] flex flex-col justify-center py-6 md:py-8 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-8 md:space-y-12">
+        <div id="desktop-landing-container" className="min-h-[calc(100vh-80px)] flex flex-col justify-center py-6 md:py-8 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-8 md:space-y-12 bg-ambient-radial-gold">
           {/* Split Hero Grid */}
           <div 
             id="desktop-landing-grid" 
@@ -1044,123 +1122,125 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-start w-full"
           >
             
-            {/* Left Column: Heading, CTA, Bullets */}
-            <div className="lg:col-span-7 space-y-4 xl:space-y-5 py-2">
-              
-              {/* Header Tag / Trust Strip */}
-              <div id="landing-trust-strip" className={`flex items-center gap-2 text-xs font-semibold text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 w-fit ${language === 'ar' ? 'mr-0 ml-auto' : 'ml-0 mr-auto'}`}>
-                <Shield 
-                  className="w-4 h-4 text-[#0A3D62] fill-[#0A3D62]" 
-                  strokeWidth={3} 
-                />
-                <span>{language === 'ar' ? 'نظام الثقة العقارية ' : 'Real Estate Trust System '}<strong className="font-bold">(REITS)</strong> ™️</span>
+            {/* Left Column: Interactive Playable Hero Onboarding */}
+            <div className="lg:col-span-7 space-y-6 py-4 flex flex-col justify-center min-h-[420px]">
+              <div className="space-y-2">
+                <span className="text-xs font-extrabold tracking-widest text-[#0A3D62] uppercase block">
+                  REAL ESTATE PROFESSIONALS
+                </span>
+                <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 font-heading leading-tight">
+                  CLIENT CONFIDENCE
+                </h1>
               </div>
 
-              {/* Premium Gold Typography Hero Section with Rotator */}
-              <div className="space-y-4">
-                <span className="text-xs font-extrabold tracking-widest text-slate-500 uppercase block">
-                  {t.heroIntro}
-                </span>
-                
-                {/* Word-rotator container */}
-                <div className="overflow-hidden h-[50px] sm:h-[65px] lg:h-[75px] xl:h-[85px] relative flex items-center justify-start">
-                  <span 
-                    key={activeStateIndex}
-                    className={`absolute text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight text-gold-gradient font-serif-premium leading-none block animate-slide-up-in ${
-                      activeStateIndex === 6 ? 'scale-105 transition-all duration-300' : ''
-                    } ${language === 'ar' ? 'right-0' : 'left-0'}`}
-                    style={{
-                      animation: activeStateIndex === 6 ? 'slideUpIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, pulse 2s infinite ease-in-out' : undefined
-                    }}
-                  >
-                    {ROTATOR_STATES[activeStateIndex].text}
-                  </span>
-                </div>
-
-                {/* Progress bar container */}
-                <div className="w-full max-w-[280px] h-[3px] bg-gray-150 rounded-full overflow-hidden mt-3">
-                  <div 
-                    key={activeStateIndex}
-                    className={`h-full bg-[#0A3D62] rounded-full animate-progress-bar ${
-                      isPaused ? 'animate-progress-bar-paused' : ''
-                    }`}
-                  />
-                </div>
-
-                {/* Navigation dots */}
-                <div className="flex items-center gap-1.5 justify-start mt-3">
-                  {ROTATOR_STATES.map((state, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        setActiveStateIndex(idx);
-                        setIsPaused(true);
-                      }}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        idx === activeStateIndex
-                          ? 'bg-[#0A3D62] w-4'
-                          : 'bg-gray-300 hover:bg-gray-400'
-                      }`}
-                      title={state.text}
-                    />
-                  ))}
-                </div>
-
-                <p className="text-2xl font-bold text-slate-900 leading-tight pt-2">
-                  {language === 'ar' ? 'احصل عليها جميعاً الآن 👇' : 'Get them all now 👇'}
+              {/* The "What should clients call you?" prompt & ChatGPT-style input */}
+              <div className="space-y-4 max-w-xl">
+                <p className="text-lg font-bold text-gray-700 font-heading">
+                  {language === 'ar' ? 'ما الاسم الذي يفضله العملاء لمناداتك؟' : 'What should clients call you?'}
                 </p>
                 
-                <span className="text-sm text-slate-500 font-semibold block">
-                  ⭐ {t.poweredBy} <span className="text-[#FF1744]">R8</span> ESTATE
+                <form onSubmit={handleStartPlay} className="relative w-full">
+                  <input
+                    type="text"
+                    value={typedName}
+                    onChange={(e) => {
+                      setTypedName(e.target.value);
+                      setHasUserTyped(true);
+                      updateProfile({ name: e.target.value });
+                    }}
+                    placeholder={language === 'ar' ? 'أدخل اسمك هنا...' : 'Enter your name...'}
+                    className="w-full bg-white border-2 border-gray-200 focus:border-[#FAC417] rounded-2xl pl-5 pr-14 py-4 text-base text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400"
+                    disabled={isTransitioning}
+                  />
+                  {typedName.trim().length > 0 && (
+                    <button
+                      type="submit"
+                      disabled={isTransitioning}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#FAC417] hover:bg-[#E5B210] flex items-center justify-center text-slate-900 transition-all shadow-md animate-pulse-glow hover:scale-105 active:scale-95 cursor-pointer"
+                    >
+                      <ArrowRight className="w-5 h-5 font-black shrink-0 ltr:rotate-0 rtl:rotate-180" />
+                    </button>
+                  )}
+                </form>
+
+                {/* Helper text changes dynamically based on typing */}
+                <div className="h-6 flex items-center">
+                  {typedName.trim().length === 0 ? (
+                    <p className="text-xs text-gray-500 font-semibold flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#FAC417]" />
+                      <span>{language === 'ar' ? 'شاهد بطاقة الثقة الخاصة بك تتفاعل وتتغير فوراً.' : 'See your Trust Card come alive instantly.'}</span>
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-700 font-bold flex items-center gap-1.5 animate-fade-up">
+                      <Check className="w-3.5 h-3.5 text-emerald-500 font-bold" />
+                      <span>
+                        {language === 'ar' ? `جميل جداً! دعنا نجعل المشترين يثقون في ` : "Looks good. Let's make buyers trust "}
+                        <span className="text-[#0A3D62] font-black">{typedName}</span>.
+                      </span>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Quick Status indicators below input */}
+              <div className="flex items-center gap-4 text-xs text-gray-500 font-semibold pt-4">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{language === 'ar' ? 'تحديث فوري للمعاينة' : 'Live preview updates instantly'}</span>
+                </span>
+                <span className="text-gray-300">•</span>
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{language === 'ar' ? 'تدقيق مؤشر القرار المهني' : 'Audited decision intelligence'}</span>
                 </span>
               </div>
-
-              {/* Strategic highlights loop */}
-              <div className={`space-y-2 py-1 ${language === 'ar' ? 'border-r-2 border-gray-200 pr-4' : 'border-l-2 border-gray-200 pl-4'}`}>
-                {(language === 'ar' ? [
-                  { title: "توثيق عالمي", desc: "اربط السجلات التنظيمية والعقود الموثقة فوراً." },
-                  { title: "هوية ثقة ممتازة", desc: "بروز فريد في رسائل البريد الإلكتروني، القوائم، والمراسلات." },
-                  { title: "لا توجد نصوص مؤقتة", desc: "إحصاءاتك الحقيقية يتم تحديثها مباشرة عبر محرك المزامنة الخاص بنا." }
-                ] : [
-                  { title: "Universal verification", desc: "Instantly link verified regulatory registries & contracts." },
-                  { title: "Premium trust identity", desc: "Stand out in emails, listings, and messages." },
-                  { title: "No placeholders", desc: "Your real statistics updated live via our sync engine." }
-                ]).map((h, i) => (
-                  <div key={i} className="text-xs">
-                    <span className="font-bold text-slate-800">{h.title}:</span>{" "}
-                    <span className="text-gray-500">{h.desc}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Direct CTA Button */}
-              <div className="pt-2 max-w-sm">
-                <Button
-                  id="btn-landing-cta"
-                  onClick={handleStartBuilder}
-                  variant={activeStateIndex === 6 ? 'danger' : 'dark'}
-                  size="lg"
-                  className={`w-full flex items-center justify-center gap-2 ${
-                    activeStateIndex === 6 ? 'scale-105 animate-pulse ring-4 ring-[#FF1744]/30' : ''
-                  }`}
-                >
-                  <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
-                  <ArrowRight className="w-4 h-4 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
-                </Button>
-                <span className="text-xs text-slate-400 block mt-2">
-                  {language === 'ar' ? '90 ثانية - معاينة فورية - بدون تسجيل' : '90 seconds - Instant preview - No signup'}
-                </span>
-              </div>
-
             </div>
 
-            {/* Right Column: Live Output Card Preview */}
-            <div className="lg:col-span-5 flex items-center justify-center py-6 lg:py-10">
-              <div className="w-full scale-95 sm:scale-100 lg:scale-[1.02] xl:scale-110 origin-center duration-300 flex flex-col items-center">
+            {/* Right Column: Live Output Card Preview with HUD Overlay */}
+            <div className="lg:col-span-5 flex items-center justify-center py-6 lg:py-10 relative">
+              <div className="w-full scale-95 sm:scale-100 lg:scale-[1.02] xl:scale-110 origin-center duration-300 flex flex-col items-center animate-float relative">
+                
+                {/* Assembling HUD Overlay Animation */}
+                {isTransitioning && (
+                  <div className="absolute inset-0 z-30 bg-[#0B1329]/95 backdrop-blur-md rounded-3xl p-6 flex flex-col justify-center space-y-4 border border-[#FAC417]/40 text-start text-xs text-white">
+                    <div className="flex items-center justify-between text-[#FAC417] font-black uppercase tracking-wider text-[10px] pb-2 border-b border-white/10">
+                      <span>⚙️ ASSEMBLING DECISION ASSET</span>
+                      <span className="animate-pulse">HUD v1.0</span>
+                    </div>
+                    
+                    <div className="space-y-3 font-semibold text-slate-300">
+                      <div className="flex items-center gap-2">
+                        <Check className={`w-4 h-4 ${transitionPhase >= 1 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                        <span className={transitionPhase >= 1 ? 'text-white' : 'text-gray-500'}>VERIFYING OFFICIAL NAME...</span>
+                        {transitionPhase === 1 && <span className="text-[10px] text-[#FAC417] animate-pulse">Running</span>}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className={`w-4 h-4 ${transitionPhase >= 2 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                        <span className={transitionPhase >= 2 ? 'text-white' : 'text-gray-500'}>LINKING COMPANY REGISTRY...</span>
+                        {transitionPhase === 2 && <span className="text-[10px] text-[#FAC417] animate-pulse">Connecting</span>}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className={`w-4 h-4 ${transitionPhase >= 3 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                        <span className={transitionPhase >= 3 ? 'text-white' : 'text-gray-500'}>COMPUTING TRUST SCORE...</span>
+                        {transitionPhase === 3 && <span className="text-[10px] text-[#FAC417] animate-pulse">Calculating</span>}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className={`w-4 h-4 ${transitionPhase >= 4 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                        <span className={transitionPhase >= 4 ? 'text-white' : 'text-gray-500'}>ISSUING CONFIDENCE BADGE...</span>
+                        {transitionPhase === 4 && <span className="text-[10px] text-[#FAC417] animate-pulse">Activating</span>}
+                      </div>
+                    </div>
+                    
+                    <div className="w-full bg-white/10 rounded-full h-1 mt-4">
+                      <div className="bg-[#FAC417] h-1 rounded-full transition-all duration-300" style={{ width: `${(transitionPhase / 4) * 100}%` }} />
+                    </div>
+                  </div>
+                )}
+
                 <LivePreviewCard 
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
-                  theme={isLanding ? (ROTATOR_STATES[activeStateIndex]?.theme || 'gold') : cardTheme}
+                  theme={cardTheme}
                   language={language}
                 />
               </div>
@@ -1274,15 +1354,17 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <button
                         key={goal.id}
                         onClick={() => updateProfile({ selectedGoal: goal.id })}
-                        className={`p-4 rounded-xl border text-start transition-all ${
+                        className={`p-4 rounded-2xl border text-start hover-lift-premium transition-all duration-300 ${
                           isSelected
-                            ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-sm font-bold'
-                            : 'bg-white border-gray-200 text-gray-800 hover:border-gray-300'
+                            ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-lg scale-[1.02] ring-2 ring-[#FAC417]/40 font-bold'
+                            : 'glass-premium-light border-gray-200 text-gray-800 hover:border-[#FAC417]/50'
                         }`}
                       >
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-lg">{goal.icon}</span>
-                          <span className={`font-semibold text-sm font-heading ${isSelected ? 'text-white' : 'text-gray-900'}`}>
+                        <div className="flex items-center gap-2.5 mb-1.5">
+                          <div className={`p-1.5 rounded-lg flex items-center justify-center ${isSelected ? 'bg-white/10' : 'bg-[#0A3D62]/5'}`}>
+                            {getGoalIcon(goal.id, isSelected)}
+                          </div>
+                          <span className={`font-bold text-sm font-heading ${isSelected ? 'text-white' : 'text-slate-900'}`}>
                             {gt.label}
                           </span>
                         </div>
@@ -1319,10 +1401,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <button
                         key={prof.id}
                         onClick={() => updateProfile({ professionId: prof.id })}
-                        className={`p-3.5 rounded-xl border text-start transition-all flex items-center justify-between ${
+                        className={`p-3.5 rounded-2xl border text-start hover-lift-premium transition-all flex items-center justify-between duration-300 ${
                           isSelected
-                            ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-sm font-bold'
-                            : 'bg-white border-gray-200 text-gray-800 hover:border-gray-300'
+                            ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-lg scale-[1.02] ring-2 ring-[#FAC417]/40 font-bold'
+                            : 'glass-premium-light border-gray-200 text-gray-800 hover:border-[#FAC417]/50'
                         }`}
                       >
                         <div>
@@ -1713,8 +1795,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
         </div>
 
-        {/* Right Column: Premium live-sync card outcome */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24">
+        {/* Right Column: Premium live-sync card outcome with Gamified Step Rewards */}
+        <div className="lg:col-span-5 lg:sticky lg:top-24 relative">
           <div className="mb-4 flex items-center justify-between text-xs">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
               Live Output preview
@@ -1725,7 +1807,26 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             </span>
           </div>
           
-          <div className="w-full scale-100 transition-transform">
+          <div className="w-full scale-100 transition-transform relative">
+            
+            {/* Gamification Reward floating banner */}
+            {STEP_REWARDS[currentStep] && (
+              <div 
+                key={currentStep}
+                className="absolute -top-6 -right-6 z-10 bg-[#0B1329] text-white border border-[#FAC417]/50 rounded-2xl px-4 py-2.5 shadow-xl animate-bounce flex items-center gap-2"
+              >
+                <Sparkles className="w-4.5 h-4.5 text-[#FAC417]" />
+                <div className="text-start">
+                  <div className="text-[10px] font-black uppercase text-[#FAC417] tracking-wider">
+                    {STEP_REWARDS[currentStep].text}
+                  </div>
+                  <div className="text-[9px] text-slate-300 font-semibold leading-none">
+                    {STEP_REWARDS[currentStep].detail}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <LivePreviewCard
               profile={profile}
               onOpenFullPage={onFinish}
