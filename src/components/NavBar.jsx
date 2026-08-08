@@ -22,24 +22,38 @@ export default function NavBar({
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
-        {/* Logo Brand area */}
-        <a href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-          <div id="app-brand-logo" className="flex items-center shrink-0">
-            <img
-              src="/favicon.svg"
-              alt="R8ESTATE Icon"
-              className="h-8 w-8 object-contain"
-            />
-          </div>
-          <div className="flex flex-col text-left">
-            <span className="text-[19px] sm:text-[20px] font-extrabold text-slate-900 leading-none tracking-tight">
-              <span className="text-[#FF1744]">R8</span> ESTATE
+        {/* Logo Brand area - R8ESTATE (infrastructure) + TRUST CARD (product) */}
+        <div className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <div id="app-brand-logo" className="flex items-center shrink-0">
+              <img
+                src="/favicon.svg"
+                alt="R8ESTATE Icon"
+                className="h-6 w-6 object-contain"
+              />
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[13px] font-black text-slate-800 leading-none tracking-tight">
+                <span className="text-[#FF1744]">R8</span> ESTATE
+              </span>
+            </div>
+          </a>
+          
+          <div className="h-6 w-px bg-gray-200" />
+          
+          <div className="text-start">
+            <span className="text-base font-serif-premium font-black tracking-tight text-slate-900 uppercase">
+              TRUST CARD™
             </span>
-            <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-[0.18em] leading-none mt-1">
-              {t.decisionIntelligence}
-            </span>
           </div>
-        </a>
+        </div>
+
+        {/* Center Navigation Links */}
+        <div className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-500">
+          <a href="#desktop-landing-how" className="hover:text-[#FAC417] transition-colors">{language === 'ar' ? 'كيف يعمل' : 'How It Works'}</a>
+          <a href="#desktop-landing-stats" className="hover:text-[#FAC417] transition-colors">{language === 'ar' ? 'للمحترفين' : 'For Professionals'}</a>
+          <a href="#btn-hero-fallback-cta" className="hover:text-[#FAC417] transition-colors">{language === 'ar' ? 'صفحة الثقة' : 'Trust Page'}</a>
+        </div>
 
         {/* Inspiration Header Controls */}
         <div className="flex items-center gap-4">
@@ -113,10 +127,10 @@ export default function NavBar({
             variant="dark"
             size="sm"
             onClick={onSignInClick}
-            className="shadow-sm flex items-center gap-1"
+            className="shadow-sm flex items-center gap-1 bg-gold-gradient text-slate-950 hover:bg-[#E5B210]"
           >
-            <span>{t.getStarted}</span>
-            <ArrowRight className="w-3 h-3 text-[#FAC417] shrink-0 ltr:rotate-0 rtl:rotate-180" />
+            <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card™'}</span>
+            <ArrowRight className="w-3 h-3 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
           </Button>
         </div>
 

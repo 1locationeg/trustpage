@@ -660,22 +660,30 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
       <div id="mobile-builder-pwa" className="flex-1 flex flex-col justify-between bg-mobile-glow-ambient text-gray-900 relative">
         
         {/* Sticky Mobile PWA Header */}
-        <div id="pwa-header" className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0">
-          <div className="flex items-center space-x-1.5">
-            <Shield className="w-4 h-4 text-[#0A3D62]" />
-            <span className="font-extrabold text-xs tracking-wider text-slate-800 font-heading">
-              <span className="text-[#FF1744]">R8</span> ESTATE
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500 border border-gray-200 rounded-full px-2 py-0.5 bg-gray-50">
-              <button onClick={() => setLanguage && setLanguage('en')} className={`${language === 'en' ? 'text-slate-900 font-black' : 'text-gray-400'}`}>EN</button>
-              <span className="text-gray-300">/</span>
-              <button onClick={() => setLanguage && setLanguage('ar')} className={`${language === 'ar' ? 'text-slate-900 font-black font-arabic' : 'text-gray-400 font-arabic'}`}>ع</button>
+        <div id="pwa-header" className="bg-white border-b border-gray-150/80 px-4 pt-safe-top pb-2 sticky top-0 z-30 shrink-0 flex flex-col space-y-1 text-center bg-white/95 backdrop-blur-md">
+          {/* Top safe-area region: R8ESTATE left, Actions/ellipsis right */}
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center space-x-1">
+              <Shield className="w-3.5 h-3.5 text-[#0A3D62]" />
+              <span className="font-extrabold text-[10px] tracking-wider text-slate-800 font-heading">
+                <span className="text-[#FF1744]">R8</span> ESTATE
+              </span>
             </div>
-            <span className="text-[9px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
-              {language === 'ar' ? 'مزامنة' : 'Sync'}
+            
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 text-[8px] font-bold text-gray-500 border border-gray-200 rounded-full px-1.5 py-0.5 bg-gray-50">
+                <button onClick={() => setLanguage && setLanguage('en')} className={`${language === 'en' ? 'text-slate-900 font-black' : 'text-gray-400'}`}>EN</button>
+                <span>/</span>
+                <button onClick={() => setLanguage && setLanguage('ar')} className={`${language === 'ar' ? 'text-slate-900 font-black font-arabic' : 'text-gray-400 font-arabic'}`}>ع</button>
+              </div>
+              <span className="text-slate-400 font-bold text-xs tracking-widest">•••</span>
+            </div>
+          </div>
+
+          {/* Compact Product Identity */}
+          <div className="w-full text-center">
+            <span className="text-xs font-serif-premium font-black tracking-tight text-slate-900 uppercase">
+              TRUST CARD™
             </span>
           </div>
         </div>
@@ -1847,7 +1855,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     STEP 12 • CARD GENERATED
                   </span>
                   <h2 className="text-3xl font-extrabold text-gray-900 font-heading mt-1">
-                    Your R8 ESTATE Trust Card is ready!
+                    Your TRUST CARD™ is ready!
                   </h2>
                   <p className="text-sm text-gray-600">
                     Click below to generate and publish your official decision intelligence profile page.

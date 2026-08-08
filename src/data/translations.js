@@ -10,7 +10,7 @@ export const TRANSLATIONS = {
     
     // Landing
     heroIntro: "Real Estate Professional Looking for",
-    claimProfile: "Claim Your Trust Profile",
+    claimProfile: "Get Your TRUST CARD™",
     livePreview: "Interactive Live Preview",
     whyMe: "WHY CLIENTS CHOOSE ME",
     verifiedIdentity: "Verified Identity",
@@ -20,7 +20,7 @@ export const TRANSLATIONS = {
     trustedByClients: "Trusted by 100+ clients. Real reviews. Real results.",
     connectVerify: "Connect & Verify",
     scanProfile: "Scan Profile",
-    trustCard: "TRUST CARD",
+    trustCard: "TRUST CARD™",
     reits: "REITS ™",
     
     // Benefits
@@ -90,7 +90,7 @@ export const TRANSLATIONS = {
     
     // Landing
     heroIntro: "محترف عقاري يتطلع إلى",
-    claimProfile: "احصل على ملف الثقة الخاص بك",
+    claimProfile: "احصل على TRUST CARD™ الخاصة بك",
     livePreview: "معاينة حية تفاعلية",
     whyMe: "لماذا يختارني العملاء",
     verifiedIdentity: "هوية موثقة",
@@ -100,7 +100,7 @@ export const TRANSLATIONS = {
     trustedByClients: "موثوق من +100 عميل. تقييمات حقيقية. نتائج مثبتة.",
     connectVerify: "تواصل وتأكد",
     scanProfile: "امسح الملف",
-    trustCard: "بطاقة الثقة",
+    trustCard: "TRUST CARD™",
     reits: "REITS ™",
     
     // Benefits
