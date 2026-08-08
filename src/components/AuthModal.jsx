@@ -3,7 +3,7 @@ import { X, Check, Loader2, ArrowLeft, Plus } from 'lucide-react';
 import Button from './Button';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "336829777595-sfe0t1iih47c6lgg958k36pbfslphkgi.apps.googleusercontent.com";
-const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || "dev-1locationeg.us.auth0.com";
+const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || "dev-fnjc04fu1fk585ca.us.auth0.com";
 const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || "aBuvlAaaMpVIIx0iFCu8BXEoxbQhu7qF";
 
 
