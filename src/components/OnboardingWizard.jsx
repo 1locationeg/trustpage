@@ -1182,10 +1182,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </span>
                 
                 {/* Stripe/Apple style outcome word rotator */}
-                <div className="overflow-hidden h-[45px] sm:h-[55px] lg:h-[65px] xl:h-[75px] relative flex items-center justify-start">
+                <div className="overflow-hidden h-[50px] sm:h-[60px] lg:h-[70px] xl:h-[80px] relative flex items-center justify-start">
                   <span 
                     key={activeStateIndex}
-                    className="absolute text-4xl sm:text-5xl lg:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-none block animate-outcome-cycle uppercase"
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-none block animate-outcome-cycle uppercase"
                   >
                     {ROTATOR_STATES[activeStateIndex].text}
                   </span>
