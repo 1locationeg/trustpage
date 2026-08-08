@@ -620,6 +620,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   activeStateIndex={activeStateIndex}
                   theme={cardTheme}
                   language={language}
+                  onOpenFullPage={handleStartPlay}
                 />
               </div>
             </div>
@@ -1181,6 +1182,23 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     {ROTATOR_STATES[activeStateIndex].text}
                   </span>
                 </div>
+
+                {/* Subtle progress dots to indicate active outcome */}
+                <div className="flex items-center gap-1.5 pt-1">
+                  {ROTATOR_STATES.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setActiveStateIndex(idx);
+                        setIsPaused(true);
+                      }}
+                      className={`h-1 rounded-full transition-all duration-300 ${
+                        idx === activeStateIndex ? 'bg-[#FAC417] w-4' : 'bg-slate-700 w-1.5'
+                      }`}
+                      title={`Switch to outcome ${idx + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
 
               {/* Supporting Outcome Message */}
@@ -1319,6 +1337,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   activeStateIndex={activeStateIndex}
                   theme={cardTheme}
                   language={language}
+                  onOpenFullPage={handleStartPlay}
                 />
               </div>
             </div>

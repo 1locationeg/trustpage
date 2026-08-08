@@ -149,8 +149,8 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
   const isElementHighlighted = (elementKey) => {
     if (activeStateIndex === -1) return false;
     
-    // 0: MORE CLIENTS -> Trust Score, Reviews (Rating), Deals Advised
-    if (activeStateIndex === 0 && (elementKey === 'trust_score' || elementKey === 'client_rating' || elementKey === 'deals_advised')) return true;
+    // 0: MORE CLIENTS -> Trust Score, Reviews (Rating), Deals Advised, Contact CTA
+    if (activeStateIndex === 0 && (elementKey === 'trust_score' || elementKey === 'client_rating' || elementKey === 'deals_advised' || elementKey === 'contact_cta')) return true;
     
     // 1: MORE DEALS -> Deals Advised, Experience
     if (activeStateIndex === 1 && (elementKey === 'deals_advised' || elementKey === 'practice_years')) return true;
@@ -582,16 +582,23 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
 
         {/* Action Button inside card if full page preview needed */}
         {onOpenFullPage && (
-          <Button
-            id="btn-preview-full-page-inside-card"
-            onClick={onOpenFullPage}
-            variant="primary"
-            size="sm"
-            className="w-full mt-4 flex items-center justify-center gap-1.5 z-20 relative"
+          <div 
+            className={`w-full mt-4 rounded-xl transition-all duration-300 ${activeStateIndex >= 0 ? (isElementHighlighted('contact_cta') ? 'p-0.5 border' : '') : ''}`}
+            style={{
+              ...getHighlightStyle('contact_cta')
+            }}
           >
-            <span>{t.connectVerify}</span>
-            <ExternalLink className="w-3.5 h-3.5 shrink-0 ltr:rotate-0 rtl:rotate-180" />
-          </Button>
+            <Button
+              id="btn-preview-full-page-inside-card"
+              onClick={onOpenFullPage}
+              variant="primary"
+              size="sm"
+              className="w-full flex items-center justify-center gap-1.5 z-20 relative font-heading"
+            >
+              <span>{t.connectVerify}</span>
+              <ExternalLink className="w-3.5 h-3.5 shrink-0 ltr:rotate-0 rtl:rotate-180" />
+            </Button>
+          </div>
         )}
 
       </Card>
