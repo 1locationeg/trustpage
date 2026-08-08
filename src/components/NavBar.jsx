@@ -32,7 +32,7 @@ export default function NavBar({
                 className="h-6 w-6 object-contain"
               />
             </div>
-            <div className={`flex flex-col ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <div className={`flex flex-col ${language === 'ar' ? 'text-right' : 'text-start'}`}>
               <span className="text-[13px] font-black text-slate-800 leading-none tracking-tight">
                 <span className="text-[#FF1744]">R8</span> ESTATE
               </span>

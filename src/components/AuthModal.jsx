@@ -115,7 +115,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   <button
                     key={email}
                     onClick={() => handleSelectAccount(email)}
-                    className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 border border-slate-100 hover:border-slate-200 rounded-xl text-left transition-all duration-200 group cursor-pointer"
+                    className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 border border-slate-100 hover:border-slate-200 rounded-xl text-start transition-all duration-200 group cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs uppercase">
@@ -132,7 +132,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 {!showCustomInput ? (
                   <button
                     onClick={() => setShowCustomInput(true)}
-                    className="w-full flex items-center gap-3 p-3 bg-white hover:bg-slate-50 border border-dashed border-slate-200 hover:border-slate-300 rounded-xl text-left transition-all duration-200 text-slate-500 cursor-pointer"
+                    className="w-full flex items-center gap-3 p-3 bg-white hover:bg-slate-50 border border-dashed border-slate-200 hover:border-slate-300 rounded-xl text-start transition-all duration-200 text-slate-500 cursor-pointer"
                   >
                     <div className="w-8 h-8 rounded-full bg-slate-50 border border-dashed border-slate-300 flex items-center justify-center">
                       <Plus className="w-4 h-4 text-slate-400" />

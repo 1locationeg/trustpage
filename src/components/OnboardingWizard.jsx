@@ -338,7 +338,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
   const renderFlatPwaForm = () => {
     return (
-      <div id="flat-pwa-forms-container" className="space-y-6 text-left">
+      <div id="flat-pwa-forms-container" className="space-y-6 text-start">
         
         {/* Section 1: Identity & Brand */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm space-y-3">
@@ -447,7 +447,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <button
                   key={goal.id}
                   onClick={() => updateProfile({ selectedGoal: goal.id })}
-                  className={`w-full p-2.5 rounded-lg border text-left text-xs transition-all flex items-center justify-between ${
+                  className={`w-full p-2.5 rounded-lg border text-start text-xs transition-all flex items-center justify-between ${
                     isSelected
                       ? 'bg-slate-900 text-white border-slate-900 font-bold'
                       : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
@@ -749,7 +749,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <div className="bg-emerald-100 text-emerald-700 p-1.5 rounded-full">
                         <Check className="w-4 h-4" />
                       </div>
-                      <div className="text-left">
+                      <div className="text-start">
                         <p className="text-xs font-bold text-slate-900">Define Profession Profile</p>
                         <p className="text-[10px] text-gray-500">Structured as {activeProfession.label}</p>
                       </div>
@@ -761,7 +761,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <div className="bg-emerald-100 text-emerald-700 p-1.5 rounded-full">
                         <Check className="w-4 h-4" />
                       </div>
-                      <div className="text-left">
+                      <div className="text-start">
                         <p className="text-xs font-bold text-slate-900">Set Official Identity</p>
                         <p className="text-[10px] text-gray-500">{profile.name} · {profile.company}</p>
                       </div>
@@ -773,7 +773,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <div className={`p-1.5 rounded-full ${profile.photo ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                         {profile.photo ? <Check className="w-4 h-4" /> : <Star className="w-4 h-4" />}
                       </div>
-                      <div className="text-left">
+                      <div className="text-start">
                         <p className="text-xs font-bold text-slate-900">Professional Headshot</p>
                         <p className="text-[10px] text-gray-500">{profile.photo ? 'Photo linked successfully' : 'Upload professional picture'}</p>
                       </div>
@@ -793,7 +793,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       <div className="bg-amber-100 text-amber-700 p-1.5 rounded-full">
                         <Award className="w-4 h-4" />
                       </div>
-                      <div className="text-left">
+                      <div className="text-start">
                         <p className="text-xs font-bold text-slate-900">Audit Proof Records</p>
                         <p className="text-[10px] text-gray-500">{profile.dealsClosed} deals · {profile.proofItems?.length || 0} verified documents</p>
                       </div>
@@ -824,7 +824,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           {mobileTab === 'build' && (
             <div id="tab-build-container" className="space-y-4 animate-fade-up">
               
-              <div className="text-left">
+              <div className="text-start">
                 <h2 className="text-lg font-bold text-slate-900 font-heading">Build Card Data</h2>
                 <p className="text-xs text-gray-500">Live syncs automatically to your card outcome.</p>
               </div>
@@ -842,7 +842,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   <span className="pointer-events-none">{mobileAccordion === 'identity' ? '▲' : '▼'}</span>
                 </button>
                 {mobileAccordion === 'identity' && (
-                  <div className="p-4 space-y-3.5 text-left">
+                  <div className="p-4 space-y-3.5 text-start">
                     <div>
                       <label htmlFor="mobile-input-name" className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Full Official Name</label>
                       <input
@@ -893,7 +893,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   <span className="pointer-events-none">{mobileAccordion === 'kpis' ? '▲' : '▼'}</span>
                 </button>
                 {mobileAccordion === 'kpis' && (
-                  <div className="p-4 space-y-4 text-left">
+                  <div className="p-4 space-y-4 text-start">
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="text-xs font-bold text-gray-800 block">Deals Closed</span>
@@ -933,7 +933,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   <span className="pointer-events-none">{mobileAccordion === 'verifications' ? '▲' : '▼'}</span>
                 </button>
                 {mobileAccordion === 'verifications' && (
-                  <div className="p-4 space-y-3 text-left">
+                  <div className="p-4 space-y-3 text-start">
                     <div className="p-3.5 bg-slate-900 text-white rounded-xl space-y-2 border border-slate-800">
                       <div className="flex items-center space-x-2">
                         <ShieldAlert className="w-4 h-4 text-[#FAC417]" />
@@ -960,14 +960,14 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   <span className="pointer-events-none">{mobileAccordion === 'goals' ? '▲' : '▼'}</span>
                 </button>
                 {mobileAccordion === 'goals' && (
-                  <div className="p-4 space-y-2 text-left">
+                  <div className="p-4 space-y-2 text-start">
                     {USER_GOALS.map((goal) => {
                       const isSelected = profile.selectedGoal === goal.id;
                       return (
                         <button
                           key={goal.id}
                           onClick={() => updateProfile({ selectedGoal: goal.id })}
-                          className={`w-full p-3 rounded-lg border text-left text-xs transition-all flex items-center justify-between ${
+                          className={`w-full p-3 rounded-lg border text-start text-xs transition-all flex items-center justify-between ${
                             isSelected
                               ? 'bg-slate-900 text-white border-slate-900 font-bold'
                               : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
@@ -1002,7 +1002,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           {/* TAB 3: DASHBOARD METRICS */}
           {mobileTab === 'dashboard' && (
             !user ? renderLockScreen(t.privateWorkspace || 'Workspace Dashboard', t.verifyUnlockDashboard || 'Sign in to access your listings scoreboards, partner leads, and verification dashboard.') : (
-              <div id="tab-dashboard-container" className="space-y-4 animate-fade-up text-left">
+              <div id="tab-dashboard-container" className="space-y-4 animate-fade-up text-start">
                 <h2 className="text-lg font-bold text-slate-900 font-heading">Decision Dashboard</h2>
                 <p className="text-xs text-gray-500">Real-time credibility indicators configured for your profile.</p>
 
@@ -1167,7 +1167,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     /* 1. LANDING STATE (CLASSIC SPLIT HERO + STAT STRIP + HOW IT WORKS) */
     if (isLanding) {
       return (
-        <div id="desktop-landing-container" className="min-h-[calc(100vh-80px)] flex flex-col justify-center py-6 md:py-8 max-w-7xl mx-auto px-6 text-left animate-fade-up space-y-8 md:space-y-12 bg-ambient-radial-gold">
+        <div id="desktop-landing-container" className="min-h-[calc(100vh-80px)] flex flex-col justify-center py-6 md:py-8 max-w-7xl mx-auto px-6 text-start animate-fade-up space-y-8 md:space-y-12 bg-ambient-radial-gold">
           {/* Split Hero Grid */}
           <div 
             id="desktop-landing-grid" 
@@ -1181,7 +1181,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               
               {/* Category Eyebrow & Rotating Outcome Headline */}
               <div className="space-y-3">
-                <span className="text-xs font-black tracking-widest text-slate-500 uppercase block">
+                <span className="text-[10px] sm:text-xs font-black tracking-widest text-slate-400/90 uppercase block">
                   {language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR'}
                 </span>
                 
@@ -1189,7 +1189,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <div className="overflow-hidden h-[50px] sm:h-[60px] lg:h-[70px] xl:h-[80px] relative flex items-center justify-start">
                   <span 
                     key={activeStateIndex}
-                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-none block animate-outcome-cycle uppercase"
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block animate-outcome-cycle uppercase"
                   >
                     {ROTATOR_STATES[activeStateIndex].text}
                   </span>
@@ -1218,7 +1218,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <p className="text-sm font-black text-[#FAC417] tracking-wider uppercase">
                   {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
                 </p>
-                <p className="text-sm text-gray-500 font-medium max-w-lg leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-500/90 font-medium max-w-lg leading-relaxed">
                   {language === 'ar' 
                     ? 'ابنِ حضوراً مهنياً موثقاً يحول خبرتك وعملك إلى ثقة، أمان وصفقات جديدة.' 
                     : 'Build a verified professional presence that turns your experience into trust, confidence and opportunities.'}
@@ -1227,7 +1227,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
               {/* Personalization & Interactive Input */}
               <div className="space-y-4 max-w-xl">
-                <p className="text-sm font-bold text-gray-700 font-heading">
+                <p className="text-sm sm:text-base font-extrabold text-slate-800 font-heading">
                   {language === 'ar' ? 'ما الاسم الذي يفضله العملاء لمناداتك؟' : 'What should clients call you?'}
                 </p>
                 
@@ -1406,7 +1406,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
     /* 2. BUILDER STATE (SPLIT LAYOUT DURING 12-STEPS) */
     return (
-      <div id="desktop-builder-grid" className="max-w-7xl mx-auto px-6 py-8 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start text-left animate-fade-up">
+      <div id="desktop-builder-grid" className="max-w-7xl mx-auto px-6 py-8 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start text-start animate-fade-up">
         
         {/* Left Column: Form & Onboarding Wizard Container */}
         <div className="lg:col-span-7 bg-white rounded-[24px] border border-gray-200/80 p-8 md:p-10 shadow-premium-soft relative flex flex-col justify-between min-h-[560px]">
@@ -1584,7 +1584,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 4: EXPERTISE */}
             {currentStep === 4 && (
-              <div id="step-4-container" className="space-y-5 text-left">
+              <div id="step-4-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 4 • EXPERTISE
@@ -1619,7 +1619,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                             : [...currentSpecs, spec];
                           updateProfile({ specializations: nextSpecs });
                         }}
-                        className={`p-3 rounded-xl border text-left text-xs font-medium transition-all flex items-center justify-between ${
+                        className={`p-3 rounded-xl border text-start text-xs font-medium transition-all flex items-center justify-between ${
                           isSelected
                             ? 'bg-[#0A3D62] border-[#0A3D62] text-white shadow-sm font-bold'
                             : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
@@ -1636,7 +1636,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 5: COMPANY & MARKETS */}
             {currentStep === 5 && (
-              <div id="step-5-container" className="space-y-5 text-left">
+              <div id="step-5-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 5 • COMPANY & MARKETS
@@ -1669,7 +1669,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 6: PHOTO */}
             {currentStep === 6 && (
-              <div id="step-6-container" className="space-y-5 text-center text-left">
+              <div id="step-6-container" className="space-y-5 text-center text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 6 • EXECUTIVE PHOTO
@@ -1696,7 +1696,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 7: VERIFICATION CENTER */}
             {currentStep === 7 && (
-              <div id="step-7-container" className="space-y-4 text-left">
+              <div id="step-7-container" className="space-y-4 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 7 • VERIFICATION CENTER
@@ -1728,7 +1728,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 8: TRACK RECORD */}
             {currentStep === 8 && (
-              <div id="step-8-container" className="space-y-5 text-left">
+              <div id="step-8-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 8 • TRACK RECORD
@@ -1768,7 +1768,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 9: PROOF CENTER */}
             {currentStep === 9 && (
-              <div id="step-9-container" className="space-y-4 text-left">
+              <div id="step-9-container" className="space-y-4 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 9 • PROOF CENTER
@@ -1781,7 +1781,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
                 <div id="proof-items-list" className="space-y-2">
                   {profile.proofItems?.map((item) => (
-                    <div key={item.id} className="p-3.5 bg-gray-50 rounded-xl border border-gray-200 text-xs space-y-1 text-left">
+                    <div key={item.id} className="p-3.5 bg-gray-50 rounded-xl border border-gray-200 text-xs space-y-1 text-start">
                       <div className="flex justify-between items-center">
                         <span className="font-semibold text-gray-900 font-heading">{item.title}</span>
                         <span className="text-emerald-700 text-xs font-semibold">{item.confidence}% Verified</span>
@@ -1795,7 +1795,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 10: INTELLIGENCE SCORE */}
             {currentStep === 10 && (
-              <div id="step-10-container" className="space-y-5 text-center py-4 text-left">
+              <div id="step-10-container" className="space-y-5 text-center py-4 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 10 • DECISION INTELLIGENCE
@@ -1806,7 +1806,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   <p className="text-sm text-gray-600">Synthesizing trust metrics for {activeProfession.label}</p>
                 </div>
 
-                <div className="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4 max-w-sm mx-auto text-left">
+                <div className="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4 max-w-sm mx-auto text-start">
                   <div className="flex items-center justify-between text-xs border-b border-gray-200 pb-2">
                     <span className="font-semibold text-gray-600">Calculated Risk Index:</span>
                     <span className="font-bold text-emerald-700 uppercase">LOW RISK</span>
@@ -1825,7 +1825,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 11: METRIC SUMMARY */}
             {currentStep === 11 && (
-              <div id="step-11-container" className="space-y-5 text-left">
+              <div id="step-11-container" className="space-y-5 text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 11 • CORE TRUST SCORE
@@ -1857,7 +1857,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
             {/* STEP 12: READY */}
             {currentStep === 12 && (
-              <div id="step-12-container" className="space-y-5 text-center text-left">
+              <div id="step-12-container" className="space-y-5 text-center text-start">
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     STEP 12 • CARD GENERATED
