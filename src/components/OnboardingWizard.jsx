@@ -50,7 +50,7 @@ const STEP_REWARDS = {
   12: { text: "Elite Level Unlocked! 🏆", detail: "Viral Share Ready" }
 };
 
-export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en', setLanguage, user, onSignInClick }) {
+export default function OnboardingWizard({ profile, setProfile, onFinish, isMobileView, flatMode, language = 'en', setLanguage, user, onSignInClick, websiteConfig }) {
   const [isLanding, setIsLanding] = useState(true);
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [currentStep, setCurrentStep] = useState(1);
@@ -142,29 +142,37 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
   const activeProfession = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
 
   // Vertical Word-Rotator States (7 outcomes)
-  const ROTATOR_STATES = [
-    { text: language === 'ar' ? 'المزيد من العملاء' : 'MORE CLIENTS', presetId: "client-confidence", theme: "gold" },
-    { text: language === 'ar' ? 'المزيد من الصفقات' : 'MORE DEALS', presetId: "more-opportunities", theme: "gold" },
-    { text: language === 'ar' ? 'المزيد من الإحالات' : 'MORE REFERRALS', presetId: "client-confidence", theme: "emerald" },
-    { text: language === 'ar' ? 'المزيد من النفوذ والسيطرة' : 'MORE AUTHORITY', presetId: "build-authority", theme: "silver" },
-    { text: language === 'ar' ? 'المزيد من الانتشار والظهور' : 'MORE VISIBILITY', presetId: "stand-out", theme: "emerald" },
-    { text: language === 'ar' ? 'فرص أفضل' : 'BETTER OPPORTUNITIES', presetId: "more-opportunities", theme: "silver" },
-    { text: language === 'ar' ? 'سمعة أقوى' : 'STRONGER REPUTATION', presetId: "proven-experience", theme: "gold" }
-  ];
+  const ROTATOR_STATES = (websiteConfig?.hero?.outcomes || [
+    { text: { en: 'MORE CLIENTS', ar: 'المزيد من العملاء' } },
+    { text: { en: 'MORE DEALS', ar: 'المزيد من الصفقات' } },
+    { text: { en: 'MORE REFERRALS', ar: 'المزيد من الإحالات' } },
+    { text: { en: 'MORE AUTHORITY', ar: 'MORE AUTHORITY' } },
+    { text: { en: 'MORE VISIBILITY', ar: 'المزيد من الانتشار والظهور' } },
+    { text: { en: 'BETTER OPPORTUNITIES', ar: 'فرص أفضل' } },
+    { text: { en: 'STRONGER REPUTATION', ar: 'سمعة أقوى' } }
+  ]).map((out, idx) => {
+    const presets = ["client-confidence", "more-opportunities", "client-confidence", "build-authority", "stand-out", "more-opportunities", "proven-experience"];
+    const themes = ["gold", "gold", "emerald", "silver", "emerald", "silver", "gold"];
+    return {
+      text: out.text[language] || out.text.en,
+      presetId: presets[idx % presets.length],
+      theme: themes[idx % themes.length]
+    };
+  });
 
   const [activeStateIndex, setActiveStateIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   // Autoplay cycle effect: holds for 2.4 seconds to align with outcome cycle CSS animation
   useEffect(() => {
-    if (isPaused || !isLanding) return;
+    if (isPaused || !isLanding || ROTATOR_STATES.length === 0) return;
 
     const timer = setTimeout(() => {
-      setActiveStateIndex((prev) => (prev + 1) % 7);
+      setActiveStateIndex((prev) => (prev + 1) % ROTATOR_STATES.length);
     }, 2400);
 
     return () => clearTimeout(timer);
-  }, [activeStateIndex, isPaused, isLanding]);
+  }, [activeStateIndex, isPaused, isLanding, ROTATOR_STATES.length]);
 
   // Sync profile preset when activeStateIndex changes (only in landing state)
   useEffect(() => {
@@ -533,7 +541,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             {/* Outcome first mobile heading */}
             <div className="text-center shrink-0 space-y-1">
               <span className="text-[10px] font-black tracking-widest text-slate-500 uppercase block">
-                {language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR'}
+                {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
               </span>
               <div className="h-9 overflow-hidden relative flex items-center justify-center">
                 <span 
@@ -1182,7 +1190,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               {/* Category Eyebrow & Rotating Outcome Headline */}
               <div className="space-y-3">
                 <span className="text-[10px] sm:text-xs font-black tracking-widest text-slate-400/90 uppercase block">
-                  {language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR'}
+                  {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
                 </span>
                 
                 {/* Stripe/Apple style outcome word rotator */}
@@ -1191,7 +1199,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     key={activeStateIndex}
                     className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block animate-outcome-cycle uppercase"
                   >
-                    {ROTATOR_STATES[activeStateIndex].text}
+                    {ROTATOR_STATES[activeStateIndex]?.text}
                   </span>
                 </div>
 
@@ -1219,16 +1227,14 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
                 </p>
                 <p className="text-sm sm:text-base text-gray-500/90 font-medium max-w-lg leading-relaxed">
-                  {language === 'ar' 
-                    ? 'ابنِ حضوراً مهنياً موثقاً يحول خبرتك وعملك إلى ثقة، أمان وصفقات جديدة.' 
-                    : 'Build a verified professional presence that turns your experience into trust, confidence and opportunities.'}
+                  {websiteConfig?.hero?.supportingText[language] || websiteConfig?.hero?.supportingText.en}
                 </p>
               </div>
 
               {/* Personalization & Interactive Input */}
               <div className="space-y-4 max-w-xl">
                 <p className="text-sm sm:text-base font-extrabold text-slate-800 font-heading">
-                  {language === 'ar' ? 'ما الاسم الذي يفضله العملاء لمناداتك؟' : 'What should clients call you?'}
+                  {websiteConfig?.hero?.personalizationPrompt[language] || websiteConfig?.hero?.personalizationPrompt.en}
                 </p>
                 
                 <form onSubmit={handleStartPlay} className="relative w-full">
@@ -1240,7 +1246,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       setHasUserTyped(true);
                       updateProfile({ name: e.target.value });
                     }}
-                    placeholder={language === 'ar' ? 'أدخل اسمك هنا...' : 'Enter your name...'}
+                    placeholder={websiteConfig?.hero?.personalizationPlaceholder[language] || websiteConfig?.hero?.personalizationPlaceholder.en}
                     className={`w-full bg-white border-2 border-gray-200 focus:border-[#FAC417] rounded-2xl py-4 text-base text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400 ${
                       language === 'ar' ? 'pr-5 pl-14' : 'pl-5 pr-14'
                     }`}

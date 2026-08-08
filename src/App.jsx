@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Layout, Eye, UserCheck, ArrowRight, Smartphone, Monitor, Check, Star } from 'lucide-react';
 import { DEFAULT_PROFILE, MOCK_PRESETS } from './data/mockProfiles';
+import { INITIAL_WEBSITE_CONFIG } from './data/websiteConfig';
 import LivePreviewCard from './components/LivePreviewCard';
 import OnboardingWizard from './components/OnboardingWizard';
 import PublicTrustPage from './components/PublicTrustPage';
+import AdminPanel from './components/AdminPanel';
 import AuthModal from './components/AuthModal';
 import NavBar from './components/NavBar';
 import Button from './components/Button';
@@ -24,7 +26,8 @@ export default function App() {
     return DEFAULT_PROFILE;
   });
 
-  const [viewMode, setViewMode] = useState('builder'); // 'builder' | 'public' | 'card'
+  const [websiteConfig, setWebsiteConfig] = useState(INITIAL_WEBSITE_CONFIG);
+  const [viewMode, setViewMode] = useState('builder'); // 'builder' | 'public' | 'card' | 'admin'
   const [deviceMode, setDeviceMode] = useState('desktop'); // 'desktop' | 'mobile_sim'
   const [actualMobile, setActualMobile] = useState(false);
   const [timeString, setTimeString] = useState("09:41");
@@ -129,6 +132,18 @@ export default function App() {
 
   const isMobileView = actualMobile || deviceMode === 'mobile_sim';
 
+  if (viewMode === 'admin') {
+    return (
+      <AdminPanel
+        profile={profile}
+        onUpdateProfile={setProfile}
+        websiteConfig={websiteConfig}
+        onUpdateConfig={setWebsiteConfig}
+        onCloseAdmin={() => setViewMode('builder')}
+      />
+    );
+  }
+
   return (
     <div 
       id="app-root" 
@@ -153,6 +168,8 @@ export default function App() {
             translations={t}
             deviceMode={deviceMode}
             setDeviceMode={setDeviceMode}
+            websiteConfig={websiteConfig}
+            onAdminClick={() => setViewMode('admin')}
           />
 
           {/* 2. Main Layout Area */}
@@ -172,6 +189,7 @@ export default function App() {
                         setLanguage={setLanguage}
                         user={user}
                         onSignInClick={() => setIsAuthOpen(true)}
+                        websiteConfig={websiteConfig}
                       />
                     )}
                     {viewMode === 'card' && (
@@ -219,6 +237,7 @@ export default function App() {
                               setLanguage={setLanguage}
                               user={user}
                               onSignInClick={() => setIsAuthOpen(true)}
+                              websiteConfig={websiteConfig}
                             />
                           )}
                           {viewMode === 'card' && (
@@ -254,6 +273,7 @@ export default function App() {
                       language={language}
                       user={user}
                       onSignInClick={() => setIsAuthOpen(true)}
+                      websiteConfig={websiteConfig}
                     />
                   )}
 

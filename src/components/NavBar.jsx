@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Shield } from 'lucide-react';
 import Button from './Button';
 
 export default function NavBar({
@@ -12,15 +12,17 @@ export default function NavBar({
   translations,
   deviceMode,
   setDeviceMode,
+  websiteConfig,
+  onAdminClick
 }) {
   const t = translations;
   
   return (
     <header 
       id={id} 
-      className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 px-6 py-3.5 shadow-sm hidden md:block"
+      className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 px-6 py-3.5"
     >
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         
         {/* Logo Brand area - R8ESTATE (infrastructure) + TRUST CARD (product) */}
         <div className="flex items-center gap-3">
@@ -32,7 +34,7 @@ export default function NavBar({
                 className="h-6 w-6 object-contain"
               />
             </div>
-            <div className={`flex flex-col ${language === 'ar' ? 'text-right' : 'text-start'}`}>
+            <div className={`flex flex-col text-start`}>
               <span className="text-[13px] font-black text-slate-800 leading-none tracking-tight">
                 <span className="text-[#FF1744]">R8</span> ESTATE
               </span>
@@ -43,16 +45,26 @@ export default function NavBar({
           
           <div className="text-start">
             <span className="text-base font-serif-premium font-black tracking-tight text-slate-900 uppercase">
-              TRUST CARD™
+              {websiteConfig?.global?.siteName || "TRUST CARD™"}
             </span>
           </div>
         </div>
 
         {/* Center Navigation Links */}
         <div className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-500">
-          <a href="#desktop-landing-how" className="hover:text-[#FAC417] transition-colors">{language === 'ar' ? 'كيف يعمل' : 'How It Works'}</a>
-          <a href="#desktop-landing-stats" className="hover:text-[#FAC417] transition-colors">{language === 'ar' ? 'للمحترفين' : 'For Professionals'}</a>
-          <a href="#btn-hero-fallback-cta" className="hover:text-[#FAC417] transition-colors">{language === 'ar' ? 'صفحة الثقة' : 'Trust Page'}</a>
+          {(websiteConfig?.global?.navigation?.links || [
+            { id: "nav-how", label: { en: "How It Works", ar: "كيف يعمل" }, href: "#desktop-landing-how" },
+            { id: "nav-stats", label: { en: "For Professionals", ar: "للمحترفين" }, href: "#desktop-landing-stats" },
+            { id: "nav-trust", label: { en: "Trust Page", ar: "صفحة الثقة" }, href: "#btn-hero-fallback-cta" }
+          ]).map(link => (
+            <a 
+              key={link.id} 
+              href={link.href} 
+              className="hover:text-[#FAC417] transition-colors"
+            >
+              {link.label[language] || link.label.en}
+            </a>
+          ))}
         </div>
 
         {/* Inspiration Header Controls */}
@@ -99,6 +111,16 @@ export default function NavBar({
             </button>
           </div>
 
+          {/* CMS Admin Panel Trigger Button */}
+          <button
+            onClick={onAdminClick}
+            className="text-xs font-bold text-[#FAC417] bg-slate-950 border border-[#FAC417]/25 hover:bg-slate-900 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm shadow-[#FAC417]/10"
+            title="Admin CMS Settings"
+          >
+            <Shield className="w-3.5 h-3.5 text-[#FAC417]" />
+            <span className="hidden sm:inline">{language === 'ar' ? 'التحكم' : 'CMS'}</span>
+          </button>
+
           {user ? (
             <div className="flex items-center gap-2">
               <div 
@@ -129,7 +151,7 @@ export default function NavBar({
             onClick={onSignInClick}
             className="shadow-sm flex items-center gap-1 bg-gold-gradient text-slate-950 hover:bg-[#E5B210]"
           >
-            <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card™'}</span>
+            <span>{websiteConfig?.global?.navigation?.cta?.label[language] || websiteConfig?.global?.navigation?.cta?.label.en || (language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card™')}</span>
             <ArrowRight className="w-3 h-3 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
           </Button>
         </div>
