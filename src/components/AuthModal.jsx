@@ -4,7 +4,7 @@ import Button from './Button';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "336829777595-sfe0t1iih47c6lgg958k36pbfslphkgi.apps.googleusercontent.com";
 const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || "dev-1locationeg.us.auth0.com";
-const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || "aBuv1AaaMpVIIx0iFCu8BXEoxbQhu7qF";
+const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || "aBuvlAaaMpVIIx0iFCu8BXEoxbQhu7qF";
 
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
@@ -210,11 +210,15 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 </p>
               </div>
 
-              {/* Google Button */}
+              {/* Google Button - Real Auth0 redirect for Google connection */}
               <Button
-                onClick={() => handleStartOAuth('google')}
+                onClick={() => {
+                  const redirectUri = window.location.origin + '/';
+                  const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=token&client_id=${AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('openid email profile')}&state=auth0`;
+                  window.location.href = authUrl;
+                }}
                 variant="secondary"
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl shadow-sm transition-all duration-200"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl shadow-sm transition-all duration-200 cursor-pointer"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.74 1.64 15.06 1 12 1 7.24 1 3.2 3.74 1.25 7.74l3.88 3.01C6.07 7.79 8.78 5.04 12 5.04z"/>
