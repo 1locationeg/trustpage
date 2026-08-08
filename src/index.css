@@ -564,6 +564,56 @@
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Sophisticated Gold Shimmer Moving Light Effect */
+.gold-shimmer-text {
+  background: linear-gradient(
+    120deg,
+    #FAC417 30%,
+    #FFE896 45%,
+    #FAC417 50%,
+    #C29306 70%,
+    #FAC417 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerFlow 6s linear infinite;
+}
+
+@keyframes shimmerFlow {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Stripe/Apple-like outcome cycle animation */
+@keyframes outcomeCycle {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px);
+    filter: blur(4px);
+  }
+}
+
+.animate-outcome-cycle {
+  animation: outcomeCycle 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 
 
 

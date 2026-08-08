@@ -141,27 +141,27 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
   const activeProfession = PROFESSIONS_DICT[profile.professionId || 'broker'] || PROFESSIONS_DICT.broker;
 
-  // Vertical Word-Rotator States (7 states)
+  // Vertical Word-Rotator States (7 outcomes)
   const ROTATOR_STATES = [
-    { text: t.benefit_0, presetId: "build-authority", theme: "silver" },
-    { text: t.benefit_1, presetId: "proven-experience", theme: "gold" },
-    { text: t.benefit_2, presetId: "client-confidence", theme: "emerald" },
-    { text: t.benefit_3, presetId: "stronger-partnerships", theme: "silver" },
-    { text: t.benefit_4, presetId: "stand-out", theme: "emerald" },
-    { text: t.benefit_5, presetId: "more-opportunities", theme: "gold" },
-    { text: t.benefit_6, presetId: "client-confidence", theme: "gold", isClimax: true }
+    { text: language === 'ar' ? 'المزيد من العملاء' : 'MORE CLIENTS', presetId: "client-confidence", theme: "gold" },
+    { text: language === 'ar' ? 'المزيد من الصفقات' : 'MORE DEALS', presetId: "more-opportunities", theme: "gold" },
+    { text: language === 'ar' ? 'المزيد من الإحالات' : 'MORE REFERRALS', presetId: "client-confidence", theme: "emerald" },
+    { text: language === 'ar' ? 'المزيد من النفوذ والسيطرة' : 'MORE AUTHORITY', presetId: "build-authority", theme: "silver" },
+    { text: language === 'ar' ? 'المزيد من الانتشار والظهور' : 'MORE VISIBILITY', presetId: "stand-out", theme: "emerald" },
+    { text: language === 'ar' ? 'فرص أفضل' : 'BETTER OPPORTUNITIES', presetId: "more-opportunities", theme: "silver" },
+    { text: language === 'ar' ? 'سمعة أقوى' : 'STRONGER REPUTATION', presetId: "proven-experience", theme: "gold" }
   ];
 
   const [activeStateIndex, setActiveStateIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Autoplay cycle effect: holds for 2.6s (and let's trigger transition after 2.8s)
+  // Autoplay cycle effect: holds for 2.4 seconds to align with outcome cycle CSS animation
   useEffect(() => {
     if (isPaused || !isLanding) return;
 
     const timer = setTimeout(() => {
       setActiveStateIndex((prev) => (prev + 1) % 7);
-    }, 2800); // 2600ms hold + 200ms transition buffer
+    }, 2400);
 
     return () => clearTimeout(timer);
   }, [activeStateIndex, isPaused, isLanding]);
@@ -528,56 +528,97 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </header>
 
           {/* Scrollable Viewport Content Area */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col justify-center space-y-4">
+          <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col justify-between space-y-3 pt-4">
             
-            {/* Outcome Carousel Header */}
+            {/* Outcome first mobile heading */}
             <div className="text-center shrink-0 space-y-1">
-              <span 
-                className="font-bold tracking-wider text-slate-400 uppercase block"
-                style={{ fontSize: 'clamp(8px, 2vw, 10px)' }}
-              >
-                {language === 'ar' ? 'بطاقة الثقة تمنحك' : 'YOUR TRUST CARD SECURES'}
+              <span className="text-[10px] font-black tracking-widest text-slate-500 uppercase block">
+                {language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR'}
               </span>
-              <div className="h-7 overflow-hidden relative flex items-center justify-center">
+              <div className="h-9 overflow-hidden relative flex items-center justify-center">
                 <span 
                   key={activeStateIndex}
-                  className="font-extrabold tracking-tight text-slate-800 font-heading animate-slide-up-in block"
-                  style={{ fontSize: 'clamp(13px, 3.5vw, 18px)' }}
+                  className="font-serif-premium font-black tracking-tight gold-shimmer-text animate-outcome-cycle block uppercase text-2xl"
                 >
-                  {language === 'ar' ? (
-                    activeStateIndex === 0 ? 'المزيد من العملاء' :
-                    activeStateIndex === 1 ? 'المزيد من العقارات' :
-                    activeStateIndex === 2 ? 'المزيد من الصفقات الناجحة' :
-                    activeStateIndex === 3 ? 'إحالات أعلى' :
-                    activeStateIndex === 4 ? 'صفر اعتراضات' :
-                    activeStateIndex === 5 ? 'توثيق مطلق' : 'R8 ESTATE'
-                  ) : ROTATOR_STATES[activeStateIndex].text}
+                  {ROTATOR_STATES[activeStateIndex].text}
                 </span>
               </div>
-              {/* Compact dots indicator */}
-              <div className="flex items-center space-x-1.5 justify-center mt-1">
-                {ROTATOR_STATES.map((state, idx) => (
+              <p className="text-xs font-black text-[#FAC417] tracking-wider uppercase mt-1">
+                {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
+              </p>
+            </div>
+
+            {/* Mobile Playable Name Input */}
+            <div className="max-w-sm mx-auto w-full shrink-0">
+              <form onSubmit={handleStartPlay} className="relative w-full">
+                <input
+                  type="text"
+                  value={typedName}
+                  onChange={(e) => {
+                    setTypedName(e.target.value);
+                    setHasUserTyped(true);
+                    updateProfile({ name: e.target.value });
+                  }}
+                  placeholder={language === 'ar' ? 'ما الاسم الذي يفضله العملاء؟' : 'What should clients call you?'}
+                  className="w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl pl-4 pr-12 py-2.5 text-xs text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400"
+                  disabled={isTransitioning}
+                />
+                {typedName.trim().length > 0 && (
                   <button
-                    key={idx}
-                    onClick={() => {
-                      setActiveStateIndex(idx);
-                      setIsPaused(true);
-                    }}
-                    className={`w-1 h-1 rounded-full transition-all duration-300 ${
-                      idx === activeStateIndex ? 'bg-[#FF1744] w-2.5' : 'bg-gray-200'
-                    }`}
-                  />
-                ))}
+                    type="submit"
+                    disabled={isTransitioning}
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAC417] hover:bg-[#E5B210] flex items-center justify-center text-slate-900 transition-all shadow-md animate-pulse-glow hover:scale-105 active:scale-95 cursor-pointer"
+                  >
+                    <ArrowRight className="w-4 h-4 font-black shrink-0 ltr:rotate-0 rtl:rotate-180" />
+                  </button>
+                )}
+              </form>
+              <div className="h-4 flex items-center justify-center mt-1">
+                <p className="text-[10px] text-gray-500 font-semibold">
+                  {typedName.trim().length === 0 
+                    ? (language === 'ar' ? 'شاهد بطاقة الثقة تتفاعل فوراً.' : 'See your Trust Card update instantly.')
+                    : (language === 'ar' ? 'رائع جداً! اضغط على السهم للبدء.' : "Looks good. Let's build your Trust Page.")}
+                </p>
               </div>
             </div>
 
             {/* Premium Trust Card Container (Fluid & Centered) */}
-            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-2 shrink-0 animate-card-slide-up">
-              <div className="w-full max-w-[480px] sm:max-w-[520px] mx-auto drop-shadow-xl">
+            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-1 flex-1 min-h-[220px] animate-card-slide-up relative">
+              
+              {/* Mobile HUD overlay during transition */}
+              {isTransitioning && (
+                <div className="absolute inset-0 z-30 bg-[#0B1329]/95 backdrop-blur-md rounded-2xl p-4 flex flex-col justify-center space-y-3 border border-[#FAC417]/40 text-start text-[10px] text-white">
+                  <div className="flex items-center justify-between text-[#FAC417] font-black uppercase tracking-wider text-[8px] pb-1.5 border-b border-white/10">
+                    <span>⚙️ ASSEMBLING ASSET</span>
+                    <span className="animate-pulse">HUD v1.0</span>
+                  </div>
+                  
+                  <div className="space-y-2 font-semibold text-slate-300">
+                    <div className="flex items-center gap-1.5">
+                      <Check className={`w-3 h-3 ${transitionPhase >= 1 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                      <span className={transitionPhase >= 1 ? 'text-white' : 'text-gray-500'}>VERIFYING OFFICIAL NAME...</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Check className={`w-3 h-3 ${transitionPhase >= 2 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                      <span className={transitionPhase >= 2 ? 'text-white' : 'text-gray-500'}>LINKING COMPANY REGISTRY...</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Check className={`w-3 h-3 ${transitionPhase >= 3 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                      <span className={transitionPhase >= 3 ? 'text-white' : 'text-gray-500'}>COMPUTING TRUST SCORE...</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Check className={`w-3 h-3 ${transitionPhase >= 4 ? 'text-emerald-500 font-bold' : 'text-gray-600'}`} />
+                      <span className={transitionPhase >= 4 ? 'text-white' : 'text-gray-500'}>ISSUING CONFIDENCE BADGE...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="w-full max-w-[340px] mx-auto drop-shadow-xl scale-90 origin-center">
                 <LivePreviewCard 
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
-                  theme={ROTATOR_STATES[activeStateIndex]?.theme || 'gold'}
+                  theme={cardTheme}
                   language={language}
                 />
               </div>
@@ -1124,18 +1165,39 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             
             {/* Left Column: Interactive Playable Hero Onboarding */}
             <div className="lg:col-span-7 space-y-6 py-4 flex flex-col justify-center min-h-[420px]">
-              <div className="space-y-2">
-                <span className="text-xs font-extrabold tracking-widest text-[#0A3D62] uppercase block">
-                  REAL ESTATE PROFESSIONALS
+              
+              {/* Category Eyebrow & Rotating Outcome Headline */}
+              <div className="space-y-3">
+                <span className="text-xs font-black tracking-widest text-slate-500 uppercase block">
+                  {language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR'}
                 </span>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 font-heading leading-tight">
-                  CLIENT CONFIDENCE
-                </h1>
+                
+                {/* Stripe/Apple style outcome word rotator */}
+                <div className="overflow-hidden h-[45px] sm:h-[55px] lg:h-[65px] xl:h-[75px] relative flex items-center justify-start">
+                  <span 
+                    key={activeStateIndex}
+                    className="absolute text-4xl sm:text-5xl lg:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-none block animate-outcome-cycle uppercase"
+                  >
+                    {ROTATOR_STATES[activeStateIndex].text}
+                  </span>
+                </div>
               </div>
 
-              {/* The "What should clients call you?" prompt & ChatGPT-style input */}
+              {/* Supporting Outcome Message */}
+              <div className="space-y-2">
+                <p className="text-sm font-black text-[#FAC417] tracking-wider uppercase">
+                  {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
+                </p>
+                <p className="text-sm text-gray-500 font-medium max-w-lg leading-relaxed">
+                  {language === 'ar' 
+                    ? 'ابنِ حضوراً مهنياً موثقاً يحول خبرتك وعملك إلى ثقة، أمان وصفقات جديدة.' 
+                    : 'Build a verified professional presence that turns your experience into trust, confidence and opportunities.'}
+                </p>
+              </div>
+
+              {/* Personalization & Interactive Input */}
               <div className="space-y-4 max-w-xl">
-                <p className="text-lg font-bold text-gray-700 font-heading">
+                <p className="text-sm font-bold text-gray-700 font-heading">
                   {language === 'ar' ? 'ما الاسم الذي يفضله العملاء لمناداتك؟' : 'What should clients call you?'}
                 </p>
                 
@@ -1163,7 +1225,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   )}
                 </form>
 
-                {/* Helper text changes dynamically based on typing */}
+                {/* Dynamic Helper Text */}
                 <div className="h-6 flex items-center">
                   {typedName.trim().length === 0 ? (
                     <p className="text-xs text-gray-500 font-semibold flex items-center gap-1.5">
@@ -1174,16 +1236,31 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     <p className="text-xs text-gray-700 font-bold flex items-center gap-1.5 animate-fade-up">
                       <Check className="w-3.5 h-3.5 text-emerald-500 font-bold" />
                       <span>
-                        {language === 'ar' ? `جميل جداً! دعنا نجعل المشترين يثقون في ` : "Looks good. Let's make buyers trust "}
-                        <span className="text-[#0A3D62] font-black">{typedName}</span>.
+                        {language === 'ar' ? `رائع جداً! دعنا نبني بطاقة الثقة الخاصة بك.` : "Looks good. Let's build your Trust Page."}
                       </span>
                     </p>
                   )}
                 </div>
               </div>
 
+              {/* Fallback CTA (R8ESTATE Gold styling, non-oversized) */}
+              <div className="flex items-center gap-4 flex-wrap pt-2">
+                <Button
+                  id="btn-hero-fallback-cta"
+                  onClick={() => {
+                    setIsLanding(false);
+                    setCurrentStep(1);
+                  }}
+                  variant="primary"
+                  size="sm"
+                  className="flex items-center gap-1.5 px-6 py-3 rounded-full bg-gold-gradient text-slate-950 font-bold uppercase tracking-wider text-xs shadow-md hover:shadow-lg hover:scale-102 active:scale-98 transition-all duration-300"
+                >
+                  <span>{language === 'ar' ? 'ابنِ بطاقة الثقة الخاصة بي ➜' : 'BUILD MY TRUST CARD ➜'}</span>
+                </Button>
+              </div>
+
               {/* Quick Status indicators below input */}
-              <div className="flex items-center gap-4 text-xs text-gray-500 font-semibold pt-4">
+              <div className="flex items-center gap-4 text-xs text-gray-500 font-semibold pt-2">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{language === 'ar' ? 'تحديث فوري للمعاينة' : 'Live preview updates instantly'}</span>

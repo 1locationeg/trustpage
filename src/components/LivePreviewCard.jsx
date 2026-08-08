@@ -147,14 +147,28 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
   const activeAccent = activeStateIndex >= 0 ? (STATE_ACCENTS[activeStateIndex] || '#fac417') : tc.accent;
 
   const isElementHighlighted = (elementKey) => {
-    if (activeStateIndex === 6) return true;
+    if (activeStateIndex === -1) return false;
     
-    if (activeStateIndex === 0 && elementKey === 'trust_score') return true;
-    if (activeStateIndex === 1 && elementKey === 'practice_years') return true;
-    if (activeStateIndex === 2 && elementKey === 'client_rating') return true;
-    if (activeStateIndex === 3 && elementKey === 'company_line') return true;
-    if (activeStateIndex === 4 && elementKey === 'elite_badge') return true;
-    if (activeStateIndex === 5 && elementKey === 'deals_advised') return true;
+    // 0: MORE CLIENTS -> Trust Score, Reviews (Rating), Deals Advised
+    if (activeStateIndex === 0 && (elementKey === 'trust_score' || elementKey === 'client_rating' || elementKey === 'deals_advised')) return true;
+    
+    // 1: MORE DEALS -> Deals Advised, Experience
+    if (activeStateIndex === 1 && (elementKey === 'deals_advised' || elementKey === 'practice_years')) return true;
+    
+    // 2: MORE REFERRALS -> Client Rating, Trusted by Clients
+    if (activeStateIndex === 2 && (elementKey === 'client_rating' || elementKey === 'trusted_by_clients')) return true;
+    
+    // 3: MORE AUTHORITY -> Trust Score, Elite Badge
+    if (activeStateIndex === 3 && (elementKey === 'trust_score' || elementKey === 'elite_badge')) return true;
+    
+    // 4: MORE VISIBILITY -> Company Line, Name/Title Line
+    if (activeStateIndex === 4 && (elementKey === 'company_line' || elementKey === 'name_line')) return true;
+    
+    // 5: BETTER OPPORTUNITIES -> Deals Advised, Experience
+    if (activeStateIndex === 5 && (elementKey === 'deals_advised' || elementKey === 'practice_years')) return true;
+    
+    // 6: STRONGER REPUTATION -> Trust Score, Client Rating, Elite Badge
+    if (activeStateIndex === 6 && (elementKey === 'trust_score' || elementKey === 'client_rating' || elementKey === 'elite_badge')) return true;
     
     return false;
   };
@@ -340,7 +354,12 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             </div>
 
             {/* Name & Titles */}
-            <div className="space-y-1 text-start">
+            <div 
+              className={`space-y-1 text-start rounded transition-all duration-300 ${activeStateIndex >= 0 ? (isElementHighlighted('name_line') ? 'px-1.5 py-0.5 border' : '') : ''}`}
+              style={{
+                ...getHighlightStyle('name_line')
+              }}
+            >
               <div className="flex flex-wrap items-center gap-1">
                 <h3 
                   className={`font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}
@@ -538,7 +557,12 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             fontSize: 'clamp(7px, 1.8vw, 9px)'
           }}
         >
-          <div className="flex items-center gap-2">
+          <div 
+            className={`flex items-center gap-2 rounded transition-all duration-300 ${activeStateIndex >= 0 ? (isElementHighlighted('trusted_by_clients') ? 'px-1.5 py-0.5 border' : '') : ''}`}
+            style={{
+              ...getHighlightStyle('trusted_by_clients')
+            }}
+          >
             <div className="flex -space-x-1.5 overflow-hidden">
               <img style={{ width: 'clamp(12px, 3.2vw, 16px)', height: 'clamp(12px, 3.2vw, 16px)' }} className="inline-block rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Client 1" />
               <img style={{ width: 'clamp(12px, 3.2vw, 16px)', height: 'clamp(12px, 3.2vw, 16px)' }} className="inline-block rounded-full ring-1 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Client 2" />
