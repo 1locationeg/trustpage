@@ -560,14 +560,18 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     updateProfile({ name: e.target.value });
                   }}
                   placeholder={language === 'ar' ? 'ما الاسم الذي يفضله العملاء؟' : 'What should clients call you?'}
-                  className="w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl pl-4 pr-12 py-2.5 text-xs text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400"
+                  className={`w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl py-2.5 text-xs text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400 ${
+                    language === 'ar' ? 'pr-4 pl-12' : 'pl-4 pr-12'
+                  }`}
                   disabled={isTransitioning}
                 />
                 {typedName.trim().length > 0 && (
                   <button
                     type="submit"
                     disabled={isTransitioning}
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAC417] hover:bg-[#E5B210] flex items-center justify-center text-slate-900 transition-all shadow-md animate-pulse-glow hover:scale-105 active:scale-95 cursor-pointer"
+                    className={`absolute top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAC417] hover:bg-[#E5B210] flex items-center justify-center text-slate-900 transition-all shadow-md animate-pulse-glow hover:scale-105 active:scale-95 cursor-pointer ${
+                      language === 'ar' ? 'left-1.5' : 'right-1.5'
+                    }`}
                   >
                     <ArrowRight className="w-4 h-4 font-black shrink-0 ltr:rotate-0 rtl:rotate-180" />
                   </button>
@@ -1237,14 +1241,18 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       updateProfile({ name: e.target.value });
                     }}
                     placeholder={language === 'ar' ? 'أدخل اسمك هنا...' : 'Enter your name...'}
-                    className="w-full bg-white border-2 border-gray-200 focus:border-[#FAC417] rounded-2xl pl-5 pr-14 py-4 text-base text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400"
+                    className={`w-full bg-white border-2 border-gray-200 focus:border-[#FAC417] rounded-2xl py-4 text-base text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400 ${
+                      language === 'ar' ? 'pr-5 pl-14' : 'pl-5 pr-14'
+                    }`}
                     disabled={isTransitioning}
                   />
                   {typedName.trim().length > 0 && (
                     <button
                       type="submit"
                       disabled={isTransitioning}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#FAC417] hover:bg-[#E5B210] flex items-center justify-center text-slate-900 transition-all shadow-md animate-pulse-glow hover:scale-105 active:scale-95 cursor-pointer"
+                      className={`absolute top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#FAC417] hover:bg-[#E5B210] flex items-center justify-center text-slate-900 transition-all shadow-md animate-pulse-glow hover:scale-105 active:scale-95 cursor-pointer ${
+                        language === 'ar' ? 'left-2.5' : 'right-2.5'
+                      }`}
                     >
                       <ArrowRight className="w-5 h-5 font-black shrink-0 ltr:rotate-0 rtl:rotate-180" />
                     </button>
