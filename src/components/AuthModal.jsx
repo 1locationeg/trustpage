@@ -189,7 +189,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   <button
                     onClick={() => {
                       const redirectUri = window.location.origin + '/';
-                      const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=token&client_id=${AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('openid email profile')}&state=auth0`;
+                      const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=token&client_id=${AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('openid email profile')}&state=auth0&prompt=select_account`;
                       window.location.href = authUrl;
                     }}
                     className="w-full flex items-center justify-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-center transition-all duration-200 text-blue-800 font-bold text-xs cursor-pointer"
@@ -214,7 +214,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               <Button
                 onClick={() => {
                   const redirectUri = window.location.origin + '/';
-                  const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=token&client_id=${AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('openid email profile')}&state=auth0`;
+                  const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=token&client_id=${AUTH0_CLIENT_ID}&connection=google-oauth2&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('openid email profile')}&state=auth0&prompt=select_account`;
                   window.location.href = authUrl;
                 }}
                 variant="secondary"
