@@ -54,7 +54,7 @@ export default function AdminPanel({
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === "r8estate" || password === "admin") {
+    if (password === "197900") {
       setIsAuthenticated(true);
       showToast("Welcome back, administrator.");
     } else {
