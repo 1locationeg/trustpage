@@ -22,11 +22,43 @@ export default function App() {
           return found.data;
         }
       }
+      const saved = localStorage.getItem('r8estate_profile');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse saved profile", e);
+        }
+      }
     }
     return DEFAULT_PROFILE;
   });
 
-  const [websiteConfig, setWebsiteConfig] = useState(INITIAL_WEBSITE_CONFIG);
+  const [websiteConfig, setWebsiteConfig] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('r8estate_config');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse saved websiteConfig", e);
+        }
+      }
+    }
+    return INITIAL_WEBSITE_CONFIG;
+  });
+
+  useEffect(() => {
+    if (profile) {
+      localStorage.setItem('r8estate_profile', JSON.stringify(profile));
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (websiteConfig) {
+      localStorage.setItem('r8estate_config', JSON.stringify(websiteConfig));
+    }
+  }, [websiteConfig]);
   const [viewMode, setViewMode] = useState('builder'); // 'builder' | 'public' | 'card' | 'admin'
   const [deviceMode, setDeviceMode] = useState('desktop'); // 'desktop' | 'mobile_sim'
   const [actualMobile, setActualMobile] = useState(false);
