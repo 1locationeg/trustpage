@@ -546,7 +546,9 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <div className="h-9 overflow-hidden relative flex items-center justify-center">
                 <span 
                   key={activeStateIndex}
-                  className="font-serif-premium font-black tracking-tight gold-shimmer-text animate-outcome-cycle block uppercase text-2xl"
+                  className={`font-serif-premium font-black tracking-tight gold-shimmer-text block uppercase text-2xl ${
+                    isPaused ? 'opacity-100' : 'animate-outcome-cycle'
+                  }`}
                 >
                   {ROTATOR_STATES[activeStateIndex].text}
                 </span>
@@ -1197,7 +1199,9 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <div className="overflow-hidden h-[50px] sm:h-[60px] lg:h-[70px] xl:h-[80px] relative flex items-center justify-start">
                   <span 
                     key={activeStateIndex}
-                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block animate-outcome-cycle uppercase"
+                    className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block uppercase ${
+                      isPaused ? 'opacity-100' : 'animate-outcome-cycle'
+                    }`}
                   >
                     {ROTATOR_STATES[activeStateIndex]?.text}
                   </span>
