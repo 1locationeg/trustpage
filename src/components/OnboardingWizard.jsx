@@ -545,10 +545,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <span className="text-[10px] font-black tracking-widest text-slate-500 uppercase block">
                 {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
               </span>
-              <div className="h-9 overflow-hidden relative flex items-center justify-center">
+              <div className="h-12 overflow-hidden relative flex items-center justify-center">
                 <span 
                   key={activeStateIndex}
-                  className={`font-serif-premium font-black tracking-tight gold-shimmer-text block uppercase text-2xl ${
+                  className={`font-serif-premium font-black tracking-tight gold-shimmer-text block uppercase text-xl xs:text-2xl whitespace-nowrap ${
                     isPaused ? 'opacity-100' : 'animate-outcome-cycle'
                   }`}
                 >
@@ -1198,10 +1198,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </span>
                 
                 {/* Stripe/Apple style outcome word rotator */}
-                <div className="overflow-hidden h-[50px] sm:h-[60px] lg:h-[70px] xl:h-[80px] relative flex items-center justify-start">
+                <div className="overflow-hidden h-[50px] sm:h-[60px] lg:h-[76px] xl:h-[86px] relative flex items-center justify-start">
                   <span 
                     key={activeStateIndex}
-                    className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block uppercase ${
+                    className={`text-2xl xs:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block uppercase whitespace-nowrap ${
                       isPaused ? 'opacity-100' : 'animate-outcome-cycle'
                     }`}
                   >
