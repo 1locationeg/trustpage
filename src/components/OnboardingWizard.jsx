@@ -538,14 +538,14 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </header>
 
           {/* Scrollable Viewport Content Area */}
-          <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col justify-between space-y-3 pt-4">
+          <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col justify-between space-y-2 pt-2">
             
             {/* Outcome first mobile heading */}
-            <div className="text-center shrink-0 space-y-1">
+            <div className="text-center shrink-0 space-y-0.5">
               <span className="text-[10px] font-black tracking-widest text-slate-500 uppercase block">
                 {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
               </span>
-              <div className="h-12 overflow-hidden relative flex items-center justify-center">
+              <div className="h-10 overflow-hidden relative flex items-center justify-center">
                 <span 
                   key={activeStateIndex}
                   className={`font-serif-premium font-black tracking-tight gold-shimmer-text block uppercase text-xl xs:text-2xl whitespace-nowrap ${
@@ -555,7 +555,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   {ROTATOR_STATES[activeStateIndex].text}
                 </span>
               </div>
-              <p className="text-xs font-black text-[#FAC417] tracking-wider uppercase mt-1">
+              <p className="text-xs font-black text-[#FAC417] tracking-wider uppercase mt-0.5">
                 {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
               </p>
             </div>
@@ -589,7 +589,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   </button>
                 )}
               </form>
-              <div className="h-4 flex items-center justify-center mt-1">
+              <div className="h-4 flex items-center justify-center mt-0.5">
                 <p className="text-[10px] text-gray-500 font-semibold">
                   {typedName.trim().length === 0 
                     ? (language === 'ar' ? 'شاهد بطاقة الثقة تتفاعل فوراً.' : 'See your Trust Card update instantly.')
@@ -599,7 +599,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             </div>
 
             {/* Premium Trust Card Container (Fluid & Centered) */}
-            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-1 flex-1 min-h-[220px] animate-card-slide-up relative">
+            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-0 flex-1 min-h-[170px] animate-card-slide-up relative">
               
               {/* Mobile HUD overlay during transition */}
               {isTransitioning && (
@@ -630,7 +630,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </div>
               )}
 
-              <div className="w-full max-w-[340px] mx-auto drop-shadow-xl scale-90 origin-center">
+              <div className="w-full max-w-[340px] mx-auto drop-shadow-xl scale-[0.85] origin-center">
                 <LivePreviewCard 
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
@@ -644,13 +644,13 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </div>
 
           {/* Sticky Bottom CTA Bar */}
-          <div className="sticky bottom-0 z-30 bg-white/60 backdrop-blur-md border-t border-gray-100/50 py-3.5 px-4 w-full shrink-0 pb-safe-bottom">
+          <div className="sticky bottom-0 z-30 bg-white/60 backdrop-blur-md border-t border-gray-100/50 py-2.5 px-4 w-full shrink-0 pb-safe-bottom">
             <Button
               id="btn-mobile-start-cta"
               onClick={handleStartBuilder}
               variant={activeStateIndex === 6 ? 'danger' : 'dark'}
               size="md"
-              className={`w-full flex items-center justify-center space-x-2 py-3.5 rounded-full transition-all duration-300 text-xs uppercase tracking-wider font-extrabold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
+              className={`w-full flex items-center justify-center space-x-2 py-3 rounded-full transition-all duration-300 text-xs uppercase tracking-wider font-extrabold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
                 activeStateIndex === 6 
                   ? 'bg-rose-600 hover:bg-rose-700 text-white ring-4 ring-rose-500/20' 
                   : 'bg-gold-gradient text-slate-950 hover:bg-[#E5B210]'
@@ -660,7 +660,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <ArrowRight className="w-4 h-4 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
             </Button>
             <span 
-              className="text-gray-400 font-medium block text-center mt-2"
+              className="text-gray-400 font-medium block text-center mt-1"
               style={{ fontSize: 'clamp(8px, 1.8vw, 10px)' }}
             >
               {language === 'ar' ? '90 ثانية • معاينة فورية • بدون تسجيل' : '90 seconds • Instant preview • No signup'}

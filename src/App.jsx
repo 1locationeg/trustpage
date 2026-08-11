@@ -191,18 +191,20 @@ export default function App() {
       ) : (
         <>
           {/* 1. Global Header Bar (Clean production header, logo linked to home) */}
-          <NavBar
-            language={language}
-            setLanguage={setLanguage}
-            user={user}
-            onSignOut={handleSignOut}
-            onSignInClick={() => setIsAuthOpen(true)}
-            translations={t}
-            deviceMode={deviceMode}
-            setDeviceMode={setDeviceMode}
-            websiteConfig={websiteConfig}
-            onAdminClick={() => setViewMode('admin')}
-          />
+          {!actualMobile && (
+            <NavBar
+              language={language}
+              setLanguage={setLanguage}
+              user={user}
+              onSignOut={handleSignOut}
+              onSignInClick={() => setIsAuthOpen(true)}
+              translations={t}
+              deviceMode={deviceMode}
+              setDeviceMode={setDeviceMode}
+              websiteConfig={websiteConfig}
+              onAdminClick={() => setViewMode('admin')}
+            />
+          )}
 
           {/* 2. Main Layout Area */}
           <div id="main-content-wrapper" className="flex-1 flex flex-col bg-[#FAFAF9]">
