@@ -488,6 +488,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
       return (
         <div 
           id="mobile-landing-pwa" 
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           className="min-h-screen w-full max-w-[640px] mx-auto flex flex-col bg-mobile-glow-ambient text-gray-900 overflow-x-hidden relative animate-fade-in"
         >
           {/* Sticky PWA Header Bar */}
