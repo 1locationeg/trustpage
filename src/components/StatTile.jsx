@@ -7,7 +7,7 @@ export default function StatTile({
   icon,
   variant = 'dark', // 'dark' | 'light'
   highlighted = false,
-  activeAccent = '#FAC417',
+  activeAccent = '#ed1b40',
   className = '',
   style,
   ...props
@@ -59,18 +59,18 @@ export default function StatTile({
             </div>
           )}
           <div 
-            className="font-bold font-heading text-center"
+            className="font-medium text-center"
             style={{ 
               color: highlighted ? activeAccent : '#ffffff',
-              fontSize: 'clamp(10px, 2.5vw, 13px)',
+              fontSize: '12px',
               marginTop: 'clamp(2px, 0.5vw, 4px)'
             }}
           >
             {value}
           </div>
           <div 
-            className={`text-center truncate leading-none ${highlighted ? 'text-white' : 'text-gray-400'}`}
-            style={{ fontSize: 'clamp(6.5px, 1.6vw, 8.5px)' }}
+            className={`text-center truncate leading-none uppercase tracking-wider ${highlighted ? 'text-white' : 'text-[#5b6b7a]'}`}
+            style={{ fontSize: '11px' }}
           >
             {label}
           </div>
@@ -78,8 +78,8 @@ export default function StatTile({
       ) : (
         <>
           {icon && <div className="mb-2 text-[#0A3D62]">{icon}</div>}
-          <span className="text-2xl font-extrabold text-slate-900 font-heading">{value}</span>
-          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1 text-center">{label}</span>
+          <span className="text-2xl font-medium text-[#0a3d62]">{value}</span>
+          <span className="text-[11px] text-[#5b6b7a] font-bold uppercase tracking-wider mt-1 text-center">{label}</span>
         </>
       )}
     </div>

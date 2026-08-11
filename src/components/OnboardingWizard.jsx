@@ -15,6 +15,12 @@ import Badge from './Badge';
 import Card from './Card';
 import StatTile from './StatTile';
 
+const toSentenceCase = (str) => {
+  if (!str) return '';
+  if (/[\u0600-\u06FF]/.test(str)) return str; // Leave Arabic untouched
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 const getGoalIcon = (goalId, isSelected) => {
   const colorClass = isSelected ? 'text-white' : 'text-[#0A3D62]';
   switch (goalId) {
@@ -154,7 +160,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
     const presets = ["client-confidence", "more-opportunities", "client-confidence", "build-authority", "stand-out", "more-opportunities", "proven-experience"];
     const themes = ["gold", "gold", "emerald", "silver", "emerald", "silver", "gold"];
     return {
-      text: out.text[language] || out.text.en,
+      text: toSentenceCase(out.text[language] || out.text.en),
       presetId: presets[idx % presets.length],
       theme: themes[idx % themes.length]
     };
@@ -495,23 +501,23 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           {/* Sticky PWA Header Bar */}
           <header className="sticky top-0 z-30 w-full bg-white/60 backdrop-blur-md border-b border-gray-100/50 px-4 py-3 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-black tracking-wider text-slate-800 font-heading">
-                <span className="text-[#FF1744]">R8</span> ESTATE
+              <span className="text-xs font-black tracking-wider text-[#0a3d62] font-heading">
+                <span className="text-[#ed1b40]">R8</span> ESTATE
               </span>
             </div>
             <div className="flex items-center gap-3">
               {/* Language toggler */}
-              <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-500">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#5b6b7a]">
                 <button 
                   onClick={() => setLanguage && setLanguage('en')} 
-                  className={`hover:text-slate-900 cursor-pointer ${language === 'en' ? 'text-slate-900 font-extrabold underline decoration-2 decoration-[#FF1744] underline-offset-2' : 'text-gray-400'}`}
+                  className={`hover:text-[#0a3d62] cursor-pointer ${language === 'en' ? 'text-[#0a3d62] font-extrabold underline decoration-2 decoration-[#ed1b40] underline-offset-2' : 'text-gray-400'}`}
                 >
                   EN
                 </button>
                 <span className="text-gray-300">/</span>
                 <button 
                   onClick={() => setLanguage && setLanguage('ar')} 
-                  className={`hover:text-slate-900 font-arabic cursor-pointer ${language === 'ar' ? 'text-slate-900 font-extrabold underline decoration-2 decoration-[#FF1744] underline-offset-2' : 'text-gray-400 font-arabic'}`}
+                  className={`hover:text-[#0a3d62] font-arabic cursor-pointer ${language === 'ar' ? 'text-[#0a3d62] font-extrabold underline decoration-2 decoration-[#ed1b40] underline-offset-2' : 'text-gray-400 font-arabic'}`}
                 >
                   ع
                 </button>
@@ -529,9 +535,9 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               ) : (
                 <button 
                   onClick={onSignInClick}
-                  className="text-[9px] font-bold text-slate-800 bg-slate-50 hover:bg-slate-100 border border-gray-250 rounded-full px-2 py-0.5"
+                  className="text-[9px] font-bold text-[#5b6b7a] hover:text-[#0a3d62] bg-slate-50 hover:bg-slate-100 border border-gray-250 rounded-full px-2 py-0.5"
                 >
-                  {language === 'ar' ? 'دخول' : 'Sign In'}
+                  {toSentenceCase(language === 'ar' ? 'دخول' : 'Sign In')}
                 </button>
               )}
             </div>
@@ -542,21 +548,21 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             
             {/* Outcome first mobile heading */}
             <div className="text-center shrink-0 space-y-0.5">
-              <span className="text-[10px] font-black tracking-widest text-slate-500 uppercase block">
+              <span className="text-[11px] font-black tracking-widest text-[#5b6b7a] uppercase block">
                 {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
               </span>
               <div className="h-10 overflow-hidden relative flex items-center justify-center">
                 <span 
                   key={activeStateIndex}
-                  className={`font-serif-premium font-black tracking-tight gold-shimmer-text block uppercase text-xl xs:text-2xl whitespace-nowrap ${
+                  className={`font-black tracking-tight text-[#0a3d62] block text-xl xs:text-2xl whitespace-nowrap ${
                     isPaused ? 'opacity-100' : 'animate-outcome-cycle'
                   }`}
                 >
                   {ROTATOR_STATES[activeStateIndex].text}
                 </span>
               </div>
-              <p className="text-xs font-black text-[#FAC417] tracking-wider uppercase mt-0.5">
-                {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
+              <p className="text-xs font-black text-[#ed1b40] tracking-wider mt-0.5">
+                {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'Get them all. 👇'}
               </p>
             </div>
 
@@ -572,7 +578,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     updateProfile({ name: e.target.value });
                   }}
                   placeholder={language === 'ar' ? 'ما الاسم الذي يفضله العملاء؟' : 'What should clients call you?'}
-                  className={`w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl py-2.5 text-xs text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400 ${
+                  className={`w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl py-2.5 text-sm text-[#0a3d62] shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-normal placeholder-gray-400 ${
                     language === 'ar' ? 'pr-4 pl-12' : 'pl-4 pr-12'
                   }`}
                   disabled={isTransitioning}
@@ -590,7 +596,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 )}
               </form>
               <div className="h-4 flex items-center justify-center mt-0.5">
-                <p className="text-[10px] text-gray-500 font-semibold">
+                <p className="text-[13px] text-[#5b6b7a] font-normal">
                   {typedName.trim().length === 0 
                     ? (language === 'ar' ? 'شاهد بطاقة الثقة تتفاعل فوراً.' : 'See your Trust Card update instantly.')
                     : (language === 'ar' ? 'رائع جداً! اضغط على السهم للبدء.' : "Looks good. Let's build your Trust Page.")}
@@ -650,18 +656,17 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               onClick={handleStartBuilder}
               variant={activeStateIndex === 6 ? 'danger' : 'dark'}
               size="md"
-              className={`w-full flex items-center justify-center space-x-2 py-3 rounded-full transition-all duration-300 text-xs uppercase tracking-wider font-extrabold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
+              className={`w-full flex items-center justify-center space-x-2 py-3 rounded-full transition-all duration-300 !text-sm !font-medium normal-case tracking-normal shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
                 activeStateIndex === 6 
                   ? 'bg-rose-600 hover:bg-rose-700 text-white ring-4 ring-rose-500/20' 
                   : 'bg-gold-gradient text-slate-950 hover:bg-[#E5B210]'
               }`}
             >
-              <span>{language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card'}</span>
+              <span>{toSentenceCase(language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card')}</span>
               <ArrowRight className="w-4 h-4 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
             </Button>
             <span 
-              className="text-gray-400 font-medium block text-center mt-1"
-              style={{ fontSize: 'clamp(8px, 1.8vw, 10px)' }}
+              className="text-[#5b6b7a] font-normal block text-center mt-1 text-[11px]"
             >
               {language === 'ar' ? '90 ثانية • معاينة فورية • بدون تسجيل' : '90 seconds • Instant preview • No signup'}
             </span>
@@ -681,8 +686,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-1">
               <Shield className="w-3.5 h-3.5 text-[#0A3D62]" />
-              <span className="font-extrabold text-[10px] tracking-wider text-slate-800 font-heading">
-                <span className="text-[#FF1744]">R8</span> ESTATE
+              <span className="font-extrabold text-[10px] tracking-wider text-[#0a3d62] font-heading">
+                <span className="text-[#ed1b40]">R8</span> ESTATE
               </span>
             </div>
             
@@ -698,7 +703,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
           {/* Compact Product Identity */}
           <div className="w-full text-center">
-            <span className="text-xs font-serif-premium font-black tracking-tight text-slate-900 uppercase">
+            <span className="text-xs font-black tracking-tight text-[#0a3d62] uppercase">
               TRUST CARD™
             </span>
           </div>
@@ -1193,7 +1198,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               
               {/* Category Eyebrow & Rotating Outcome Headline */}
               <div className="space-y-3">
-                <span className="text-[10px] sm:text-xs font-black tracking-widest text-slate-400/90 uppercase block">
+                <span className="text-[11px] font-black tracking-widest text-[#5b6b7a] uppercase block">
                   {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
                 </span>
                 
@@ -1201,7 +1206,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 <div className="overflow-hidden h-[50px] sm:h-[60px] lg:h-[76px] xl:h-[86px] relative flex items-center justify-start">
                   <span 
                     key={activeStateIndex}
-                    className={`text-2xl xs:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif-premium font-black tracking-tight gold-shimmer-text leading-[1.1] block uppercase whitespace-nowrap ${
+                    className={`text-2xl xs:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight text-[#0a3d62] leading-[1.1] block whitespace-nowrap ${
                       isPaused ? 'opacity-100' : 'animate-outcome-cycle'
                     }`}
                   >
@@ -1229,17 +1234,17 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
 
               {/* Supporting Outcome Message */}
               <div className="space-y-2">
-                <p className="text-sm font-black text-[#FAC417] tracking-wider uppercase">
-                  {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'GET THEM ALL. 👇'}
+                <p className="text-sm font-black text-[#ed1b40] tracking-wider mt-0.5">
+                  {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'Get them all. 👇'}
                 </p>
-                <p className="text-sm sm:text-base text-gray-500/90 font-medium max-w-lg leading-relaxed">
+                <p className="text-sm font-normal text-[#5b6b7a] max-w-lg leading-relaxed">
                   {websiteConfig?.hero?.supportingText[language] || websiteConfig?.hero?.supportingText.en}
                 </p>
               </div>
 
               {/* Personalization & Interactive Input */}
               <div className="space-y-4 max-w-xl">
-                <p className="text-sm sm:text-base font-extrabold text-slate-800 font-heading">
+                <p className="text-sm sm:text-base font-extrabold text-[#0a3d62] font-heading">
                   {websiteConfig?.hero?.personalizationPrompt[language] || websiteConfig?.hero?.personalizationPrompt.en}
                 </p>
                 
@@ -1253,7 +1258,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                       updateProfile({ name: e.target.value });
                     }}
                     placeholder={websiteConfig?.hero?.personalizationPlaceholder[language] || websiteConfig?.hero?.personalizationPlaceholder.en}
-                    className={`w-full bg-white border-2 border-gray-200 focus:border-[#FAC417] rounded-2xl py-4 text-base text-slate-900 shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-medium placeholder-gray-400 ${
+                    className={`w-full bg-white border-2 border-gray-200 focus:border-[#FAC417] rounded-2xl py-4 text-sm text-[#0a3d62] shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-normal placeholder-gray-400 ${
                       language === 'ar' ? 'pr-5 pl-14' : 'pl-5 pr-14'
                     }`}
                     disabled={isTransitioning}
@@ -1274,12 +1279,12 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 {/* Dynamic Helper Text */}
                 <div className="h-6 flex items-center">
                   {typedName.trim().length === 0 ? (
-                    <p className="text-xs text-gray-500 font-semibold flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#FAC417]" />
+                    <p className="text-[13px] text-[#5b6b7a] font-normal flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#ed1b40]" />
                       <span>{language === 'ar' ? 'شاهد بطاقة الثقة الخاصة بك تتفاعل وتتغير فوراً.' : 'See your Trust Card come alive instantly.'}</span>
                     </p>
                   ) : (
-                    <p className="text-xs text-gray-700 font-bold flex items-center gap-1.5 animate-fade-up">
+                    <p className="text-[13px] text-[#0a3d62] font-normal flex items-center gap-1.5 animate-fade-up">
                       <Check className="w-3.5 h-3.5 text-emerald-500 font-bold" />
                       <span>
                         {language === 'ar' ? `رائع جداً! دعنا نبني بطاقة الثقة الخاصة بك.` : "Looks good. Let's build your Trust Page."}
@@ -1299,14 +1304,14 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   }}
                   variant="primary"
                   size="sm"
-                  className="flex items-center gap-1.5 px-6 py-3 rounded-full bg-gold-gradient text-slate-950 font-bold uppercase tracking-wider text-xs shadow-md hover:shadow-lg hover:scale-102 active:scale-98 transition-all duration-300"
+                  className="flex items-center gap-1.5 px-6 py-3 rounded-full bg-gold-gradient text-slate-950 !text-sm !font-medium normal-case tracking-normal shadow-md hover:shadow-lg hover:scale-102 active:scale-98 transition-all duration-300"
                 >
-                  <span>{language === 'ar' ? 'ابنِ بطاقة الثقة الخاصة بي ➜' : 'BUILD MY TRUST CARD ➜'}</span>
+                  <span>{toSentenceCase(language === 'ar' ? 'ابنِ بطاقة الثقة الخاصة بي ➜' : 'Build My Trust Card ➜')}</span>
                 </Button>
               </div>
 
               {/* Quick Status indicators below input */}
-              <div className="flex items-center gap-4 text-xs text-gray-500 font-semibold pt-2">
+              <div className="flex items-center gap-4 text-[13px] text-[#5b6b7a] font-normal pt-2">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{language === 'ar' ? 'تحديث فوري للمعاينة' : 'Live preview updates instantly'}</span>

@@ -2,6 +2,12 @@ import React from 'react';
 import { ArrowRight, Shield } from 'lucide-react';
 import Button from './Button';
 
+const toSentenceCase = (str) => {
+  if (!str) return '';
+  if (/[\u0600-\u06FF]/.test(str)) return str; // Leave Arabic untouched
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 export default function NavBar({
   id = 'global-header',
   language,
@@ -36,7 +42,7 @@ export default function NavBar({
             </div>
             <div className={`flex flex-col text-start`}>
               <span className="text-[13px] font-black text-slate-800 leading-none tracking-tight">
-                <span className="text-[#FF1744]">R8</span> ESTATE
+                <span className="text-[#ed1b40]">R8</span> ESTATE
               </span>
             </div>
           </a>
@@ -44,14 +50,14 @@ export default function NavBar({
           <div className="h-6 w-px bg-gray-200" />
           
           <div className="text-start">
-            <span className="text-base font-serif-premium font-black tracking-tight text-slate-900 uppercase">
+            <span className="text-base font-black tracking-tight text-[#0a3d62] uppercase">
               {websiteConfig?.global?.siteName || "TRUST CARD™"}
             </span>
           </div>
         </div>
 
         {/* Center Navigation Links */}
-        <div className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-500">
+        <div className="hidden lg:flex items-center gap-6 text-[11px] font-bold uppercase tracking-wider text-[#5b6b7a]">
           {(websiteConfig?.global?.navigation?.links || [
             { id: "nav-how", label: { en: "How It Works", ar: "كيف يعمل" }, href: "#desktop-landing-how" },
             { id: "nav-stats", label: { en: "For Professionals", ar: "للمحترفين" }, href: "#desktop-landing-stats" },
@@ -60,9 +66,9 @@ export default function NavBar({
             <a 
               key={link.id} 
               href={link.href} 
-              className="hover:text-[#FAC417] transition-colors"
+              className="hover:text-[#0a3d62] transition-colors"
             >
-              {link.label[language] || link.label.en}
+              {(link.label[language] || link.label.en).toUpperCase()}
             </a>
           ))}
         </div>
@@ -95,17 +101,17 @@ export default function NavBar({
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 text-xs font-bold text-gray-600">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-[#5b6b7a]">
             <button 
               onClick={() => setLanguage('en')}
-              className={`hover:text-slate-900 cursor-pointer ${language === 'en' ? 'text-slate-900 underline underline-offset-4 decoration-[#FF1744] decoration-2' : ''}`}
+              className={`hover:text-[#0a3d62] cursor-pointer ${language === 'en' ? 'text-[#0a3d62] underline underline-offset-4 decoration-[#ed1b40] decoration-2' : ''}`}
             >
               EN
             </button>
             <span className="text-gray-300">/</span>
             <button 
               onClick={() => setLanguage('ar')}
-              className={`hover:text-slate-900 font-arabic cursor-pointer ${language === 'ar' ? 'text-slate-900 underline underline-offset-4 decoration-[#FF1744] decoration-2' : ''}`}
+              className={`hover:text-[#0a3d62] font-arabic cursor-pointer ${language === 'ar' ? 'text-[#0a3d62] underline underline-offset-4 decoration-[#ed1b40] decoration-2' : ''}`}
             >
               ع
             </button>
@@ -131,17 +137,17 @@ export default function NavBar({
               </div>
               <button 
                 onClick={onSignOut}
-                className="text-xs font-bold text-red-500 hover:text-red-700 cursor-pointer"
+                className="text-xs font-bold text-[#ed1b40] hover:text-[#D50000] cursor-pointer"
               >
-                {t.signOut}
+                {toSentenceCase(t.signOut)}
               </button>
             </div>
           ) : (
             <button 
               onClick={onSignInClick}
-              className="text-xs font-bold text-gray-600 hover:text-slate-900 cursor-pointer"
+              className="text-xs font-bold text-[#5b6b7a] hover:text-[#0a3d62] cursor-pointer"
             >
-              {t.signIn}
+              {toSentenceCase(t.signIn)}
             </button>
           )}
 
@@ -149,9 +155,9 @@ export default function NavBar({
             variant="dark"
             size="sm"
             onClick={onSignInClick}
-            className="shadow-sm flex items-center gap-1 bg-gold-gradient text-slate-950 hover:bg-[#E5B210]"
+            className="shadow-sm flex items-center gap-1 bg-gold-gradient text-slate-950 hover:bg-[#E5B210] !text-sm !font-medium"
           >
-            <span>{websiteConfig?.global?.navigation?.cta?.label[language] || websiteConfig?.global?.navigation?.cta?.label.en || (language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card™')}</span>
+            <span>{toSentenceCase(websiteConfig?.global?.navigation?.cta?.label[language] || websiteConfig?.global?.navigation?.cta?.label.en || (language === 'ar' ? 'احصل على بطاقة الثقة الخاصة بي' : 'Get My Trust Card™'))}</span>
             <ArrowRight className="w-3 h-3 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
           </Button>
         </div>

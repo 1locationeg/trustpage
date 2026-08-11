@@ -362,8 +362,8 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
             >
               <div className="flex flex-wrap items-center gap-1">
                 <h3 
-                  className={`font-bold text-white font-serif-premium tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}
-                  style={{ fontSize: 'clamp(12px, 3.5vw, 18px)' }}
+                  className={`font-normal text-white tracking-wide transition-opacity duration-150 ${isUpdating ? 'opacity-60' : 'opacity-100'}`}
+                  style={{ fontSize: '14px' }}
                 >
                   {debouncedName}
                 </h3>
@@ -574,7 +574,7 @@ export default function LivePreviewCard({ profile, onOpenFullPage, theme = 'gold
           <div className="flex items-center gap-1 font-bold text-gray-300 uppercase tracking-wide">
             <span>{t.poweredBy}</span>
             <div className="flex items-center gap-0.5 text-white bg-white/5 border border-white/10 rounded px-1 py-0.5 leading-none" dir="ltr">
-              <span className="text-[7px] text-[#FF1744] font-extrabold font-heading">R8</span>
+              <span className="text-[7px] text-[#ed1b40] font-extrabold font-heading">R8</span>
               <span className="text-[7px] font-medium">ESTATE</span>
             </div>
           </div>
