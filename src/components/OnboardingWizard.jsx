@@ -496,10 +496,10 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           id="mobile-landing-pwa" 
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="min-h-screen w-full max-w-[640px] mx-auto flex flex-col bg-mobile-glow-ambient text-gray-900 overflow-x-hidden relative animate-fade-in"
+          className="h-[100dvh] w-full max-w-[640px] mx-auto flex flex-col bg-mobile-glow-ambient text-gray-900 overflow-hidden relative animate-fade-in"
         >
           {/* Sticky PWA Header Bar */}
-          <header className="sticky top-0 z-30 w-full bg-white/60 backdrop-blur-md border-b border-gray-100/50 px-4 py-3 flex items-center justify-between shrink-0">
+          <header className="sticky top-0 z-30 w-full bg-white/60 backdrop-blur-md border-b border-gray-100/50 px-4 py-2 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-black tracking-wider text-[#0a3d62] font-heading">
                 <span className="text-[#ed1b40]">R8</span> ESTATE
@@ -544,24 +544,24 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </header>
 
           {/* Scrollable Viewport Content Area */}
-          <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col justify-between space-y-2 pt-2">
+          <div className="flex-1 overflow-y-auto px-4 py-1.5 flex flex-col justify-start space-y-1.5">
             
             {/* Outcome first mobile heading */}
             <div className="text-center shrink-0 space-y-0.5">
-              <span className="text-[11px] font-black tracking-widest text-[#5b6b7a] uppercase block">
+              <span className="text-[10px] font-black tracking-widest text-[#5b6b7a] uppercase block">
                 {websiteConfig?.hero?.eyebrow[language] || websiteConfig?.hero?.eyebrow.en || (language === 'ar' ? 'محترفو العقارات الباحثون عن' : 'REAL ESTATE PROFESSIONALS LOOKING FOR')}
               </span>
-              <div className="h-10 overflow-hidden relative flex items-center justify-center">
+              <div className="h-8 overflow-hidden relative flex items-center justify-center">
                 <span 
                   key={activeStateIndex}
-                  className={`font-black tracking-tight text-[#0a3d62] block text-xl xs:text-2xl whitespace-nowrap ${
+                  className={`font-black tracking-tight text-[#0a3d62] block text-lg xs:text-xl whitespace-nowrap ${
                     isPaused ? 'opacity-100' : 'animate-outcome-cycle'
                   }`}
                 >
                   {ROTATOR_STATES[activeStateIndex].text}
                 </span>
               </div>
-              <p className="text-xs font-black text-[#ed1b40] tracking-wider mt-0.5">
+              <p className="text-[11px] font-black text-[#ed1b40] tracking-wider mt-0">
                 {language === 'ar' ? 'احصل عليها جميعاً. 👇' : 'Get them all. 👇'}
               </p>
             </div>
@@ -578,7 +578,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                     updateProfile({ name: e.target.value });
                   }}
                   placeholder={language === 'ar' ? 'ما الاسم الذي يفضله العملاء؟' : 'What should clients call you?'}
-                  className={`w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl py-2.5 text-sm text-[#0a3d62] shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-normal placeholder-gray-400 ${
+                  className={`w-full bg-white border border-gray-200 focus:border-[#FAC417] rounded-xl py-2 text-sm text-[#0a3d62] shadow-sm focus:outline-none focus:bg-white transition-all duration-300 font-normal placeholder-gray-400 ${
                     language === 'ar' ? 'pr-4 pl-12' : 'pl-4 pr-12'
                   }`}
                   disabled={isTransitioning}
@@ -595,8 +595,8 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                   </button>
                 )}
               </form>
-              <div className="h-4 flex items-center justify-center mt-0.5">
-                <p className="text-[13px] text-[#5b6b7a] font-normal">
+              <div className="h-3 flex items-center justify-center mt-0">
+                <p className="text-xs text-[#5b6b7a] font-normal">
                   {typedName.trim().length === 0 
                     ? (language === 'ar' ? 'شاهد بطاقة الثقة تتفاعل فوراً.' : 'See your Trust Card update instantly.')
                     : (language === 'ar' ? 'رائع جداً! اضغط على السهم للبدء.' : "Looks good. Let's build your Trust Page.")}
@@ -605,7 +605,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
             </div>
 
             {/* Premium Trust Card Container (Fluid & Centered) */}
-            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-0 flex-1 min-h-[170px] animate-card-slide-up relative">
+            <div id="mobile-landing-outcome" className="w-full flex items-center justify-center py-0 flex-1 min-h-[120px] animate-card-slide-up relative">
               
               {/* Mobile HUD overlay during transition */}
               {isTransitioning && (
@@ -636,7 +636,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
                 </div>
               )}
 
-              <div className="w-full max-w-[340px] mx-auto drop-shadow-xl scale-[0.85] origin-center">
+              <div className="w-full max-w-[340px] mx-auto drop-shadow-xl scale-[0.75] xs:scale-[0.8] sm:scale-[0.85] origin-center">
                 <LivePreviewCard 
                   profile={profile} 
                   activeStateIndex={activeStateIndex}
@@ -650,13 +650,13 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
           </div>
 
           {/* Sticky Bottom CTA Bar */}
-          <div className="sticky bottom-0 z-30 bg-white/60 backdrop-blur-md border-t border-gray-100/50 py-2.5 px-4 w-full shrink-0 pb-safe-bottom">
+          <div className="sticky bottom-0 z-30 bg-white/60 backdrop-blur-md border-t border-gray-100/50 py-1.5 px-4 w-full shrink-0 pb-safe-bottom">
             <Button
               id="btn-mobile-start-cta"
               onClick={handleStartBuilder}
               variant={activeStateIndex === 6 ? 'danger' : 'dark'}
-              size="md"
-              className={`w-full flex items-center justify-center space-x-2 py-3 rounded-full transition-all duration-300 !text-sm !font-medium normal-case tracking-normal shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
+              size="sm"
+              className={`w-full flex items-center justify-center space-x-2 py-2.5 rounded-full transition-all duration-300 !text-sm !font-medium normal-case tracking-normal shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] ${
                 activeStateIndex === 6 
                   ? 'bg-rose-600 hover:bg-rose-700 text-white ring-4 ring-rose-500/20' 
                   : 'bg-gold-gradient text-slate-950 hover:bg-[#E5B210]'
@@ -666,7 +666,7 @@ export default function OnboardingWizard({ profile, setProfile, onFinish, isMobi
               <ArrowRight className="w-4 h-4 text-slate-950 shrink-0 ltr:rotate-0 rtl:rotate-180" />
             </Button>
             <span 
-              className="text-[#5b6b7a] font-normal block text-center mt-1 text-[11px]"
+              className="text-[#5b6b7a] font-normal block text-center mt-0.5 text-[11px]"
             >
               {language === 'ar' ? '90 ثانية • معاينة فورية • بدون تسجيل' : '90 seconds • Instant preview • No signup'}
             </span>
